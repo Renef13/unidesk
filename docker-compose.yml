@@ -12,14 +12,6 @@ services:
       - db_data:/var/lib/postgresql/data
       - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
 
-  redis:
-    image: redis:alpine
-    container_name: uni-desk-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-
   api:
     image: uni-desk-api
     container_name: uni-desk-api

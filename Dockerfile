@@ -6,7 +6,7 @@ RUN ./gradlew build --no-daemon
 
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
-COPY --from=builder /app/build/libs/uni-desk-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/build/libs/*.jar app.jar
 RUN mkdir -p /app/uploads
 RUN chmod -R 777 /app/uploads
 ENTRYPOINT ["java", "-jar", "app.jar"]
