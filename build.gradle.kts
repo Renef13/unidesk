@@ -23,7 +23,6 @@ configurations {
 
 repositories {
     mavenCentral()
-    // Removido repositório de snapshots porque usaremos versões estáveis
 }
 
 extra["snippetsDir"] = file("build/generated-snippets")
@@ -40,13 +39,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-security")
 
-
-    // Dependência para geração de código OpenAPI via CLI (não é runtime, é só para gerar código)
     configurations["swaggerCodegen"]("org.openapitools:openapi-generator-cli:7.3.0")
-    // Anotações Swagger/OpenAPI usadas na aplicação
     implementation("io.swagger.core.v3:swagger-annotations:2.2.20")
 
-    // UI do SpringDoc compatível com Spring Boot 3.2.x
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
     implementation("com.google.guava:guava:32.1.2-jre")
