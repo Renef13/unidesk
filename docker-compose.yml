@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: vaideferry-db
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+
+  api:
+    image: vaideferry-api
+    container_name: vaideferry-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${VAIDEFERRY_SERVER_PORT}:${VAIDEFERRY_SERVER_PORT}"
+    environment:
+      - VAIDEFERRY_SERVER_PORT=${VAIDEFERRY_SERVER_PORT}
+      - VAIDEFERRY_API_DOCS_PATH=${VAIDEFERRY_API_DOCS_PATH}
+      - VAIDEFERRY_DB_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - VAIDEFERRY_DB_USERNAME=${POSTGRES_USER}
+      - VAIDEFERRY_DB_PASSWORD=${POSTGRES_PASSWORD}
+      - VAIDEFERRY_IMAGENS_DIR=/app/imagens
+    volumes:
+      - imagens_data:/app/imagens
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  imagens_data:
