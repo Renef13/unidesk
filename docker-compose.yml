@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: vaideferry-db
+    container_name: uni-desk-db
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -12,26 +12,31 @@ services:
       - db_data:/var/lib/postgresql/data
       - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
 
+  redis:
+    image: redis:alpine
+    container_name: uni-desk-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
   api:
-    image: vaideferry-api
-    container_name: vaideferry-api
+    image: uni-desk-api
+    container_name: uni-desk-api
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "${VAIDEFERRY_SERVER_PORT}:${VAIDEFERRY_SERVER_PORT}"
+      - "${UNIDESK_SERVER_PORT}:${UNIDESK_SERVER_PORT}"
     environment:
-      - VAIDEFERRY_SERVER_PORT=${VAIDEFERRY_SERVER_PORT}
-      - VAIDEFERRY_API_DOCS_PATH=${VAIDEFERRY_API_DOCS_PATH}
-      - VAIDEFERRY_DB_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
-      - VAIDEFERRY_DB_USERNAME=${POSTGRES_USER}
-      - VAIDEFERRY_DB_PASSWORD=${POSTGRES_PASSWORD}
-      - VAIDEFERRY_IMAGENS_DIR=/app/imagens
-    volumes:
-      - imagens_data:/app/imagens
+      - UNIDESK_SERVER_PORT=${UNIDESK_SERVER_PORT}
+      - UNIDESK_API_DOCS_PATH=${UNIDESK_API_DOCS_PATH}
+      - UNIDESK_DB_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - UNIDESK_DB_USERNAME=${POSTGRES_USER}
+      - UNIDESK_DB_PASSWORD=${POSTGRES_PASSWORD}
+
     depends_on:
       - db
 
 volumes:
   db_data:
-  imagens_data:
