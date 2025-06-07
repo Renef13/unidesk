@@ -31,11 +31,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
-      # 4. Carregar Variáveis do Arquivo .env.ci
+      # 4. Carregar Variáveis do Arquivo .env
       - name: Load Environment Variables
         run: |
           set -o allexport
-          source .env.ci || true
+          source .env || true
           set +o allexport
 
       # 5. Login no Docker Hub
@@ -48,9 +48,9 @@ jobs:
       # 6. Build da Imagem Docker
       - name: Build Docker Image
         run: |
-          docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/vaideferry-backend:dev .
+          docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/unidesk:dev .
 
       # 7. Push da Imagem para o Docker Hub
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/vaideferry-backend:dev
+          docker push ${{ secrets.DOCKER_USERNAME }}/unidesk:dev
