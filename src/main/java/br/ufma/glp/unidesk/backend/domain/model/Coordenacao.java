@@ -31,7 +31,7 @@ public class Coordenacao {
     @Column(name = "id", nullable = false, unique = true)
     private Long idCoordenacao;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "nome" ,nullable = false, unique = true)
     @NotBlank(message = "O nome da coordenação não pode ser vazio ou nulo")
     @Size(max = 100, message = "O nome da coordenação não pode ter mais de 100 caracteres")
     private String nome;
