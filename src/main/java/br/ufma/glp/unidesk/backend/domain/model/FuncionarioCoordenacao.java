@@ -30,6 +30,6 @@ public class FuncionarioCoordenacao extends Usuario {
 
     @ManyToOne
     @JoinColumn(name = "id_coordenacao", nullable = false)
-    @NotBlank(message = "Coordenacao não pode ser nula")
+    @NotNull(message = "Coordenacao não pode ser nula")
     private Coordenacao coordenacao;
 }
