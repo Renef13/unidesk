@@ -31,6 +31,4 @@ public class Aluno extends Usuario{
     @JoinColumn(name = "id_curso")
     private Curso curso;
 
-    public Aluno(Long idUsuario, String nome, String email, String senha, String matricula, Curso curso) {
-    }
 }

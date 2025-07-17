@@ -26,7 +26,13 @@ class AlunoTest {
 
     static class DummyAluno extends Aluno {
         DummyAluno(Long idUsuario, String nome, String email, String senha, String matricula, Curso curso) {
-            super(idUsuario, nome, email, senha, matricula, curso);
+            super();
+            setIdUsuario(idUsuario);
+            setNome(nome);
+            setEmail(email);
+            setSenha(senha);
+            setMatricula(matricula);
+            setCurso(curso);
         }
     }
 
