@@ -10,10 +10,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Relatorio {
+    //TODO: Adicionar validações de conteúdo, data e tipoRelatorio
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idRelatorio;
-
     private String conteudo;
     private LocalDate data;
     private String tipoRelatorio;
