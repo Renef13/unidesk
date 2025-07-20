@@ -33,16 +33,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByTituloContainingIgnoreCase(String texto);
 
     /**
-     * Busca tickets que contêm o texto na descrição.
-     */
-    List<Ticket> findByDescricaoContainingIgnoreCase(String texto);
-
-    /**
-     * Busca tickets por texto no título ou descrição.
-     */
-    List<Ticket> findByTituloContainingIgnoreCaseOrDescricaoContainingIgnoreCase(String titulo, String descricao);
-
-    /**
      * Busca tickets por status.
      */
     List<Ticket> findByStatus(Status status);
@@ -80,7 +70,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     /**
      * Busca tickets pelo ID do aluno.
      */
-    List<Ticket> findByAlunoIdAluno(Long idAluno);
+    List<Ticket> findByAlunoIdUsuario(Long idAluno);
 
     /**
      * Busca tickets por funcionário.
@@ -90,7 +80,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     /**
      * Busca tickets pelo ID do funcionário.
      */
-    List<Ticket> findByFuncionarioIdFuncionario(Long idFuncionario);
+    List<Ticket> findByFuncionarioIdUsuario(Long idFuncionario);
 
     /**
      * Busca tickets por coordenação.
