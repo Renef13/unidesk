@@ -25,4 +25,7 @@ public class Categoria {
     @NotBlank(message = "O nome da categoria não pode ser vazio")
     @Size(max = 100, message = "O nome da categoria deve ter no máximo 100 caracteres")
     private String nome;
+
+    public Categoria(long l, String cat, String camp) {
+    }
 }
