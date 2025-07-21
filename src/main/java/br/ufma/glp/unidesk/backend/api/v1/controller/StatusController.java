@@ -9,7 +9,6 @@ import br.ufma.glp.unidesk.backend.api.v1.dto.model.StatusModel;
 import br.ufma.glp.unidesk.backend.domain.service.StatusService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
