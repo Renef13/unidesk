@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/categorias")
-class CategoriaController {
+public class CategoriaController {
 
     private final CategoriaService categoriaService;
     private final CategoriaModelAssembler categoriaModelAssembler;
