@@ -63,7 +63,7 @@ public class CategoriaService {
     }
 
     @Transactional
-    public void exlcuir(
+    public void excluir(
             @Valid @NotNull(message = "O ID da categoria não pode ser nulo")
             @Positive(message = "O ID deve ser um número positivo") Long idCategoria) {
         Categoria categoria = buscarPorIdOuFalhar(idCategoria);
