@@ -13,6 +13,6 @@ public class FuncionarioCoordenacaoNaoEncontradoException extends EntidadeNaoEnc
     }
     
     public FuncionarioCoordenacaoNaoEncontradoException(String matricula, String tipo) {
-        this(String.format("Não existe um funcionário de coordenação com a matrícula %s", matricula));
+        this(String.format("Não existe um funcionário de coordenação com a matrícula %s e do tipo %s", matricula, tipo));
     }
 }
