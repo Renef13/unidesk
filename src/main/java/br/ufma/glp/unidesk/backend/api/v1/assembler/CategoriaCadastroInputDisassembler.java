@@ -12,7 +12,7 @@ public class CategoriaCadastroInputDisassembler {
 
     private final ModelMapper modelMapper;
 
-    public Categoria toDoaminObject(CategoriaCadastroInput categoriaCadastroInput) {
+    public Categoria toDomainObject(CategoriaCadastroInput categoriaCadastroInput) {
         return modelMapper.map(categoriaCadastroInput, Categoria.class);
     }
 
