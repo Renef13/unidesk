@@ -8,7 +8,8 @@ public class PrioridadeNivelEmUsoException extends NegocioException {
         super(mensagem);
     }
 
-    public PrioridadeNivelEmUsoException(String nivel) {
-        this(String.format("Já existe uma prioridade cadastrada com o nível '%s'", nivel));
+    public static PrioridadeNivelEmUsoException comNivel(String nivel) {
+        return new PrioridadeNivelEmUsoException(
+                String.format("Já existe uma prioridade cadastrada com o nível '%s'", nivel));
     }
 }
