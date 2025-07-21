@@ -49,7 +49,7 @@ class CategoriaController {
         return categoriaModelAssembler.toModel(
                 categoriaService
                         .salvar(categoriaCadastroInputDisassembler
-                                .toDoaminObject(categoriaInput)));
+                                .toDomainObject(categoriaInput)));
     }
 
     @PutMapping("/")
