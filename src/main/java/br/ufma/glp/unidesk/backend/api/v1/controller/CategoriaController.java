@@ -64,7 +64,7 @@ class CategoriaController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {
-        categoriaService.exlcuir(id);
+        categoriaService.excluir(id);
     }
 
 }
