@@ -5,6 +5,9 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import br.ufma.glp.unidesk.backend.domain.exception.EntidadeEmUsoException;
+import br.ufma.glp.unidesk.backend.domain.exception.EntidadeNaoEncontradaException;
+import br.ufma.glp.unidesk.backend.domain.exception.NegocioException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
