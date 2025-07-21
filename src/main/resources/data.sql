@@ -78,11 +78,11 @@ INSERT INTO status (nome) VALUES
 
 
 
--- INSERT INTO tickets (titulo, descricao, data_criacao, data_atualizacao, id_coordenacao, id_func_coordenacao, id_aluno, id_status, id_prioridade, id_categoria) VALUES
--- ('Problema com acesso ao sistema', 'Não consigo logar no sistema acadêmico.', NOW(), NOW(), 1, 5, 1, 1, 3, 1),
--- ('Dúvida sobre nota', 'Minha nota de cálculo não aparece no histórico.', NOW(), NOW(), 2, 6, 2, 1, 2, 3),
--- ('Solicitação de material', 'Preciso de acesso aos slides da aula de Banco de Dados.', NOW(), NOW(), 1, 5, 1, 1, 1, 3),
--- ('Erro no boleto', 'O valor do boleto de mensalidade está incorreto.', NOW(), NOW(), 2, 6, 2, 1, 4, 2);
+INSERT INTO tickets (titulo, descricao, data_criacao, data_atualizacao, id_coordenacao, id_func_coordenacao, id_aluno, id_status, id_prioridade, id_categoria) VALUES
+('Problema com acesso ao sistema', 'Não consigo logar no sistema acadêmico.', NOW(), NOW(), 1, 5, 1, 1, 3, 1),
+('Dúvida sobre nota', 'Minha nota de cálculo não aparece no histórico.', NOW(), NOW(), 2, 6, 2, 1, 2, 3),
+('Solicitação de material', 'Preciso de acesso aos slides da aula de Banco de Dados.', NOW(), NOW(), 1, 5, 1, 1, 1, 3),
+('Erro no boleto', 'O valor do boleto de mensalidade está incorreto.', NOW(), NOW(), 2, 6, 2, 1, 4, 2);
 
 
 
