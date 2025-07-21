@@ -1,6 +1,5 @@
 package br.ufma.glp.unidesk.backend.api.v1.dto.model;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
