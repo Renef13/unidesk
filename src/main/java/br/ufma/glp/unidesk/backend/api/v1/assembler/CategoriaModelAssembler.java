@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-class CategoriaModelAssembler {
+public class CategoriaModelAssembler {
 
     private final ModelMapper modelMapper;
 

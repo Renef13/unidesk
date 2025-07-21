@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-class CategoriaCadastroInputDisassembler {
+public class CategoriaCadastroInputDisassembler {
 
     private final ModelMapper modelMapper;
 

@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Validated
-class CategoriaService {
+public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
     private final TicketRepository ticketRepository;
