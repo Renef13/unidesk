@@ -58,15 +58,11 @@ public class PrioridadeController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PrioridadeModel atualizar(
-            @PathVariable Long id,
-            @RequestBody @Valid PrioridadeEdicaoInput prioridadeInput) {
-
-        Prioridade prioridadeAtual = prioridadeService.buscarPorIdOuFalhar(id);
-        prioridadeInput.setIdPrioridade(id);
-        prioridadeEdicaoInputDisassembler.copyToDomainObject(prioridadeInput, prioridadeAtual);
-
-        return prioridadeModelAssembler.toModel(prioridadeService.atualizar(prioridadeAtual));
+    public PrioridadeModel atualizar(@RequestBody @Valid PrioridadeEdicaoInput prioridadeInput) {
+        return prioridadeModelAssembler
+                .toModel(prioridadeService
+                        .atualizar(prioridadeEdicaoInputDisassembler
+                                .toDomainObject(prioridadeInput)));
     }
 
     @DeleteMapping("/{id}")

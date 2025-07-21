@@ -167,4 +167,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      * @return Verdadeiro se existirem tickets com a prioridade, falso caso contrário.
      */
     boolean existsByPrioridade(Prioridade prioridade);
+
+    /**
+     * Verifica se existem tickets com a categoria informada.
+     *
+     * @param categoria Categoria para verificação.
+     * @return Verdadeiro se existirem tickets com a categoria, falso caso contrário.
+     */
+    boolean existsByCategoria(Categoria categoria);
 }
