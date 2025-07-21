@@ -16,7 +16,5 @@ public class CategoriaCadastroInput {
     @NotBlank(message = "O nome da categoria é obrigatório")
     @Size(max = 100, message = "O nome não pode ter mais de 100 caracteres")
     private String nome;
-    
-    @Size(max = 255, message = "A descrição não pode ter mais de 255 caracteres")
-    private String descricao;
+
 }
