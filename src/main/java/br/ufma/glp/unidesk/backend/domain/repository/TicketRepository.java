@@ -152,4 +152,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      */
     List<Ticket> findByFuncionarioAndStatus(FuncionarioCoordenacao funcionario, Status status);
 
+    /**
+     * Verifica se existem tickets com o status informado.
+     *
+     * @param status Status para verificação.
+     * @return Verdadeiro se existirem tickets com o status, falso caso contrário.
+     */
+    boolean existsByStatus(Status status);
 }
