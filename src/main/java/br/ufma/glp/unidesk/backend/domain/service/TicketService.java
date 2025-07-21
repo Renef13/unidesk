@@ -2,12 +2,18 @@ package br.ufma.glp.unidesk.backend.domain.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.ufma.glp.unidesk.backend.domain.exception.TicketNaoEncontradoException;
+import br.ufma.glp.unidesk.backend.domain.model.Status;
 import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.model.UsuarioRole;
+import br.ufma.glp.unidesk.backend.domain.repository.StatusRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.TicketRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -18,17 +24,22 @@ public class TicketService {
     
     private TicketRepository ticketRepository;
     private StorageService storageService;
+    private StatusRepository statusRepository;
 
-    public TicketService(TicketRepository ticketRepository, StorageService storageService) {
+    public TicketService(TicketRepository ticketRepository, StorageService storageService, StatusRepository statusRepository) {
         this.ticketRepository = ticketRepository;
         this.storageService = storageService;
+        this.statusRepository = statusRepository;
     }
 
-    public List<Ticket> listarTickets(Usuario usuario) {
+    public Page<Ticket> listarTickets(Usuario usuario, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        
         if(usuario.getRole().equals(UsuarioRole.ADMIN)) {
-            return ticketRepository.findAll().stream().toList();
+
+            return ticketRepository.findAll(pageable);
         } else {
-            return ticketRepository.findByAlunoIdUsuario(usuario.getIdUsuario()).stream().toList();
+            return ticketRepository.findByAlunoIdUsuario(usuario.getIdUsuario(), pageable);
         }
     }
 
@@ -43,20 +54,26 @@ public class TicketService {
         return ticket;
     }
 
-    public void alterarStatusTicket() {
-
+    @Transactional
+    public String alterarStatusTicket(Ticket ticket, Status status) {
+        ticket.setStatus(status);
+        return "Novo status do ticket: " + status.getNome();
     }
 
-    public void fecharTicket() {
+    @Transactional
+    public Ticket fecharTicket(Ticket ticket, Long idStatus) {
+        Status novoStatus = statusRepository.findById(idStatus).get();
+        ticket.setStatus(novoStatus);
 
+        return ticket;
     }
 
-    public void buscarTicketPorId() {
-
+    public Ticket buscarTicketPorId(@Valid @NotNull(message = "O Id do ticket nao pode ser nulo") Long idTicket) {
+        return ticketRepository.findById(idTicket).orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
     }
 
-    public void buscarTicketPorTermo() {
-
+    public List<Ticket> buscarTicketPorTermo(String termo) {
+        return ticketRepository.findByTermo(termo);
     }
 
     public void filtrarPorCategoria() {
