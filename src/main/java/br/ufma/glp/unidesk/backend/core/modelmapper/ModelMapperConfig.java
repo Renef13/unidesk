@@ -1,6 +1,7 @@
 package br.ufma.glp.unidesk.backend.core.modelmapper;
 
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.AlunoCadastroInput;
+import br.ufma.glp.unidesk.backend.api.v1.dto.input.AlunoEdicaoInput;
 import br.ufma.glp.unidesk.backend.domain.model.Aluno;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -25,6 +26,13 @@ public class ModelMapperConfig {
                 skip(destination.getCurso());
             }
         });
+        modelMapper.addMappings(new PropertyMap<AlunoEdicaoInput, Aluno>() {
+            @Override
+            protected void configure() {
+                skip(destination.getCurso());
+            }
+        });
+
 
         return modelMapper;
     }
