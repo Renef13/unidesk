@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 public class CursoModel {
 
     private Long idCurso;
-    
-    @NotBlank(message = "O nome do curso não pode ser vazio ou nulo")
+
     private String nome;
-    
-    @NotBlank(message = "O campus do curso não pode ser vazio ou nulo")
+
     private String campus;
 }

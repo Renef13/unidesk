@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class StatusModel {
 
     private Long idStatus;
+
     private String nome;
 }

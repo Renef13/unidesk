@@ -12,7 +12,10 @@ import java.time.LocalDate;
 public class RelatorioModel {
 
     private Long idRelatorio;
+
     private String conteudo;
+
     private LocalDate data;
+
     private String tipoRelatorio;
 }

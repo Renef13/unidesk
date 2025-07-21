@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class PrioridadeModel {
 
     private Long idPrioridade;
+
     private String nivel;
 }

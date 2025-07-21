@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseConhecimentoModel {
+public class CoordenacaoModel {
 
-    private Long idArtigo;
-    
-    private String titulo;
-    
-    private String conteudo;
-    
-    private CategoriaModel categoria;
+    private Long idCoordenacao;
+
+    private String nome;
+
+    private CursoModel curso;
 }
