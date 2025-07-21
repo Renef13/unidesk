@@ -1,33 +1,29 @@
 package br.ufma.glp.unidesk.backend.api.v1.assembler;
 
-import br.ufma.glp.unidesk.backend.api.v1.controller.StatusController;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.StatusModel;
 import br.ufma.glp.unidesk.backend.domain.model.Status;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-@Component
-public class StatusModelAssembler extends RepresentationModelAssemblerSupport<Status, StatusModel> {
+import java.util.List;
+import java.util.stream.Collectors;
 
-    @Autowired
+@Component
+public class StatusModelAssembler {
+
     private final ModelMapper modelMapper;
 
     public StatusModelAssembler(ModelMapper modelMapper) {
-        super(StatusController.class, StatusModel.class);
         this.modelMapper = modelMapper;
     }
 
-    @Override
     public StatusModel toModel(Status status) {
-        StatusModel statusModel = modelMapper.map(status, StatusModel.class);
-        return statusModel;
+        return modelMapper.map(status, StatusModel.class);
     }
 
-    @Override
-    public CollectionModel<StatusModel> toCollectionModel(Iterable<? extends Status> entities) {
-        return super.toCollectionModel(entities);
+    public List<StatusModel> toCollectionModel(List<Status> statuses) {
+        return statuses.stream()
+                .map(this::toModel)
+                .collect(Collectors.toList());
     }
 }

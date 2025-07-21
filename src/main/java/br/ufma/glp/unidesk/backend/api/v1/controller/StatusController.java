@@ -13,6 +13,8 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/status")
@@ -25,15 +27,14 @@ public class StatusController {
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    public CollectionModel<StatusModel> listar() {
+    public List<StatusModel> listar() {
         return statusModelAssembler.toCollectionModel(statusService.listarTodos());
     }
 
     @GetMapping("/buscar")
     @ResponseStatus(HttpStatus.OK)
-    public CollectionModel<StatusModel> buscarPorNome(@RequestParam("nome") String nome) {
-        return statusModelAssembler.toCollectionModel(
-                statusService.buscarPorNomeContendo(nome));
+    public List<StatusModel> buscarPorNome(@RequestParam("nome") String nome) {
+        return statusModelAssembler.toCollectionModel(statusService.buscarPorNomeContendo(nome));
     }
 
     @GetMapping("/{id}")
