@@ -1,9 +1,16 @@
 package br.ufma.glp.unidesk.backend.domain.model;
 
+
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -15,7 +22,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "usuarios")
-public abstract class Usuario {
+public abstract class Usuario implements UserDetails{
 
     @EqualsAndHashCode.Include
     @Id
@@ -35,4 +42,48 @@ public abstract class Usuario {
     @Column(name = "senha", nullable = false, length = 100)
     @NotBlank(message = "A senha do usuário não pode ser nula ou vazia")
     private String senha;
+
+    @Column(name = "role", nullable = false)
+    @NotBlank(message = "A role não pode ser nula ou vazia")
+    private UsuarioRole role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+         if(this.role == UsuarioRole.ADMIN) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
