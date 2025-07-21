@@ -1,7 +1,6 @@
 package br.ufma.glp.unidesk.backend.domain.model;
 
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,7 +35,6 @@ public class Ticket {
     @Size(max = 100, message = "Título deve ter no máximo 100 caracteres")
     private String titulo;
 
-    @Lob
     @Column(nullable = false)
     @NotBlank(message = "Descrição não pode ser vazia")
     private String descricao;
