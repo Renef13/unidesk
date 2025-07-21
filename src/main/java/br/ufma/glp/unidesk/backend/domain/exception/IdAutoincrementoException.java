@@ -7,7 +7,7 @@ public abstract class IdAutoincrementoException extends NegocioException{
 	private static final String mensagem = "O id não pode ser definido pela camada de aplicação";
 
 	public IdAutoincrementoException(String mensagem) {
-		super(mensagem);
+		super(mensagem == null || mensagem.isEmpty() ? IdAutoincrementoException.mensagem : mensagem);
 	}
 	
 }
