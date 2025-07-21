@@ -214,7 +214,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String detail = ex.getMessage();
 
 		Problem problem = createProblemBuilder(status, problemType, detail)
-				.userMessage(detail)
 				.userMessage("Você não possui permissão para executar essa operação.")
 				.build();
 
