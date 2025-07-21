@@ -6,7 +6,6 @@ public abstract class EntidadeEmUsoException extends NegocioException {
 	
 	public EntidadeEmUsoException(String mensagem) {
 		super(mensagem);
-		// TODO Auto-generated constructor stub
 	}
 
 }
