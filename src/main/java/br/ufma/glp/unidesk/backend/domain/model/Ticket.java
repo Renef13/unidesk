@@ -38,6 +38,9 @@ public class Ticket {
     @Column(nullable = false)
     @NotBlank(message = "Descrição não pode ser vazia")
     private String descricao;
+    
+    @Column(name = "id_file")
+    private String idFile;
 
     @CreationTimestamp
     @Column(name = "data_criacao", nullable = false, updatable = false)
@@ -80,6 +83,8 @@ public class Ticket {
     @JoinColumn(name = "id_categoria", nullable = false, foreignKey = @ForeignKey(name = "fk_ticket_categoria"))
     @NotNull(message = "Categoria é obrigatória")
     private Categoria categoria;
+
+    
 
     @AssertTrue(message = "Data de fechamento não pode ser anterior à data de criação")
     private boolean isFechaValida() {
