@@ -65,6 +65,7 @@ public class ModelMapperConfig {
         modelMapper.addMappings(new PropertyMap<MensagemCadastroInput, Mensagem>() {
             @Override
             protected void configure() {
+                skip(destination.getIdMensagem());
                 skip(destination.getTicket());
                 skip(destination.getUsuario());
             }
@@ -73,6 +74,7 @@ public class ModelMapperConfig {
         modelMapper.addMappings(new PropertyMap<MensagemEdicaoInput, Mensagem>() {
             @Override
             protected void configure() {
+                skip(destination.getIdMensagem());
                 skip(destination.getTicket());
                 skip(destination.getUsuario());
             }
@@ -81,6 +83,7 @@ public class ModelMapperConfig {
         modelMapper.addMappings(new PropertyMap<TicketCadastroInput, Ticket>() {
             @Override
             protected void configure() {
+                skip(destination.getIdTicket());
                 skip(destination.getCoordenacao());
                 skip(destination.getFuncionario());
                 skip(destination.getAluno());
@@ -93,6 +96,7 @@ public class ModelMapperConfig {
         modelMapper.addMappings(new PropertyMap<TicketEdicaoInput, Ticket>() {
             @Override
             protected void configure() {
+                skip(destination.getIdTicket());
                 skip(destination.getCoordenacao());
                 skip(destination.getFuncionario());
                 skip(destination.getAluno());
