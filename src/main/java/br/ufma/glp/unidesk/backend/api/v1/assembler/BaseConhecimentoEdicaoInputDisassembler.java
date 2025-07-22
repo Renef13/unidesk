@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 public class BaseConhecimentoEdicaoInputDisassembler {
     private final ModelMapper modelMapper;
 
-    public BaseConhecimento toDomainObject(BaseConhecimentoCadastroInput input) {
-        BaseConhecimento baseConhecimento = modelMapper.map(input, BaseConhecimento.class);
+    public BaseConhecimento toDomainObject(BaseConhecimentoCadastroInput baseConhecimentoCadastroInput) {
+        BaseConhecimento baseConhecimento = modelMapper.map(baseConhecimentoCadastroInput, BaseConhecimento.class);
 
-        if (input.getIdCategoria() != null) {
+        if (baseConhecimentoCadastroInput.getIdCategoria() != null) {
             Categoria categoria = new Categoria();
-            categoria.setIdCategoria(input.getIdCategoria());
+            categoria.setIdCategoria(baseConhecimentoCadastroInput.getIdCategoria());
             baseConhecimento.setCategoria(categoria);
         }
 

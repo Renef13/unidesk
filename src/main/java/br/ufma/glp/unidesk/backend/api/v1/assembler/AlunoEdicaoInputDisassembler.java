@@ -13,12 +13,12 @@ public class AlunoEdicaoInputDisassembler {
 
     private final ModelMapper modelMapper;
 
-    public Aluno toDomainObject(AlunoEdicaoInput input) {
-        Aluno aluno = modelMapper.map(input, Aluno.class);
+    public Aluno toDomainObject(AlunoEdicaoInput alunoEdicaoInput) {
+        Aluno aluno = modelMapper.map(alunoEdicaoInput, Aluno.class);
 
-        if (input.getIdCurso() != null) {
+        if (alunoEdicaoInput.getIdCurso() != null) {
             Curso curso = new Curso();
-            curso.setIdCurso(input.getIdCurso());
+            curso.setIdCurso(alunoEdicaoInput.getIdCurso());
             aluno.setCurso(curso);
         }
 
