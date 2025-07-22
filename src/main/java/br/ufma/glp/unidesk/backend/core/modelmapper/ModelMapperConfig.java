@@ -1,11 +1,9 @@
 package br.ufma.glp.unidesk.backend.core.modelmapper;
 
-import br.ufma.glp.unidesk.backend.api.v1.dto.input.AlunoCadastroInput;
-import br.ufma.glp.unidesk.backend.api.v1.dto.input.AlunoEdicaoInput;
-import br.ufma.glp.unidesk.backend.api.v1.dto.input.BaseConhecimentoCadastroInput;
-import br.ufma.glp.unidesk.backend.api.v1.dto.input.BaseConhecimentoEdicaoInput;
+import br.ufma.glp.unidesk.backend.api.v1.dto.input.*;
 import br.ufma.glp.unidesk.backend.domain.model.Aluno;
 import br.ufma.glp.unidesk.backend.domain.model.BaseConhecimento;
+import br.ufma.glp.unidesk.backend.domain.model.Coordenacao;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.config.Configuration.AccessLevel;
@@ -49,6 +47,20 @@ public class ModelMapperConfig {
             @Override
             protected void configure() {
                 skip(destination.getCategoria());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<CoordenacaoCadastroInput, Coordenacao>() {
+            @Override
+            protected void configure() {
+                skip(destination.getCurso());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<CoordenacaoEdicaoInput, Coordenacao>() {
+            @Override
+            protected void configure() {
+                skip(destination.getCurso());
             }
         });
 
