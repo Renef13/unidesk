@@ -175,4 +175,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      * @return Verdadeiro se existirem tickets com a categoria, falso caso contrário.
      */
     boolean existsByCategoria(Categoria categoria);
+
+    /**
+     * Verifica se existem tickets com o aluno informado.
+     *
+     * @param aluno Aluno para verificação.
+     * @return Verdadeiro se existirem tickets com o aluno, falso caso contrário.
+     */
+    boolean existsByAluno(Aluno aluno);
 }

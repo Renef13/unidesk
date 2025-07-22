@@ -1,7 +1,7 @@
 package br.ufma.glp.unidesk.backend.api.v1.assembler;
 
-import br.ufma.glp.unidesk.backend.api.v1.dto.model.StatusModel;
-import br.ufma.glp.unidesk.backend.domain.model.Status;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.AlunoModel;
+import br.ufma.glp.unidesk.backend.domain.model.Aluno;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -11,22 +11,22 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class StatusModelAssembler {
+public class AlunoModelAssembler {
 
     private final ModelMapper modelMapper;
 
-    public StatusModel toModel(Status status) {
-        if (status == null) {
+    public AlunoModel toModel(Aluno aluno) {
+        if (aluno == null) {
             return null;
         }
-        return modelMapper.map(status, StatusModel.class);
+        return modelMapper.map(aluno, AlunoModel.class);
     }
 
-    public List<StatusModel> toCollectionModel(List<Status> statuses) {
-        if (statuses == null) {
+    public List<AlunoModel> toCollectionModel(List<Aluno> alunos) {
+        if (alunos == null) {
             return List.of();
         }
-        return statuses.stream()
+        return alunos.stream()
                 .map(this::toModel)
                 .collect(Collectors.toList());
     }
