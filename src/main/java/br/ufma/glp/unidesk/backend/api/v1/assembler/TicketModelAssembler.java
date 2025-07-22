@@ -1,7 +1,7 @@
 package br.ufma.glp.unidesk.backend.api.v1.assembler;
 
-import br.ufma.glp.unidesk.backend.api.v1.dto.model.StatusModel;
-import br.ufma.glp.unidesk.backend.domain.model.Status;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketModel;
+import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -11,22 +11,21 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class StatusModelAssembler {
-
+public class TicketModelAssembler {
     private final ModelMapper modelMapper;
 
-    public StatusModel toModel(Status status) {
-        if (status == null) {
+    public TicketModel toModel(Ticket ticket) {
+        if (ticket == null) {
             return null;
         }
-        return modelMapper.map(status, StatusModel.class);
+        return modelMapper.map(ticket, TicketModel.class);
     }
 
-    public List<StatusModel> toCollectionModel(List<Status> statuses) {
-        if (statuses == null) {
+    public List<TicketModel> toCollectionModel(List<Ticket> tickets) {
+        if (tickets == null) {
             return List.of();
         }
-        return statuses.stream()
+        return tickets.stream()
                 .map(this::toModel)
                 .collect(Collectors.toList());
     }

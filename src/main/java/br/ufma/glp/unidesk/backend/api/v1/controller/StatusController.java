@@ -54,7 +54,9 @@ public class StatusController {
     @ResponseStatus(HttpStatus.OK)
     public StatusModel atualizar(@RequestBody @Valid StatusEdicaoInput statusInput) {
         return statusModelAssembler.toModel(
-                statusService.atualizar(statusEdicaoInputDisassembler.toDomainObject(statusInput)));
+                statusService
+                        .atualizar(statusEdicaoInputDisassembler
+                                .toDomainObject(statusInput)));
     }
 
     @DeleteMapping("/{id}")
