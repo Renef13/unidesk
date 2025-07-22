@@ -4,6 +4,7 @@ import br.ufma.glp.unidesk.backend.api.v1.dto.input.*;
 import br.ufma.glp.unidesk.backend.domain.model.Aluno;
 import br.ufma.glp.unidesk.backend.domain.model.BaseConhecimento;
 import br.ufma.glp.unidesk.backend.domain.model.Coordenacao;
+import br.ufma.glp.unidesk.backend.domain.model.Mensagem;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.config.Configuration.AccessLevel;
@@ -61,6 +62,22 @@ public class ModelMapperConfig {
             @Override
             protected void configure() {
                 skip(destination.getCurso());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<MensagemCadastroInput, Mensagem>() {
+            @Override
+            protected void configure() {
+                skip(destination.getTicket());
+                skip(destination.getUsuario());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<MensagemEdicaoInput, Mensagem>() {
+            @Override
+            protected void configure() {
+                skip(destination.getTicket());
+                skip(destination.getUsuario());
             }
         });
 
