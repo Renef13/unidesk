@@ -4,6 +4,7 @@ package br.ufma.glp.unidesk.backend.domain.model;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "usuarios")
-public abstract class Usuario implements UserDetails{
+public abstract class Usuario implements UserDetails {
 
     @EqualsAndHashCode.Include
     @Id
@@ -44,13 +45,13 @@ public abstract class Usuario implements UserDetails{
     private String senha;
 
     @Column(name = "role", nullable = false)
-    @NotBlank(message = "A role não pode ser nula ou vazia")
+    @NotNull(message = "O papel do usuário é obrigatório")
     @Enumerated(EnumType.STRING)
     private UsuarioRole role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-         if(this.role == UsuarioRole.ADMIN) {
+        if (this.role == UsuarioRole.ADMIN) {
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         } else {
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
