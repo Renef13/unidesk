@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import br.ufma.glp.unidesk.backend.domain.exception.CursoNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.model.Curso;
+import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.repository.CursoRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -44,14 +45,27 @@ public class CursoService {
     }
 
     @Transactional
-    public void desativarCurso(@Valid @NotNull(message = "O id do curso nao pode ser nulo") Long idCurso) {
-        Curso cursoParaDeletar = cursoRepository.findById(idCurso).orElseThrow(() -> new CursoNaoEncontradoException(idCurso));
+    public void desativarCurso(Usuario usuario, @Valid @NotNull(message = "O id do curso nao pode ser nulo") Long idCurso) {
+        boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
+        if(isAdmin) {
 
-        cursoRepository.delete(cursoParaDeletar);
+            Curso cursoParaDeletar = cursoRepository.findById(idCurso).orElseThrow(() -> new CursoNaoEncontradoException(idCurso));
+            cursoRepository.delete(cursoParaDeletar);
+        }
+
     }
 
     public Curso buscarCursoPorId(@Valid @NotNull(message = "O id do curso nao pode ser nulo") Long idCurso) {
         return cursoRepository.findById(idCurso).orElseThrow(() -> new CursoNaoEncontradoException(idCurso));
+    }
+
+    public List<Curso> buscarCursoPorNome(String nome) {
+        List<Curso> cursosPorNome = cursoRepository.findByNomeContainingIgnoreCase(nome);
+        if(cursosPorNome.isEmpty()) {
+            throw new CursoNaoEncontradoException("Nao encontrado cursos com o nome " + nome);
+        } else {
+            return cursosPorNome;
+        }
     }
 
 

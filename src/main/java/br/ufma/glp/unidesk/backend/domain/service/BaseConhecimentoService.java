@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import br.ufma.glp.unidesk.backend.domain.exception.BaseConhecimentoNaoEncontradaException;
 import br.ufma.glp.unidesk.backend.domain.model.BaseConhecimento;
+import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.repository.BaseConhecimentoRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -55,9 +56,13 @@ public class BaseConhecimentoService {
     }
 
     @Transactional
-    public void deletarFaq(@Valid @NotNull(message = "O id nao deve ser nulo") Long idBase) {
-        BaseConhecimento baseParaDeletar = baseConhecimentoRepository.findById(idBase).orElseThrow(() -> new BaseConhecimentoNaoEncontradaException(idBase));
-        baseConhecimentoRepository.delete(baseParaDeletar);
+    public void deletarFaq(Usuario usuario, @Valid @NotNull(message = "O id nao deve ser nulo") Long idBase) {
+        boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
+
+        if(isAdmin) {
+            BaseConhecimento baseParaDeletar = baseConhecimentoRepository.findById(idBase).orElseThrow(() -> new BaseConhecimentoNaoEncontradaException(idBase));
+            baseConhecimentoRepository.delete(baseParaDeletar);
+        }
     }
 
 
