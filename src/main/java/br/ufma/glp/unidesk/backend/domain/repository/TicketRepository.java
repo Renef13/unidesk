@@ -7,7 +7,12 @@ import br.ufma.glp.unidesk.backend.domain.model.Coordenacao;
 import br.ufma.glp.unidesk.backend.domain.model.FuncionarioCoordenacao;
 import br.ufma.glp.unidesk.backend.domain.model.Prioridade;
 import br.ufma.glp.unidesk.backend.domain.model.Status;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -69,8 +74,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     /**
      * Busca tickets pelo ID do aluno.
+     * @param pageable 
      */
-    List<Ticket> findByAlunoIdUsuario(Long idAluno);
+    Page<Ticket> findByAlunoIdUsuario(Long idAluno, Pageable pageable);
 
     /**
      * Busca tickets por funcionário.
@@ -151,6 +157,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      * Busca tickets por funcionário e status.
      */
     List<Ticket> findByFuncionarioAndStatus(FuncionarioCoordenacao funcionario, Status status);
+
 
     /**
      * Verifica se existem tickets com o status informado.

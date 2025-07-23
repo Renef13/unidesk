@@ -29,6 +29,16 @@ services:
 
     depends_on:
       - db
+  minio:
+    image: bitnami/minio:latest
+    container_name: minio1
+    ports: 
+      - 9000:9000
+      - 9001:9001
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - JAVA_MINIO_URL=${JAVA_MINIO_URL}
 
 volumes:
   db_data:

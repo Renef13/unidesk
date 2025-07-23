@@ -1,5 +1,6 @@
 package br.ufma.glp.unidesk.backend.api.v1.dto.input;
 
+import br.ufma.glp.unidesk.backend.domain.model.UsuarioRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +32,8 @@ public class CoordenadorCadastroInput {
     @NotBlank(message = "A matrícula é obrigatória")
     @Size(max = 20, message = "Matrícula não pode ter mais de 20 caracteres")
     private String matricula;
+
+    private UsuarioRole role;
 
     @NotNull(message = "O ID da coordenação é obrigatório")
     private Long idCoordenacao;

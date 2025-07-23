@@ -1,5 +1,6 @@
 package br.ufma.glp.unidesk.backend.api.v1.dto.input;
 
+import br.ufma.glp.unidesk.backend.domain.model.UsuarioRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -26,4 +27,6 @@ public class UsuarioCadastroInput {
     @NotBlank(message = "A senha é obrigatória")
     @Size(max = 100, message = "A senha não pode ter mais de 100 caracteres")
     private String senha;
+
+    UsuarioRole role;
 }

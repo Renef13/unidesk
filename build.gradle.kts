@@ -38,6 +38,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("io.minio:minio:8.5.17")
 
     configurations["swaggerCodegen"]("org.openapitools:openapi-generator-cli:7.3.0")
     implementation("io.swagger.core.v3:swagger-annotations:2.2.20")

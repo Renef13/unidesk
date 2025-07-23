@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+## MinIO
+
+start-minio.sh
+stop-minio.sh
