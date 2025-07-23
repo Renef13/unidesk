@@ -158,14 +158,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      */
     List<Ticket> findByFuncionarioAndStatus(FuncionarioCoordenacao funcionario, Status status);
 
-    @Query("""
-            SELECT t FROM Ticket t WHERE
-            CAST(t.id AS string) LIKE %:termo% OR
-            LOWER(t.nome) LIKE LOWER(CONCAT('%', :termo, '%')) OR
-            LOWER(t.categoria) LIKE LOWER(CONCAT('%', :termo, '%')) OR
-            LOWER(t.descricao) LIKE LOWER(CONCAT('%', :termo, '%'))
-            """)
-    List<Ticket> findByTermo(@Param("termo") String termo);
 
     /**
      * Verifica se existem tickets com o status informado.

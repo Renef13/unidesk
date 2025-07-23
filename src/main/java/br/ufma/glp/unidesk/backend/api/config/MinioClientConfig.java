@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 
 import io.minio.MinioClient;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class MinioClientConfig {
     @Value("${minio.root.user}")
     private String rootUser;

@@ -21,7 +21,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Service
 public class TicketService {
-    
+
     private TicketRepository ticketRepository;
     private StorageService storageService;
     private StatusRepository statusRepository;
@@ -34,8 +34,8 @@ public class TicketService {
 
     public Page<Ticket> listarTickets(Usuario usuario, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        
-        if(usuario.getRole().equals(UsuarioRole.ADMIN)) {
+
+        if (usuario.getRole().equals(UsuarioRole.ADMIN)) {
 
             return ticketRepository.findAll(pageable);
         } else {
@@ -45,7 +45,7 @@ public class TicketService {
 
     @Transactional
     public Ticket novoTicket(@Valid @NotNull(message = "O Ticket nao pode ser nulo") Ticket ticket, MultipartFile file) throws Exception {
-        if(file != null) {
+        if (file != null) {
             String idFile = storageService.uploadFile(file);
             ticket.setIdFile(idFile);
         }
@@ -70,10 +70,6 @@ public class TicketService {
 
     public Ticket buscarTicketPorId(@Valid @NotNull(message = "O Id do ticket nao pode ser nulo") Long idTicket) {
         return ticketRepository.findById(idTicket).orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
-    }
-
-    public List<Ticket> buscarTicketPorTermo(String termo) {
-        return ticketRepository.findByTermo(termo);
     }
 
     public void filtrarPorCategoria() {
