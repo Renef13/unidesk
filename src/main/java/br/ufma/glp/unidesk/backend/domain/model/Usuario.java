@@ -45,6 +45,7 @@ public abstract class Usuario implements UserDetails{
 
     @Column(name = "role", nullable = false)
     @NotBlank(message = "A role não pode ser nula ou vazia")
+    @Enumerated(EnumType.STRING)
     private UsuarioRole role;
 
     @Override
