@@ -1,5 +1,6 @@
 package br.ufma.glp.unidesk.backend.api.v1.dto.model;
 
+import br.ufma.glp.unidesk.backend.domain.model.UsuarioRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,6 @@ public class AlunoModel {
     private String matricula;
     
     private CursoModel curso;
+
+    private UsuarioRole role;
 }
