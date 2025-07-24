@@ -23,6 +23,12 @@ VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'USER', 'joao.silva
        ('Carlos Pereira', 'carlos.pereira@example.com', 'senha123', 'ADMIN', 'carlos.pereira'),
        ('Mariana Costa', 'mariana.costa@example.com', '$2a$10$bAl2Mf20makrh5HtlugwOuzyp87LjcLXr8vJ0bZ.lf46531kcx8KS', 'ADMIN', 'usuario.admin');
 
+--
+--   "usuario": "usuario.teste",
+--   "senha": "usuarioteste"
+--   "usuario": "usuario.admin",
+--   "senha": "senha123"
+
 
 
 INSERT INTO alunos (id_usuario, matricula, id_curso)
