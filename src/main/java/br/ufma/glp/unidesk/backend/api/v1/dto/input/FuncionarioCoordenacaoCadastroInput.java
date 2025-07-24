@@ -38,8 +38,6 @@ public class FuncionarioCoordenacaoCadastroInput {
     @Size(max = 20, message = "Matrícula não pode ter mais de 20 caracteres")
     private String matricula;
 
-    private UsuarioRole role;
-
     @NotNull(message = "O ID da coordenação é obrigatório")
     private Long idCoordenacao;
 }

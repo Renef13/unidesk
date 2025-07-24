@@ -15,16 +15,16 @@ VALUES ('Coordenação de Engenharia de Software', 1),
 
 
 INSERT INTO usuarios (nome, email, senha, role, usuario)
-VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'USER', 'joao.silva'),
-       ('Maria Souza', 'maria.souza@example.com', 'senha123', 'USER', 'maria.souza'),
+VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'ALUNO', 'joao.silva'),
+       ('Maria Souza', 'maria.souza@example.com', 'senha123', 'ALUNO', 'maria.souza'),
        ('Usuario Teste', 'usuario.teste@discente.ufma.br',
-        '$2a$10$HxeMIrPYXlJ6SaIE01bjQeikShHxgEFlavpqtUvyN6rnR/7LHe0mu', 'USER', 'usuario.teste'),
-       ('Pedro Santos', 'pedro.santos@example.com', 'senha123', 'ADMIN', 'pedro.santos'),
+        '$2a$10$HxeMIrPYXlJ6SaIE01bjQeikShHxgEFlavpqtUvyN6rnR/7LHe0mu', 'ADMIN', 'usuario.teste'),
+       ('Pedro Santos', 'pedro.santos@example.com', 'senha123', 'COORDENADOR', 'pedro.santos'),
        ('Ana Oliveira', 'ana.oliveira@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby',
-        'ADMIN', 'ana.oliveira'),
-       ('Carlos Pereira', 'carlos.pereira@example.com', 'senha123', 'ADMIN', 'carlos.pereira'),
+        'COORDENADOR', 'ana.oliveira'),
+       ('Carlos Pereira', 'carlos.pereira@example.com', 'senha123', 'FUNCIONARIO_COORDENACAO', 'carlos.pereira'),
        ('Mariana Costa', 'mariana.costa@example.com', '$2a$10$bAl2Mf20makrh5HtlugwOuzyp87LjcLXr8vJ0bZ.lf46531kcx8KS',
-        'ADMIN', 'usuario.admin');
+        'FUNCIONARIO_COORDENACAO', 'usuario.admin');
 
 --
 --   "usuario": "usuario.teste",

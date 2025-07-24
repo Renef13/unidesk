@@ -1,16 +1,18 @@
 package br.ufma.glp.unidesk.backend.domain.model;
 
+import lombok.Getter;
+
+@Getter
 public enum UsuarioRole {
     ADMIN("admin"),
-    USER("user");
+    COORDENADOR("coordenador"),
+    FUNCIONARIO_COORDENACAO("funcionario_coordenacao"),
+    ALUNO("aluno");
 
-    private String role;
+    private final String role;
 
     UsuarioRole(String role) {
         this.role = role;
     }
 
-    public String getRole() {
-        return role;
-    }
 }

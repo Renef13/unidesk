@@ -38,8 +38,6 @@ public class AlunoCadastroInput {
     @Size(max = 20, message = "Matrícula não pode ter mais de 20 caracteres")
     private String matricula;
 
-    private UsuarioRole role;
-
     @NotNull(message = "O ID do curso é obrigatório")
     private Long idCurso;
 }
