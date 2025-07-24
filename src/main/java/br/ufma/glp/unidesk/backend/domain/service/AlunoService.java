@@ -57,6 +57,10 @@ public class AlunoService {
         return alunoRepository.findByMatricula(matricula).isPresent();
     }
 
+    protected boolean existePorCuso(Long idCurso) {
+        return cursoRepository.existsById(idCurso);
+    }
+
     private boolean existePorEmail(String email) {
         return alunoRepository.findByEmail(email).isPresent();
     }

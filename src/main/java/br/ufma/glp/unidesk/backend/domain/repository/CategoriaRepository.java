@@ -67,5 +67,8 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
      */
     List<Categoria> findByIdCategoriaInOrderByNomeAsc(List<Long> ids);
 
-
+    /**
+     * Verifica se existe uma categoria com o ID informado.
+     */
+    boolean existsByIdCategoria(Long idCategoria);
 }

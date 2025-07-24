@@ -8,6 +8,7 @@ import br.ufma.glp.unidesk.backend.domain.model.FuncionarioCoordenacao;
 import br.ufma.glp.unidesk.backend.domain.model.Prioridade;
 import br.ufma.glp.unidesk.backend.domain.model.Status;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -74,7 +75,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     /**
      * Busca tickets pelo ID do aluno.
-     * @param pageable 
+     *
+     * @param pageable
      */
     Page<Ticket> findByAlunoIdUsuario(Long idAluno, Pageable pageable);
 
@@ -190,4 +192,13 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      * @return Verdadeiro se existirem tickets com o aluno, falso caso contrário.
      */
     boolean existsByAluno(Aluno aluno);
+
+    /**
+     * Recupera todos os tickets associados a uma categoria cujo nome corresponde ao valor informado, ignorando diferenças entre maiúsculas e minúsculas.
+     *
+     * @param nomeCategoria Nome da categoria a ser buscada (case-insensitive).
+     * @return Lista de tickets pertencentes à categoria especificada.
+     */
+
+    List<Ticket> findByCategoriaNomeIgnoreCase(@NotNull String nomeCategoria);
 }

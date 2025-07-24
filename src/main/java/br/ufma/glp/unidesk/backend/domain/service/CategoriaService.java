@@ -85,5 +85,9 @@ public class CategoriaService {
         }
     }
 
+    protected boolean categoriaExistePorId(Long categoriaId) {
+        return categoriaRepository.existsByIdCategoria(categoriaId);
+    }
+
 
 }
