@@ -22,6 +22,7 @@ public class CoordenadorService {
 
     private final CoordenadorRepository coordenadorRepository;
     private final CoordenacaoService coordenacaoService;
+    private final UsuarioService usuarioService;
 
     public List<Coordenador> listarTodos() {
         return coordenadorRepository.findAll();
@@ -47,6 +48,7 @@ public class CoordenadorService {
 
     @Transactional
     public Coordenador salvar(@Valid @NotNull Coordenador coordenador) {
+        usuarioService.prepararParaSalvar(coordenador);
         if (coordenadorRepository.existsByMatricula(coordenador.getMatricula())) {
             throw new IllegalArgumentException("Já existe um coordenador com essa matrícula");
         }

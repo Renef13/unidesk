@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 public class FuncionarioCoordenacaoModel {
 
     private Long idUsuario;
+
+    private String usuario;
     
     private String nome;
     

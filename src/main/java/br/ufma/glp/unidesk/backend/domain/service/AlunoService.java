@@ -24,6 +24,7 @@ public class AlunoService {
     private final AlunoRepository alunoRepository;
     private final CursoRepository cursoRepository;
     private final TicketRepository ticketRepository;
+    private final UsuarioService usuarioService;
 
     public List<Aluno> listarTodos() {
         return alunoRepository.findAll();
@@ -76,6 +77,7 @@ public class AlunoService {
 
     @Transactional
     public Aluno salvar(@Valid @NotNull(message = "O aluno não pode ser nulo") Aluno aluno) {
+        usuarioService.prepararParaSalvar(aluno);
         validarEmailEmUso(aluno.getEmail());
         validarMatriculaEmUso(aluno.getMatricula());
         validarCurso(aluno);

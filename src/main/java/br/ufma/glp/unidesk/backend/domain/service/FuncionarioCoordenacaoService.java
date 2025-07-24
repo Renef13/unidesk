@@ -22,6 +22,7 @@ public class FuncionarioCoordenacaoService {
 
     private final FuncionarioCoordenacaoRepository funcionarioCoordenacaoRepository;
     private final CoordenacaoService coordenacaoService;
+    private final UsuarioService usuarioService;
 
     public List<FuncionarioCoordenacao> listarTodos() {
         return funcionarioCoordenacaoRepository.findAll();
@@ -52,6 +53,7 @@ public class FuncionarioCoordenacaoService {
     @Transactional
     public FuncionarioCoordenacao salvar(@Valid @NotNull FuncionarioCoordenacao funcionario) {
         validarCoordenacao(funcionario);
+        usuarioService.prepararParaSalvar(funcionario);
         if (funcionarioCoordenacaoRepository.existsByMatricula(funcionario.getMatricula())) {
             throw new IllegalArgumentException("Já existe um funcionário com essa matrícula");
         }

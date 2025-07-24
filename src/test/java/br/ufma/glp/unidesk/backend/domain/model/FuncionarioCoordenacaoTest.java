@@ -9,9 +9,6 @@ import jakarta.validation.ValidatorFactory;
 import jakarta.validation.ConstraintViolation;
 import java.util.Set;
 
-import br.ufma.glp.unidesk.backend.domain.model.Coordenacao;
-import br.ufma.glp.unidesk.backend.domain.model.Curso;
-
 public class FuncionarioCoordenacaoTest {
 
     private static Validator validator;
@@ -24,7 +21,7 @@ public class FuncionarioCoordenacaoTest {
 
     static class DummyFuncionario extends FuncionarioCoordenacao {
         DummyFuncionario(Long idUsuario, String nome, String email, String senha,
-                        String matricula, Coordenacao coord,UsuarioRole role) {
+                        String matricula, Coordenacao coord,UsuarioRole role, String usuario) {
             super();
             setIdUsuario(idUsuario);
             setNome(nome);
@@ -33,6 +30,7 @@ public class FuncionarioCoordenacaoTest {
             setMatricula(matricula);
             setCoordenacao(coord);
             setRole(role);
+            setUsuario(usuario);
 
         }
     }
@@ -41,9 +39,9 @@ public class FuncionarioCoordenacaoTest {
     void equalsEHashCode_mesmoIdMatriculaCoordenacao_igualdade() {
         Coordenacao coord1 = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
         DummyFuncionario f1 = new DummyFuncionario(1L, "Nome1", "e1@discente.ufma.br", "pass1",
-                                                   "MATR1", coord1, UsuarioRole.ADMIN);
+                                                   "MATR1", coord1, UsuarioRole.ADMIN, "usuario1");
         DummyFuncionario f2 = new DummyFuncionario(1L, "Nome2", "e2@discente.ufma.br", "pass2",
-                                                   "MATR1", coord1, UsuarioRole.ADMIN);
+                                                   "MATR1", coord1, UsuarioRole.ADMIN, "usuario2");
         assertEquals(f1, f2);
         assertEquals(f1.hashCode(), f2.hashCode());
     }
@@ -52,9 +50,9 @@ public class FuncionarioCoordenacaoTest {
     void equals_idsDiferentes_naoIguais() {
         Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
         DummyFuncionario f1 = new DummyFuncionario(1L, "Nome", "e@discente.ufma.br", "pass",
-                                                   "MATR", coord, UsuarioRole.ADMIN);
+                                                   "MATR", coord, UsuarioRole.ADMIN, "usuario1");
         DummyFuncionario f2 = new DummyFuncionario(2L, "Nome", "e@discente.ufma.br", "pass",
-                                                   "MATR", coord, UsuarioRole.ADMIN);
+                                                   "MATR", coord, UsuarioRole.ADMIN, "usuario2");
         assertNotEquals(f1, f2);
     }
 
@@ -62,7 +60,7 @@ public class FuncionarioCoordenacaoTest {
     void funcionarioValido_semViolacoes() {
         Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
         DummyFuncionario f = new DummyFuncionario(1L, "Nome", "teste@discente.ufma.br", "senha",
-                                                  "MATR", coord, UsuarioRole.ADMIN);
+                                                  "MATR", coord, UsuarioRole.ADMIN, "usuario");
         Set<ConstraintViolation<FuncionarioCoordenacao>> violations = validator.validate(f);
         assertTrue(violations.isEmpty());
     }
@@ -71,7 +69,7 @@ public class FuncionarioCoordenacaoTest {
     void matriculaEmBranco_violaNotBlank() {
         Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
         DummyFuncionario f = new DummyFuncionario(1L, "Nome", "teste@discente.ufma.br", "senha",
-                                                  "   ", coord, UsuarioRole.ADMIN);
+                                                  "   ", coord, UsuarioRole.ADMIN, "usuario");
         Set<ConstraintViolation<FuncionarioCoordenacao>> violations = validator.validate(f);
         assertFalse(violations.isEmpty());
         assertTrue(violations.stream().anyMatch(v -> "matricula".equals(v.getPropertyPath().toString())));
@@ -82,7 +80,7 @@ public class FuncionarioCoordenacaoTest {
         String longo = "a".repeat(21);
         Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
         DummyFuncionario f = new DummyFuncionario(1L, "Nome", "teste@discente.ufma.br", "senha",
-                                                  longo, coord, UsuarioRole.ADMIN);
+                                                  longo, coord, UsuarioRole.ADMIN, "usuario");
         Set<ConstraintViolation<FuncionarioCoordenacao>> violations = validator.validate(f);
         assertFalse(violations.isEmpty());
         assertTrue(violations.stream().anyMatch(v -> "matricula".equals(v.getPropertyPath().toString())));
@@ -91,7 +89,7 @@ public class FuncionarioCoordenacaoTest {
     @Test
     void coordenacaoNula_violaNotNull() {
         DummyFuncionario f = new DummyFuncionario(1L, "Nome", "teste@discente.ufma.br", "senha",
-                                                  "MATR", null, UsuarioRole.ADMIN);
+                                                  "MATR", null, UsuarioRole.ADMIN, "usuario");
         Set<ConstraintViolation<FuncionarioCoordenacao>> violations = validator.validate(f);
         assertFalse(violations.isEmpty());
         assertTrue(violations.stream().anyMatch(v -> "coordenacao".equals(v.getPropertyPath().toString())));

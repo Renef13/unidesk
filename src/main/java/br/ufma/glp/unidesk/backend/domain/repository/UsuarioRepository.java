@@ -19,6 +19,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByIdUsuario(Long idUsuario);
 
     /**
+     * Busca um usuário pelo seu nome de usuário exato.
+     *
+     * @param usuario Nome de usuário.
+     * @return Usuário com o nome de usuário informado.
+     */
+    Optional<Usuario> findByUsuario(String usuario);
+
+    /**
      * Busca um usuário pelo seu email exato.
      *
      * @param email Email do usuário.
