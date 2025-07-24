@@ -84,4 +84,8 @@ public class CoordenacaoService {
                 .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado para o id: " + coordenacao.getCurso().getIdCurso()));
         coordenacao.setCurso(curso);
     }
+
+    public boolean existePorCurso(Long idCurso) {
+        return cursoRepository.existsById(idCurso);
+    }
 }
