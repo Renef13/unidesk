@@ -24,7 +24,7 @@ public class AlunoService {
     private final AlunoRepository alunoRepository;
     private final CursoRepository cursoRepository;
     private final TicketRepository ticketRepository;
-    UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
 
     public List<Aluno> listarTodos() {
         return alunoRepository.findAll();
