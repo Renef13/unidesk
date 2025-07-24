@@ -27,36 +27,36 @@ class UsuarioTest {
     }
 
     static class DummyUsuario extends Usuario {
-        DummyUsuario(Long idUsuario, String nome, String email, String senha) {
-            super(idUsuario, nome, email, senha, UsuarioRole.USER);
+        DummyUsuario(Long idUsuario, String nome, String email, String senha,String usuario) {
+            super(idUsuario, nome,usuario, email, senha, UsuarioRole.USER);
         }
     }
 
     @Test
     void equalsEHashCode_mesmoId_deveSerIguais() {
-        DummyUsuario u1 = new DummyUsuario(1L, "teste", "teste@discente.ufma.br", "pass1");
-        DummyUsuario u2 = new DummyUsuario(1L, "teste2",   "teste2@discente.ufma.br",   "pass2");
+        DummyUsuario u1 = new DummyUsuario(1L, "teste", "teste@discente.ufma.br", "pass1", "teste1");
+        DummyUsuario u2 = new DummyUsuario(1L, "teste2",   "teste2@discente.ufma.br",   "pass2,","teste2");
         assertEquals(u1, u2);
         assertEquals(u1.hashCode(), u2.hashCode());
     }
 
     @Test
     void equalsEHashCode_idsDiferentes_naoDevemSerIguais() {
-        DummyUsuario u1 = new DummyUsuario(1L, "teste", "teste@discente.ufma.br", "pass1");
-        DummyUsuario u2 = new DummyUsuario(2L, "teste", "teste@discente.ufma.br", "pass1");
+        DummyUsuario u1 = new DummyUsuario(1L, "teste", "teste@discente.ufma.br", "pass1", "teste1");
+        DummyUsuario u2 = new DummyUsuario(2L, "teste", "teste@discente.ufma.br", "pass1","teste2");
         assertNotEquals(u1, u2);
     }
 
     @Test
     void usuarioValido_semViolacoes() {
-        DummyUsuario user = new DummyUsuario(1L, "teste3", "teste3@discente.ufma.br", "senha123");
+        DummyUsuario user = new DummyUsuario(1L, "teste3", "teste3@discente.ufma.br", "senha123", "teste3");
         Set<ConstraintViolation<Usuario>> violacoes = validator.validate(user);
         assertTrue(violacoes.isEmpty());
     }
 
     @Test
     void nomeEmBranco_deveGerarViolacaoNotBlank() {
-        DummyUsuario user = new DummyUsuario(1L, "   ", "teste3@discente.ufma.br", "senha123");
+        DummyUsuario user = new DummyUsuario(1L, "   ", "teste3@discente.ufma.br", "senha123","teste3");
         Set<ConstraintViolation<Usuario>> violacoes = validator.validate(user);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream()
@@ -65,7 +65,7 @@ class UsuarioTest {
 
     @Test
     void nomeNulo_deveGerarViolacaoNotBlank() {
-        DummyUsuario user = new DummyUsuario(1L, null, "teste3@discente.ufma.br", "senha123");
+        DummyUsuario user = new DummyUsuario(1L, null, "teste3@discente.ufma.br", "senha123","teste3");
         Set<ConstraintViolation<Usuario>> violacoes = validator.validate(user);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream()
@@ -74,7 +74,7 @@ class UsuarioTest {
 
     @Test
     void emailInvalido_deveGerarViolacaoEmail() {
-        DummyUsuario user = new DummyUsuario(1L, "teste3", "email-invalido", "senha123");
+        DummyUsuario user = new DummyUsuario(1L, "teste3", "email-invalido", "senha123","teste3");
         Set<ConstraintViolation<Usuario>> violacoes = validator.validate(user);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream()
@@ -83,7 +83,7 @@ class UsuarioTest {
 
     @Test
     void emailNulo_deveGerarViolacaoNotBlank() {
-        DummyUsuario user = new DummyUsuario(1L, "teste3", null, "senha123");
+        DummyUsuario user = new DummyUsuario(1L, "teste3", null, "senha123","teste3");
         Set<ConstraintViolation<Usuario>> violacoes = validator.validate(user);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream()
@@ -92,7 +92,7 @@ class UsuarioTest {
 
     @Test
     void senhaEmBranco_deveGerarViolacaoNotBlank() {
-        DummyUsuario user = new DummyUsuario(1L, "teste3", "teste3@discente.ufma.br", "");
+        DummyUsuario user = new DummyUsuario(1L, "teste3", "teste3@discente.ufma.br", "","teste3");
         Set<ConstraintViolation<Usuario>> violacoes = validator.validate(user);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream()
@@ -101,7 +101,7 @@ class UsuarioTest {
 
     @Test
     void senhaNula_deveGerarViolacaoNotBlank() {
-        DummyUsuario user = new DummyUsuario(1L, "teste3", "teste3@discente.ufma.br", null);
+        DummyUsuario user = new DummyUsuario(1L, "teste3", "teste3@discente.ufma.br", null,"teste3");
         Set<ConstraintViolation<Usuario>> violacoes = validator.validate(user);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream()
