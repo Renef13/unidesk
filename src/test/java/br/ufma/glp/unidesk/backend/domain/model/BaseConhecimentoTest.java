@@ -57,7 +57,7 @@ class BaseConhecimentoTest {
 
     @Test
     void validacao_semViolacoes() {
-        DummyArtigo art = new DummyArtigo(1L, "Titulo", "Conteudo", null);
+        DummyArtigo art = new DummyArtigo(1L, "Titulo", "Conteudo", new Categoria(1L, "Cat", "Camp") );
         Set<ConstraintViolation<BaseConhecimento>> violacoes = validator.validate(art);
         assertTrue(violacoes.isEmpty());
     }
