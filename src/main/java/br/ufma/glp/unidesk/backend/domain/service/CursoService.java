@@ -15,10 +15,10 @@ import jakarta.validation.constraints.NotNull;
 
 @Service
 public class CursoService {
-    
-    private CursoRepository cursoRepository;
 
-    CursoService(CursoRepository cursoRepository) {
+    private final CursoRepository cursoRepository;
+
+    public CursoService(CursoRepository cursoRepository) {
         this.cursoRepository = cursoRepository;
     }
 
@@ -27,46 +27,51 @@ public class CursoService {
     }
 
     @Transactional
-    public Curso criarCurso(@Valid @NotBlank(message = "Os dados do curso nao devem estar vazios") Curso curso) {
-        Curso novoCurso = cursoRepository.save(curso);
-        return novoCurso;
+    public Curso criarCurso(@Valid @NotBlank(message = "Os dados do curso não devem estar vazios") Curso curso) {
+        return cursoRepository.save(curso);
     }
 
     @Transactional
-    public Curso alterarCurso(@Valid @NotNull(message = "O id do curso nao pode ser nulo") Long idCurso, Curso curso) {
-        Curso cursoAlterado = cursoRepository.findById(idCurso).orElseThrow(() -> new CursoNaoEncontradoException(idCurso));
-        if(curso.getCampus() != null) {
-            cursoAlterado.setCampus(curso.getCampus());
-        }
-        if(curso.getNome() != null) {
-            cursoAlterado.setNome(curso.getNome());
-        }
-        return cursoAlterado;
+    public Curso alterarCurso(@Valid @NotNull(message = "O id do curso não pode ser nulo") Long idCurso, Curso curso) {
+        Curso cursoExistente = buscarCursoPorId(idCurso);
+        atualizarDadosCurso(cursoExistente, curso);
+        return cursoRepository.save(cursoExistente);
     }
 
     @Transactional
-    public void desativarCurso(Usuario usuario, @Valid @NotNull(message = "O id do curso nao pode ser nulo") Long idCurso) {
-        boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
-        if(isAdmin) {
-
-            Curso cursoParaDeletar = cursoRepository.findById(idCurso).orElseThrow(() -> new CursoNaoEncontradoException(idCurso));
-            cursoRepository.delete(cursoParaDeletar);
-        }
-
+    public void desativarCurso(Usuario usuario, @Valid @NotNull(message = "O id do curso não pode ser nulo") Long idCurso) {
+        validarPermissaoAdmin(usuario);
+        Curso cursoParaDeletar = buscarCursoPorId(idCurso);
+        cursoRepository.delete(cursoParaDeletar);
     }
 
-    public Curso buscarCursoPorId(@Valid @NotNull(message = "O id do curso nao pode ser nulo") Long idCurso) {
-        return cursoRepository.findById(idCurso).orElseThrow(() -> new CursoNaoEncontradoException(idCurso));
+    public Curso buscarCursoPorId(@Valid @NotNull(message = "O id do curso não pode ser nulo") Long idCurso) {
+        return cursoRepository.findById(idCurso)
+                .orElseThrow(() -> new CursoNaoEncontradoException(idCurso));
     }
 
     public List<Curso> buscarCursoPorNome(String nome) {
-        List<Curso> cursosPorNome = cursoRepository.findByNomeContainingIgnoreCase(nome);
-        if(cursosPorNome.isEmpty()) {
-            throw new CursoNaoEncontradoException("Nao encontrado cursos com o nome " + nome);
-        } else {
-            return cursosPorNome;
+        List<Curso> cursos = cursoRepository.findByNomeContainingIgnoreCase(nome);
+        if (cursos.isEmpty()) {
+            throw new CursoNaoEncontradoException("Não encontrado cursos com o nome " + nome);
+        }
+        return cursos;
+    }
+
+    private void atualizarDadosCurso(Curso cursoExistente, Curso novosDados) {
+        if (novosDados.getCampus() != null) {
+            cursoExistente.setCampus(novosDados.getCampus());
+        }
+        if (novosDados.getNome() != null) {
+            cursoExistente.setNome(novosDados.getNome());
         }
     }
 
-
+    private void validarPermissaoAdmin(Usuario usuario) {
+        boolean isAdmin = usuario.getAuthorities().stream()
+                .anyMatch(role -> role.getAuthority().contains("ADMIN"));
+        if (!isAdmin) {
+            throw new SecurityException("Usuário não possui permissão para desativar cursos.");
+        }
+    }
 }
