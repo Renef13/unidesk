@@ -27,12 +27,12 @@ VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'ALUNO', 'joao.silv
         'FUNCIONARIO_COORDENACAO', 'usuario.admin');
 
 --
---   "usuario": "usuario.teste",
+--   "usuario": "usuario.teste",  ADMIN
 --   "senha": "usuarioteste"
---   "usuario": "usuario.admin",
+--   "usuario": "usuario.admin", FUNCIONARIO_COORDENACAO
 --   "senha": "senha123"
 --   "usuario": "ana.oliveira",
---   "senha": "senha123"
+--   "senha": "senha123"    COORDENADOR
 
 
 INSERT INTO alunos (id_usuario, matricula, id_curso)
