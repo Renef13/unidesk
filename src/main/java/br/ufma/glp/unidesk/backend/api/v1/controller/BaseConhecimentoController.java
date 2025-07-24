@@ -48,7 +48,7 @@ public class BaseConhecimentoController {
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public BaseConhecimentoModel cadastrarFaq(@RequestBody @Valid BaseConhecimentoCadastroInput baseConhecimentoCadastroInput) {
+    public BaseConhecimentoModel criarFaq(@RequestBody @Valid BaseConhecimentoCadastroInput baseConhecimentoCadastroInput) {
         return baseConhecimentoModelAssembler.toModel(
                 baseConhecimentoService.criarFaq(baseConhecimentoCadastroInputDisassembler.toDomainObject(baseConhecimentoCadastroInput))
         );

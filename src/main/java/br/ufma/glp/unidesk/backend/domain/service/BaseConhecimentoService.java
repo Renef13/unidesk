@@ -18,9 +18,11 @@ import lombok.RequiredArgsConstructor;
 public class BaseConhecimentoService {
 
     private final BaseConhecimentoRepository baseConhecimentoRepository;
+    private final CategoriaService categoriaService;
 
     @Transactional
     public BaseConhecimento criarFaq(@Valid @NotNull BaseConhecimento base) {
+        validaAtributos(base);
         return baseConhecimentoRepository.save(base);
     }
 
@@ -64,6 +66,22 @@ public class BaseConhecimentoService {
         if (isAdmin) {
             BaseConhecimento baseParaDeletar = baseConhecimentoRepository.findById(idBase).orElseThrow(() -> new BaseConhecimentoNaoEncontradaException(idBase));
             baseConhecimentoRepository.delete(baseParaDeletar);
+        }
+    }
+
+    @Transactional
+    public void validaAtributos(@NotNull(message = "A Base de conhecimento não pode ser nula") BaseConhecimento baseConhecimento) {
+        if (baseConhecimento.getTitulo() == null || baseConhecimento.getTitulo().isEmpty()) {
+            throw new IllegalArgumentException("O título da base de conhecimento não pode ser nulo ou vazio.");
+        }
+        if (baseConhecimento.getConteudo() == null || baseConhecimento.getConteudo().isEmpty()) {
+            throw new IllegalArgumentException("O conteúdo da base de conhecimento não pode ser nulo ou vazio.");
+        }
+        if (baseConhecimento.getCategoria() == null) {
+            throw new IllegalArgumentException("A categoria da base de conhecimento não pode ser nula.");
+        }
+        if (categoriaService.categoriaExistePorId(baseConhecimento.getCategoria().getIdCategoria())) {
+            throw new IllegalArgumentException("A categoria informada não existe.");
         }
     }
 }
