@@ -30,7 +30,7 @@ VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'USER', 'joao.silva
 INSERT INTO alunos (id_usuario, matricula, id_curso)
 VALUES (1, '20230001', 1),
        (2, '20230002', 2),
-       (3,'9999999999',2);
+       (3,'99999999',2);
 
 
 
