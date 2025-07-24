@@ -28,7 +28,7 @@ class UsuarioTest {
 
     static class DummyUsuario extends Usuario {
         DummyUsuario(Long idUsuario, String nome, String email, String senha,String usuario) {
-            super(idUsuario, nome,usuario, email, senha, UsuarioRole.USER);
+            super(idUsuario, nome,usuario, email, senha, UsuarioRole.ADMIN);
         }
     }
 

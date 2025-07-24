@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @PrimaryKeyJoinColumn(name = "id_usuario")
 public class FuncionarioCoordenacao extends Usuario {
 
-    @Column(name = "matricula" ,nullable = false, unique = true)
+    @Column(name = "matricula", nullable = false, unique = true)
     @NotBlank(message = "Matrícula não pode ser vazia ou conter apenas espaços em branco")
     @Size(max = 20, message = "Matrícula não pode ter mais de 20 caracteres")
     private String matricula;
@@ -33,4 +33,8 @@ public class FuncionarioCoordenacao extends Usuario {
     @JoinColumn(name = "id_coordenacao", nullable = false)
     @NotNull(message = "Coordenacao não pode ser nula")
     private Coordenacao coordenacao;
+
+    {
+        this.setRole(UsuarioRole.FUNCIONARIO_COORDENACAO);
+    }
 }

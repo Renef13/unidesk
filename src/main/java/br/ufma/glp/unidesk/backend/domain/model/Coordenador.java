@@ -27,7 +27,7 @@ public class Coordenador extends Usuario {
     @Column(nullable = false)
     private Boolean ativo;
 
-    @Column(name = "matricula",nullable = false, unique = true)
+    @Column(name = "matricula", nullable = false, unique = true)
     @NotBlank(message = "Matrícula não pode ser vazia ou conter apenas espaços em branco")
     @Size(max = 20, message = "Matrícula não pode ter mais de 20 caracteres")
     private String matricula;
@@ -36,4 +36,8 @@ public class Coordenador extends Usuario {
     @NotNull(message = "Coordenacao não pode ser nula")
     @JoinColumn(name = "id_coordenacao", nullable = false)
     private Coordenacao coordenacao;
+
+    {
+        this.setRole(UsuarioRole.ALUNO);
+    }
 }

@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @Table(name = "alunos")
-public class Aluno extends Usuario{
+public class Aluno extends Usuario {
 
     @Column(name = "matricula", unique = true)
     @Size(max = 20, message = "Matrícula não pode ter mais de 20 caracteres")
@@ -30,5 +30,10 @@ public class Aluno extends Usuario{
     @NotNull(message = "Curso não pode ser nulo")
     @JoinColumn(name = "id_curso")
     private Curso curso;
+
+    {
+        this.setRole(UsuarioRole.ALUNO);
+    }
+
 
 }
