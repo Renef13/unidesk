@@ -38,5 +38,5 @@ out/
 
 ## MinIO
 
-start-minio.sh
-stop-minio.sh
+start-dbs.sh
+stop-dbs.sh
