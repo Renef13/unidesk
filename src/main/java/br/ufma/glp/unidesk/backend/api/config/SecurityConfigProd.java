@@ -9,22 +9,21 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @Profile("prod")
 public class SecurityConfigProd {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtUtil jwtUtil) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET,"/v1/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/v1/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/v1/auth/login").permitAll()
-                        .requestMatchers("/swagger-ui.html", "/api-docs/**","/swagger-ui/**","/v3/api-docs/**").permitAll()
-                        .anyRequest().permitAll()
-                );
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
