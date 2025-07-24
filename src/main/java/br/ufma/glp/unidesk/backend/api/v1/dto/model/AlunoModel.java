@@ -12,6 +12,8 @@ public class AlunoModel {
 
     private Long idUsuario;
 
+    private String usuario;
+
     private String nome;
     
     private String email;
