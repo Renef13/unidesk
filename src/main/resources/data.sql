@@ -22,13 +22,15 @@ VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'USER', 'joao.silva
        ('Carlos Pereira', 'carlos.pereira@example.com', 'senha123', 'ADMIN', 'carlos.pereira'),
        ('Mariana Costa', 'mariana.costa@example.com', 'senha123', 'ADMIN', 'mariana.costa'),
        ('Fernando Lima', 'fernando.lima@example.com', 'senha123', 'USER', 'fernando.lima'),
-       ('Patrícia Almeida', 'patricia.almeida@example.com', 'senha123', 'USER', 'patricia.almeida');
+       ('Patrícia Almeida', 'patricia.almeida@example.com', 'senha123', 'USER', 'patricia.almeida'),
+       ('Usuario Teste Costa da Silva', 'usuario.teste@discente.ufma.br', '$2a$10$HxeMIrPYXlJ6SaIE01bjQeikShHxgEFlavpqtUvyN6rnR/7LHe0mu', 'USER', 'usuario.teste');
 
 
 
 INSERT INTO alunos (id_usuario, matricula, id_curso)
 VALUES (1, '20230001', 1),
-       (2, '20230002', 2);
+       (2, '20230002', 2),
+       (9,'9999999999',2);
 
 
 
