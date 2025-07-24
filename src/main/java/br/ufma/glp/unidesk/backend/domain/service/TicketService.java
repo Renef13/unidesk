@@ -1,5 +1,6 @@
 package br.ufma.glp.unidesk.backend.domain.service;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -8,11 +9,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.ufma.glp.unidesk.backend.domain.exception.StatusNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.TicketNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.model.Status;
 import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
-import br.ufma.glp.unidesk.backend.domain.model.UsuarioRole;
 import br.ufma.glp.unidesk.backend.domain.repository.StatusRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.TicketRepository;
 import jakarta.transaction.Transactional;
@@ -34,8 +35,8 @@ public class TicketService {
 
     public Page<Ticket> listarTickets(Usuario usuario, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
-        if (usuario.getRole().equals(UsuarioRole.ADMIN)) {
+        boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
+        if (isAdmin) {
 
             return ticketRepository.findAll(pageable);
         } else {
@@ -75,6 +76,25 @@ public class TicketService {
     public void filtrarPorCategoria() {
 
     }
+
+    public List<Ticket> buscarTicketsPorStatusEspecifico(Usuario usuario, Status status) {
+        boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
+        Status statusTipo = statusRepository.findByIdStatus(status.getIdStatus()).orElseThrow(() -> new StatusNaoEncontradoException("Status com tipo " + status.getNome() + " nao encontrado"));
+        if(isAdmin) {
+            return ticketRepository.findByStatus(statusTipo).stream().toList();
+        } 
+        return null;
+    }
+
+    public List<Ticket> buscarTicketsPorPeriodo(Instant dataInicio, Instant dataFim) {
+        List<Ticket> ticketsNoPeriodo = ticketRepository.findByDataCriacaoBetween(dataInicio, dataFim);
+        if(ticketsNoPeriodo.isEmpty()) {
+            throw new TicketNaoEncontradoException("Nao encontrado tickets no periodo selecionado");
+        }
+
+        return ticketsNoPeriodo;
+    }
+
 
 
 }
