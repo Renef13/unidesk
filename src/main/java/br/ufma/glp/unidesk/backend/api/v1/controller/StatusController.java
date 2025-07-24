@@ -10,7 +10,6 @@ import br.ufma.glp.unidesk.backend.domain.service.StatusService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v1/status")
-@PreAuthorize("hasRole('ROLE_FUNCIONARIO_COORDENACAO')")
 public class StatusController {
 
     private final StatusService statusService;
