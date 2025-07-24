@@ -14,15 +14,15 @@ VALUES ('Coordenação de Engenharia de Software', 1),
 
 
 
-INSERT INTO usuarios (nome, email, senha, role)
-VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'USER'),
-       ('Maria Souza', 'maria.souza@example.com', 'senha123', 'USER'),
-       ('Pedro Santos', 'pedro.santos@example.com', 'senha123', 'ADMIN'),
-       ('Ana Oliveira', 'ana.oliveira@example.com', 'senha123', 'ADMIN'),
-       ('Carlos Pereira', 'carlos.pereira@example.com', 'senha123', 'ADMIN'),
-       ('Mariana Costa', 'mariana.costa@example.com', 'senha123', 'ADMIN'),
-       ('Fernando Lima', 'fernando.lima@example.com', 'senha123', 'USER'),
-       ('Patrícia Almeida', 'patricia.almeida@example.com', 'senha123', 'USER');
+INSERT INTO usuarios (nome, email, senha, role, usuario)
+VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'USER', 'joao.silva'),
+       ('Maria Souza', 'maria.souza@example.com', 'senha123', 'USER', 'maria.souza'),
+       ('Pedro Santos', 'pedro.santos@example.com', 'senha123', 'ADMIN', 'pedro.santos'),
+       ('Ana Oliveira', 'ana.oliveira@example.com', 'senha123', 'ADMIN', 'ana.oliveira'),
+       ('Carlos Pereira', 'carlos.pereira@example.com', 'senha123', 'ADMIN', 'carlos.pereira'),
+       ('Mariana Costa', 'mariana.costa@example.com', 'senha123', 'ADMIN', 'mariana.costa'),
+       ('Fernando Lima', 'fernando.lima@example.com', 'senha123', 'USER', 'fernando.lima'),
+       ('Patrícia Almeida', 'patricia.almeida@example.com', 'senha123', 'USER', 'patricia.almeida');
 
 
 

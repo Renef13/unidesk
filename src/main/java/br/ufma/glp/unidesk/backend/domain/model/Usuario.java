@@ -35,6 +35,10 @@ public abstract class Usuario implements UserDetails {
     @NotBlank(message = "O nome do usuário não pode ser nulo ou vazio")
     private String nome;
 
+    @NotBlank(message = "O nome de usuário não pode ser nula ou vazia, e deve ser único")
+    @Column(nullable = false, unique = true)
+    private String usuario;
+
     @Column(name = "email", unique = true, nullable = false, length = 100)
     @NotBlank(message = "O email do usuário não pode ser nulo ou vazio")
     @Email(message = "O email deve ser válido")
