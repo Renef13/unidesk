@@ -50,10 +50,14 @@ public class TicketService {
     }
 
     @Transactional
-    public String alterarStatusTicket(@Valid @NotNull Ticket ticket, @Valid @NotNull Status status) {
+    public Ticket alterarStatusTicket(@Valid @NotNull Long idTicket, @Valid @NotNull Long idStatus) {
+        Ticket ticket = ticketRepository.findById(idTicket)
+                .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
+        Status status = statusRepository.findById(idStatus)
+                .orElseThrow(() -> new StatusNaoEncontradoException("Status não encontrado para o id: " + idStatus));
         ticket.setStatus(status);
         ticketRepository.save(ticket);
-        return "Novo status do ticket: " + status.getNome();
+        return ticket;
     }
 
     @Transactional
@@ -93,10 +97,11 @@ public class TicketService {
         return tickets;
     }
 
-    public List<Ticket> buscarTicketsPorStatusEspecifico(@Valid @NotNull Usuario usuario, @Valid @NotNull Status status) {
+    public List<Ticket> buscarTicketsPorStatusEspecifico(@Valid @NotNull Usuario usuario, @Valid @NotNull Long idStatus) {
+
         boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
-        Status statusTipo = statusRepository.findByIdStatus(status.getIdStatus())
-                .orElseThrow(() -> new StatusNaoEncontradoException("Status com tipo " + status.getNome() + " nao encontrado"));
+        Status statusTipo = statusRepository.findByIdStatus(idStatus)
+                .orElseThrow(() -> new StatusNaoEncontradoException("Status com id " + idStatus + " nao encontrado"));
         if (isAdmin) {
             return ticketRepository.findByStatus(statusTipo);
         }
