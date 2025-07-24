@@ -24,7 +24,6 @@ public class BaseConhecimentoController {
     private final BaseConhecimentoModelAssembler baseConhecimentoModelAssembler;
     private final BaseConhecimentoCadastroInputDisassembler baseConhecimentoCadastroInputDisassembler;
     private final BaseConhecimentoEdicaoInputDisassembler baseConhecimentoEdicaoInputDisassembler;
-    private final FuncionarioCoordenacaoService funcionarioCoordenacaoService;
 
 
     @GetMapping("/")
