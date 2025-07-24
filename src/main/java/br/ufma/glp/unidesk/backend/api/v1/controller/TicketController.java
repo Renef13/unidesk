@@ -63,29 +63,25 @@ public class TicketController {
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public TicketModel adicionar(@RequestBody @Valid TicketCadastroInput ticketInput, @RequestParam(required = false) MultipartFile file) throws Exception {
-        Ticket ticket = ticketCadastroInputDisassembler.toDomainObject(ticketInput);
-        return ticketModelAssembler.toModel(ticketService.novoTicket(ticket, file));
+        return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(ticketInput), file));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel atualizar(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
-        Ticket ticketAtualizado = ticketEdicaoInputDisassembler.toDomainObject(ticketEdicaoInput);
-        return ticketModelAssembler.toModel(ticketService.atualizarTicket(id, ticketAtualizado));
+        return ticketModelAssembler.toModel(ticketService.atualizarTicket(id, ticketEdicaoInputDisassembler.toDomainObject(ticketEdicaoInput)));
     }
 
     @PatchMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel alterarStatus(@PathVariable Long id, @RequestParam Long idStatus) {
-        Ticket ticket = ticketService.alterarStatusTicket(id, idStatus);
-        return ticketModelAssembler.toModel(ticket);
+        return ticketModelAssembler.toModel(ticketService.alterarStatusTicket(id, idStatus));
     }
 
     @PatchMapping("/{id}/fechar")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel fecharTicket(@PathVariable Long id, @RequestParam Long idStatus) {
-        Ticket ticket = ticketService.buscarTicketPorId(id);
-        return ticketModelAssembler.toModel(ticketService.fecharTicket(ticket, idStatus));
+        return ticketModelAssembler.toModel(ticketService.fecharTicket(ticketService.buscarTicketPorId(id), idStatus));
     }
 
 
