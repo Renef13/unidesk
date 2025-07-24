@@ -17,13 +17,11 @@ VALUES ('Coordenação de Engenharia de Software', 1),
 INSERT INTO usuarios (nome, email, senha, role, usuario)
 VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'USER', 'joao.silva'),
        ('Maria Souza', 'maria.souza@example.com', 'senha123', 'USER', 'maria.souza'),
-       ('Usuario Teste Costa da Silva', 'usuario.teste@discente.ufma.br', '$2a$10$HxeMIrPYXlJ6SaIE01bjQeikShHxgEFlavpqtUvyN6rnR/7LHe0mu', 'USER', 'usuario.teste'),
+       ('Usuario Teste', 'usuario.teste@discente.ufma.br', '$2a$10$HxeMIrPYXlJ6SaIE01bjQeikShHxgEFlavpqtUvyN6rnR/7LHe0mu', 'USER', 'usuario.teste'),
        ('Pedro Santos', 'pedro.santos@example.com', 'senha123', 'ADMIN', 'pedro.santos'),
        ('Ana Oliveira', 'ana.oliveira@example.com', 'senha123', 'ADMIN', 'ana.oliveira'),
        ('Carlos Pereira', 'carlos.pereira@example.com', 'senha123', 'ADMIN', 'carlos.pereira'),
-       ('Mariana Costa', 'mariana.costa@example.com', 'senha123', 'ADMIN', 'mariana.costa');
-
-
+       ('Mariana Costa', 'mariana.costa@example.com', '$2a$10$bAl2Mf20makrh5HtlugwOuzyp87LjcLXr8vJ0bZ.lf46531kcx8KS', 'ADMIN', 'usuario.admin');
 
 
 
