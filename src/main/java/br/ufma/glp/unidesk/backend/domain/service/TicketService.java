@@ -64,13 +64,33 @@ public class TicketService {
         return ticketRepository.save(ticket);
     }
 
+    @Transactional
+    public Ticket atualizarTicket(@NotNull Long idTicket, @Valid @NotNull Ticket ticketAtualizado) {
+        //TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
+        Ticket ticketExistente = ticketRepository.findById(idTicket)
+                .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
+
+        ticketExistente.setTitulo(ticketAtualizado.getTitulo());
+        ticketExistente.setDescricao(ticketAtualizado.getDescricao());
+        ticketExistente.setCoordenacao(ticketAtualizado.getCoordenacao());
+        ticketExistente.setFuncionario(ticketAtualizado.getFuncionario());
+        ticketExistente.setStatus(ticketAtualizado.getStatus());
+        ticketExistente.setIdFile(ticketAtualizado.getIdFile());
+
+        return ticketRepository.save(ticketExistente);
+    }
+
     public Ticket buscarTicketPorId(@Valid @NotNull(message = "O Id do ticket nao pode ser nulo") Long idTicket) {
         return ticketRepository.findById(idTicket)
                 .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
     }
 
-    public void filtrarPorCategoria() {
-        //TODO: Implementação futura
+    public List<Ticket> filtrarPorCategoria(@NotNull String nomeCategoria) {
+        List<Ticket> tickets = ticketRepository.findByCategoriaNomeIgnoreCase(nomeCategoria);
+        if (tickets.isEmpty()) {
+            throw new TicketNaoEncontradoException("Nenhum ticket encontrado para a categoria: " + nomeCategoria);
+        }
+        return tickets;
     }
 
     public List<Ticket> buscarTicketsPorStatusEspecifico(@Valid @NotNull Usuario usuario, @Valid @NotNull Status status) {
