@@ -44,6 +44,8 @@ public class BaseConhecimentoService {
     @Transactional
     public BaseConhecimento salvarBaseConhecimento(BaseConhecimento baseConhecimento) {
         validarAtributos(baseConhecimento);
+        var categoriaCompleta = categoriaService.buscarPorIdOuFalhar(baseConhecimento.getCategoria().getIdCategoria());
+        baseConhecimento.setCategoria(categoriaCompleta);
         return baseConhecimentoRepository.save(baseConhecimento);
     }
 
@@ -54,6 +56,8 @@ public class BaseConhecimentoService {
         }
         baseConhecimento.setIdArtigo(idBaseConhecimento);
         validarAtributos(baseConhecimento);
+        var categoriaCompleta = categoriaService.buscarPorIdOuFalhar(baseConhecimento.getCategoria().getIdCategoria());
+        baseConhecimento.setCategoria(categoriaCompleta);
         return baseConhecimentoRepository.save(baseConhecimento);
     }
 
