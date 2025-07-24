@@ -6,7 +6,6 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.BaseConhecimentoModelAssembl
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.BaseConhecimentoCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.BaseConhecimentoEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.BaseConhecimentoModel;
-import br.ufma.glp.unidesk.backend.domain.model.FuncionarioCoordenacao;
 import br.ufma.glp.unidesk.backend.domain.service.BaseConhecimentoService;
 import br.ufma.glp.unidesk.backend.domain.service.FuncionarioCoordenacaoService;
 import jakarta.validation.Valid;
@@ -31,26 +30,26 @@ public class BaseConhecimentoController {
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
     public List<BaseConhecimentoModel> listar() {
-        return baseConhecimentoModelAssembler.toCollectionModel(baseConhecimentoService.listarFaqs());
+        return baseConhecimentoModelAssembler.toCollectionModel(baseConhecimentoService.listarTodos());
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BaseConhecimentoModel buscarPorId(@PathVariable Long id) {
-        return baseConhecimentoModelAssembler.toModel(baseConhecimentoService.buscarFaqPorId(id));
+        return baseConhecimentoModelAssembler.toModel(baseConhecimentoService.buscarPorIdOuFalhar(id));
     }
 
     @GetMapping("/buscar")
     @ResponseStatus(HttpStatus.OK)
-    public List<BaseConhecimentoModel> buscarPorNome(@RequestParam String nome) {
-        return baseConhecimentoModelAssembler.toCollectionModel(baseConhecimentoService.buscarPorNome(nome));
+    public BaseConhecimentoModel buscarPorNome(@RequestParam String nome) {
+        return baseConhecimentoModelAssembler.toModel(baseConhecimentoService.buscarPorTituloOuFalhar(nome));
     }
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public BaseConhecimentoModel criarFaq(@RequestBody @Valid BaseConhecimentoCadastroInput baseConhecimentoCadastroInput) {
         return baseConhecimentoModelAssembler.toModel(
-                baseConhecimentoService.criarFaq(baseConhecimentoCadastroInputDisassembler.toDomainObject(baseConhecimentoCadastroInput))
+                baseConhecimentoService.salvarBaseConhecimento(baseConhecimentoCadastroInputDisassembler.toDomainObject(baseConhecimentoCadastroInput))
         );
     }
 
@@ -58,14 +57,13 @@ public class BaseConhecimentoController {
     @ResponseStatus(HttpStatus.OK)
     public BaseConhecimentoModel editarFaq(@RequestBody @Valid BaseConhecimentoEdicaoInput baseConhecimentoEdicaoInput, @PathVariable Long id) {
         return baseConhecimentoModelAssembler.toModel(
-                baseConhecimentoService.alterarFaq(id, baseConhecimentoEdicaoInputDisassembler.toDomainObject(baseConhecimentoEdicaoInput))
+                baseConhecimentoService.atualizarBaseConhecimento(id, baseConhecimentoEdicaoInputDisassembler.toDomainObject(baseConhecimentoEdicaoInput))
         );
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletarFaq(@RequestHeader("idUsuario") Long idFuncionarioCoordenacao, @PathVariable Long id) {
-        FuncionarioCoordenacao funcionarioCoordenacao = funcionarioCoordenacaoService.buscarPorIdOuFalhar(idFuncionarioCoordenacao);
-        baseConhecimentoService.deletarFaq(funcionarioCoordenacao, id);
+    public void deletarFaq(@PathVariable Long id) {
+        baseConhecimentoService.removerBaseConhecimento(id);
     }
 }
