@@ -2,6 +2,7 @@ package br.ufma.glp.unidesk.backend.domain.service;
 
 import br.ufma.glp.unidesk.backend.domain.exception.CursoEmUsoException;
 import br.ufma.glp.unidesk.backend.domain.exception.CursoNaoEncontradoException;
+import br.ufma.glp.unidesk.backend.domain.exception.CursoNomeEmUsoException;
 import br.ufma.glp.unidesk.backend.domain.model.Curso;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.repository.CursoRepository;
@@ -84,7 +85,7 @@ public class CursoService {
 
     private void validarNomeEmUso(String nome) {
         if (cursoRepository.existsByNome(nome)) {
-            throw new IllegalArgumentException("Já existe um curso com o nome: " + nome);
+            throw new CursoNomeEmUsoException(nome);
         }
     }
 
