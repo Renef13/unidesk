@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class PrioridadeCadastroInput {
 
     @NotBlank(message = "O nível de prioridade não pode ser vazio")

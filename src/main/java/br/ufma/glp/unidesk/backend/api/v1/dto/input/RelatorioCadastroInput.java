@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class RelatorioCadastroInput {
 
     @NotBlank(message = "O conteúdo do relatório é obrigatório")
