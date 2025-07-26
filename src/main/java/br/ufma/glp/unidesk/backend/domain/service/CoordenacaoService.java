@@ -55,8 +55,8 @@ public class CoordenacaoService {
     }
 
     @Transactional
-    public Coordenacao atualizar(@NotNull Long idCoordenacao, @Valid @NotNull Coordenacao coordenacao) {
-        Coordenacao existente = buscarPorIdOuFalhar(idCoordenacao);
+    public Coordenacao atualizar(@Valid @NotNull Coordenacao coordenacao) {
+        Coordenacao existente = buscarPorIdOuFalhar(coordenacao.getIdCoordenacao());
         validarCurso(coordenacao);
 
         existente.setNome(coordenacao.getNome());

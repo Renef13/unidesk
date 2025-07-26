@@ -13,16 +13,13 @@ public class CoordenacaoEdicaoInputDisassembler {
 
     private final ModelMapper modelMapper;
 
-    public Coordenacao toDomainObject(CoordenacaoEdicaoInput coordenacaoEdicaoInput) {
-        Coordenacao coordenacao = modelMapper.map(coordenacaoEdicaoInput, Coordenacao.class);
+    public void copyToDomainObject(CoordenacaoEdicaoInput coordenacaoEdicaoInput, Coordenacao coordenacao) {
 
+        modelMapper.map(coordenacaoEdicaoInput, coordenacao);
         if (coordenacaoEdicaoInput.getIdCurso() != null) {
             Curso curso = new Curso();
             curso.setIdCurso(coordenacaoEdicaoInput.getIdCurso());
             coordenacao.setCurso(curso);
         }
-
-        return coordenacao;
-
     }
 }

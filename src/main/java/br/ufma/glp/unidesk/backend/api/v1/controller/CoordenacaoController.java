@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.CoordenacaoModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.CoordenacaoCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.CoordenacaoEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.CoordenacaoModel;
+import br.ufma.glp.unidesk.backend.domain.model.Coordenacao;
 import br.ufma.glp.unidesk.backend.domain.service.CoordenacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,15 +51,12 @@ public class CoordenacaoController {
         );
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CoordenacaoModel atualizar(@RequestBody @Valid CoordenacaoEdicaoInput coordenacaoEdicaoInput) {
-        return coordenacaoModelAssembler.toModel(
-                coordenacaoService.atualizar(
-                        coordenacaoEdicaoInput.getIdCoordenacao(),
-                        coordenacaoEdicaoInputDisassembler.toDomainObject(coordenacaoEdicaoInput)
-                )
-        );
+    public CoordenacaoModel atualizar(@PathVariable Long id,@RequestBody @Valid CoordenacaoEdicaoInput coordenacaoEdicaoInput) {
+        Coordenacao coordenacaoExistente = coordenacaoService.buscarPorIdOuFalhar(id);
+        coordenacaoEdicaoInputDisassembler.copyToDomainObject(coordenacaoEdicaoInput, coordenacaoExistente);
+        return coordenacaoModelAssembler.toModel(coordenacaoService.atualizar(coordenacaoExistente));
     }
 
     @DeleteMapping("/{id}")
