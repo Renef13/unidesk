@@ -63,8 +63,8 @@ public class FuncionarioCoordenacaoService {
     }
 
     @Transactional
-    public FuncionarioCoordenacao atualizar(@NotNull Long idFuncionario, @Valid @NotNull FuncionarioCoordenacao funcionario) {
-        FuncionarioCoordenacao existente = buscarPorIdOuFalhar(idFuncionario);
+    public FuncionarioCoordenacao atualizar(@Valid @NotNull FuncionarioCoordenacao funcionario) {
+        FuncionarioCoordenacao existente = buscarPorIdOuFalhar(funcionario.getIdUsuario());
 
         if (!existente.getMatricula().equals(funcionario.getMatricula()) &&
                 funcionarioCoordenacaoRepository.existsByMatricula(funcionario.getMatricula())) {

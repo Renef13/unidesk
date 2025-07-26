@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.FuncionarioCoordenacaoModelA
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.FuncionarioCoordenacaoCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.FuncionarioCoordenacaoEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.FuncionarioCoordenacaoModel;
+import br.ufma.glp.unidesk.backend.domain.model.FuncionarioCoordenacao;
 import br.ufma.glp.unidesk.backend.domain.service.FuncionarioCoordenacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -59,12 +60,10 @@ public class FuncionarioCoordenacaoController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public FuncionarioCoordenacaoModel atualizar(@PathVariable Long id,
-                                                @RequestBody @Valid FuncionarioCoordenacaoEdicaoInput input) {
-        var funcionario = funcionarioCoordenacaoEdicaoInputDisassembler.toDomainObject(input);
-        return funcionarioCoordenacaoModelAssembler.toModel(
-                funcionarioCoordenacaoService.atualizar(id, funcionario)
-        );
+    public FuncionarioCoordenacaoModel atualizar(@PathVariable Long id, @RequestBody @Valid FuncionarioCoordenacaoEdicaoInput input) {
+        FuncionarioCoordenacao funcionarioExistente = funcionarioCoordenacaoService.buscarPorIdOuFalhar(id);
+        funcionarioCoordenacaoEdicaoInputDisassembler.copyToDomainObject(input, funcionarioExistente);
+        return funcionarioCoordenacaoModelAssembler.toModel(funcionarioCoordenacaoService.atualizar(funcionarioExistente));
     }
 
     @DeleteMapping("/{id}")
