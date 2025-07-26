@@ -59,7 +59,7 @@ public class AlunoController {
 
         alunoEdicaoInputDisassembler.copyToDomainObject(alunoEdicaoInput, alunoService.buscarPorIdOuFalhar(id));
 
-        Aluno alunoAtualizado = alunoService.salvar(alunoAtual);
+        Aluno alunoAtualizado = alunoService.atualizar(alunoAtual);
 
         return alunoModelAssembler.toModel(alunoAtualizado);
     }

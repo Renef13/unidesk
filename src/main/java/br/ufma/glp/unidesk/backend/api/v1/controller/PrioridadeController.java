@@ -61,7 +61,7 @@ public class PrioridadeController {
     public PrioridadeModel atualizar(@PathVariable Long id,@RequestBody @Valid PrioridadeEdicaoInput prioridadeInput) {
         Prioridade prioridadeExistente = prioridadeService.buscarPorIdOuFalhar(id);
         prioridadeEdicaoInputDisassembler.copyToDomainObject(prioridadeInput, prioridadeExistente);
-        return prioridadeModelAssembler.toModel(prioridadeService.salvar(prioridadeExistente));
+        return prioridadeModelAssembler.toModel(prioridadeService.atualizar(prioridadeExistente));
     }
 
     @DeleteMapping("/{id}")

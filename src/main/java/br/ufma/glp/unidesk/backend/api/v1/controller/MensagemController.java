@@ -50,7 +50,7 @@ public class MensagemController {
     public MensagemModel atualizar(@PathVariable Long id, @RequestBody @Valid MensagemEdicaoInput mensagemEdicaoInput) {
         Mensagem mensagemExistente = mensagemService.buscarPorIdOuFalhar(id);
         mensagemEdicaoInputDisassembler.copyToDomainObject(mensagemEdicaoInput, mensagemExistente);
-        return mensagemModelAssembler.toModel(mensagemService.salvar(mensagemExistente));
+        return mensagemModelAssembler.toModel(mensagemService.atualizar(mensagemExistente));
     }
 
     @DeleteMapping("/{id}")
