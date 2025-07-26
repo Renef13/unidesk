@@ -66,8 +66,8 @@ public class CoordenadorService {
     }
 
     @Transactional
-    public Coordenador atualizar(@NotNull Long idCoordenador, @Valid @NotNull Coordenador coordenador) {
-        Coordenador existente = buscarPorIdOuFalhar(idCoordenador);
+    public Coordenador atualizar(@Valid @NotNull Coordenador coordenador) {
+        Coordenador existente = buscarPorIdOuFalhar(coordenador.getIdUsuario());
 
         if (!existente.getMatricula().equals(coordenador.getMatricula()) &&
                 coordenadorRepository.existsByMatricula(coordenador.getMatricula())) {
@@ -78,7 +78,7 @@ public class CoordenadorService {
 
         if (coordenador.getAtivo() != null && coordenador.getAtivo()) {
             List<Coordenador> ativos = coordenadorRepository.findByCoordenacaoAndAtivo(coordenacao, true);
-            if (!ativos.isEmpty() && ativos.stream().noneMatch(c -> c.getIdUsuario().equals(idCoordenador))) {
+            if (!ativos.isEmpty() && ativos.stream().noneMatch(c -> c.getIdUsuario().equals(coordenador.getIdUsuario()))) {
                 throw new IllegalArgumentException("Já existe um coordenador ativo para esta coordenação");
             }
         }
