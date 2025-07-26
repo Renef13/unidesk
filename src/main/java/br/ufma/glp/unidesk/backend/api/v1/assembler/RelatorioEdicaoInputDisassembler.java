@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class RelatorioEdicaoInputDisassembler {
     private final ModelMapper modelMapper;
 
-    public Relatorio toDomainObject(RelatorioEdicaoInput relatorioEdicaoInput) {
-        return modelMapper.map(relatorioEdicaoInput, Relatorio.class);
+    public void copyToDomainObject(RelatorioEdicaoInput relatorioEdicaoInput, Relatorio relatorioExistente) {
+        modelMapper.map(relatorioEdicaoInput, relatorioExistente);
     }
 }
