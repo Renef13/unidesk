@@ -55,13 +55,13 @@ public class BaseConhecimentoController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseConhecimentoModel editarFaq(@PathVariable Long id, @RequestBody @Valid BaseConhecimentoEdicaoInput input) {
+    public BaseConhecimentoModel editarFaq(@PathVariable Long id, @RequestBody @Valid BaseConhecimentoEdicaoInput baseConhecimentoEdicaoInput) {
 
-        BaseConhecimento existente = baseConhecimentoService.buscarPorIdOuFalhar(id);
+        BaseConhecimento baseConhecimentoExistente = baseConhecimentoService.buscarPorIdOuFalhar(id);
 
-        baseConhecimentoEdicaoInputDisassembler.copyToDomainObject(input, existente);
+        baseConhecimentoEdicaoInputDisassembler.copyToDomainObject(baseConhecimentoEdicaoInput, baseConhecimentoExistente);
 
-        BaseConhecimento atualizado = baseConhecimentoService.atualizarBaseConhecimento(existente);
+        BaseConhecimento atualizado = baseConhecimentoService.atualizarBaseConhecimento(baseConhecimentoExistente);
 
         return baseConhecimentoModelAssembler.toModel(atualizado);
     }
