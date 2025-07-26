@@ -2,15 +2,24 @@ package br.ufma.glp.unidesk.backend.api.v1.dto.input;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class CoordenadorEdicaoInput extends CoordenadorCadastroInput {
-    
-    @EqualsAndHashCode.Include
-    private Long idUsuario;
+public class CoordenadorEdicaoInput {
+
+    private String nome;
+
+    private String email;
+
+    private String usuario;
+
+    private String senha;
+
+    private String matricula;
+
+    private Long idCoordenacao;
+
+    private Boolean ativo;
 }

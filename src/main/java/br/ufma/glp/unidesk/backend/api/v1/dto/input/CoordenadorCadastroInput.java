@@ -1,6 +1,5 @@
 package br.ufma.glp.unidesk.backend.api.v1.dto.input;
 
-import br.ufma.glp.unidesk.backend.domain.model.UsuarioRole;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,13 +7,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class CoordenadorCadastroInput {
 
     @NotBlank(message = "O nome do coordenador é obrigatório")
@@ -27,7 +24,6 @@ public class CoordenadorCadastroInput {
     private String email;
 
     @NotBlank(message = "O nome de usuário não pode ser nula ou vazia, e deve ser único")
-    @Column(nullable = false, unique = true)
     private String usuario;
 
     @NotBlank(message = "A senha é obrigatória")

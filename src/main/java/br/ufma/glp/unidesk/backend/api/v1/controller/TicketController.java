@@ -69,19 +69,26 @@ public class TicketController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel atualizar(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
-        return ticketModelAssembler.toModel(ticketService.atualizarTicket(id, ticketEdicaoInputDisassembler.toDomainObject(ticketEdicaoInput)));
+        Ticket ticketExistente = ticketService.buscarTicketPorId(id);
+        ticketEdicaoInputDisassembler.copyToDomainObject(ticketEdicaoInput, ticketExistente);
+        Ticket ticketAtualizado = ticketService.atualizarTicket(ticketExistente);
+        return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
     @PatchMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
-    public TicketModel alterarStatus(@PathVariable Long id, @RequestParam Long idStatus) {
-        return ticketModelAssembler.toModel(ticketService.alterarStatusTicket(id, idStatus));
+    public TicketModel alterarStatus(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
+        Ticket ticket = ticketService.buscarTicketPorId(id);
+        ticketEdicaoInputDisassembler.copyToDomainObject(ticketEdicaoInput, ticket);
+        Ticket ticketAtualizado = ticketService.alterarStatusTicket(id, ticket);
+        return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
     @PatchMapping("/{id}/fechar")
     @ResponseStatus(HttpStatus.OK)
-    public TicketModel fecharTicket(@PathVariable Long id, @RequestParam Long idStatus) {
-        return ticketModelAssembler.toModel(ticketService.fecharTicket(ticketService.buscarTicketPorId(id), idStatus));
+    public TicketModel fecharTicket(@PathVariable Long id) {
+        Ticket ticketAtualizado = ticketService.fecharTicket(id);
+        return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
 

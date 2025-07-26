@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.BaseConhecimentoModelAssembl
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.BaseConhecimentoCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.BaseConhecimentoEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.BaseConhecimentoModel;
+import br.ufma.glp.unidesk.backend.domain.model.BaseConhecimento;
 import br.ufma.glp.unidesk.backend.domain.service.BaseConhecimentoService;
 import br.ufma.glp.unidesk.backend.domain.service.FuncionarioCoordenacaoService;
 import jakarta.validation.Valid;
@@ -54,11 +55,17 @@ public class BaseConhecimentoController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BaseConhecimentoModel editarFaq(@RequestBody @Valid BaseConhecimentoEdicaoInput baseConhecimentoEdicaoInput, @PathVariable Long id) {
-        return baseConhecimentoModelAssembler.toModel(
-                baseConhecimentoService.atualizarBaseConhecimento(id, baseConhecimentoEdicaoInputDisassembler.toDomainObject(baseConhecimentoEdicaoInput))
-        );
+    public BaseConhecimentoModel editarFaq(@PathVariable Long id, @RequestBody @Valid BaseConhecimentoEdicaoInput baseConhecimentoEdicaoInput) {
+
+        BaseConhecimento baseConhecimentoExistente = baseConhecimentoService.buscarPorIdOuFalhar(id);
+
+        baseConhecimentoEdicaoInputDisassembler.copyToDomainObject(baseConhecimentoEdicaoInput, baseConhecimentoExistente);
+
+        BaseConhecimento atualizado = baseConhecimentoService.atualizarBaseConhecimento(baseConhecimentoExistente);
+
+        return baseConhecimentoModelAssembler.toModel(atualizado);
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

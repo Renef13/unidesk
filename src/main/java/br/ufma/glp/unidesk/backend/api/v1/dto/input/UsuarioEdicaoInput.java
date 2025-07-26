@@ -1,16 +1,20 @@
 package br.ufma.glp.unidesk.backend.api.v1.dto.input;
 
+import br.ufma.glp.unidesk.backend.domain.model.UsuarioRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class UsuarioEdicaoInput extends UsuarioCadastroInput {
+public class UsuarioEdicaoInput {
 
-    @EqualsAndHashCode.Include
-    private Long idUsuario;
+    private String nome;
+
+    private String email;
+
+    private String senha;
+
+    UsuarioRole role;
 }

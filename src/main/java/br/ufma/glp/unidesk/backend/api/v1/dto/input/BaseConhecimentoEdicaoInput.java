@@ -2,15 +2,16 @@ package br.ufma.glp.unidesk.backend.api.v1.dto.input;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class BaseConhecimentoEdicaoInput extends BaseConhecimentoCadastroInput {
+public class BaseConhecimentoEdicaoInput {
 
-    @EqualsAndHashCode.Include
-    private Long idArtigo;
+    private String titulo;
+
+    private String conteudo;
+
+    private Long idCategoria;
 }

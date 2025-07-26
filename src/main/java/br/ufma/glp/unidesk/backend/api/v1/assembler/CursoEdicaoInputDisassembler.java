@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class CursoEdicaoInputDisassembler {
     private final ModelMapper modelMapper;
 
-    public Curso toDomainObject(CursoEdicaoInput cursoEdicaoInput) {
-        return modelMapper.map(cursoEdicaoInput, Curso.class);
+    public void copyToDomainObject(CursoEdicaoInput cursoEdicaoInput, Curso curso) {
+        modelMapper.map(cursoEdicaoInput, curso);
     }
 }

@@ -29,6 +29,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final StorageService storageService;
     private final StatusRepository statusRepository;
+    private final StatusService statusService;
 
     public Page<Ticket> listarTickets(@Valid @NotNull Usuario usuario, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -50,29 +51,41 @@ public class TicketService {
     }
 
     @Transactional
-    public Ticket alterarStatusTicket(@Valid @NotNull Long idTicket, @Valid @NotNull Long idStatus) {
-        Ticket ticket = ticketRepository.findById(idTicket)
+    public Ticket alterarStatusTicket(@NotNull Long idTicket, @Valid @NotNull Ticket ticket) {
+        ticketRepository.findById(idTicket)
                 .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
-        Status status = statusRepository.findById(idStatus)
-                .orElseThrow(() -> new StatusNaoEncontradoException("Status não encontrado para o id: " + idStatus));
-        ticket.setStatus(status);
-        ticketRepository.save(ticket);
-        return ticket;
-    }
 
-    @Transactional
-    public Ticket fecharTicket(@Valid @NotNull Ticket ticket, @NotNull Long idStatus) {
-        Status novoStatus = statusRepository.findById(idStatus)
-                .orElseThrow(() -> new StatusNaoEncontradoException("Status não encontrado para o id: " + idStatus));
-        ticket.setStatus(novoStatus);
+        Status status = statusRepository.findById(ticket.getStatus().getIdStatus())
+                .orElseThrow(() -> new StatusNaoEncontradoException("Status não encontrado para o id: " + ticket.getStatus().getIdStatus()));
+
+        ticket.setStatus(status);
+
         return ticketRepository.save(ticket);
     }
 
+
     @Transactional
-    public Ticket atualizarTicket(@NotNull Long idTicket, @Valid @NotNull Ticket ticketAtualizado) {
-        //TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
+    public Ticket fecharTicket(@NotNull Long idTicket) {
         Ticket ticketExistente = ticketRepository.findById(idTicket)
                 .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
+
+        Status statusFechado = statusService.buscarPorNomeOuFalhar("Fechado");
+
+        if (ticketExistente.getStatus().getIdStatus().equals(statusFechado.getIdStatus())) {
+            throw new IllegalStateException("O ticket já está fechado.");
+        }
+
+        ticketExistente.setStatus(statusFechado);
+
+        return ticketRepository.save(ticketExistente);
+    }
+
+
+    @Transactional
+    public Ticket atualizarTicket(@Valid @NotNull Ticket ticketAtualizado) {
+        //TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
+        Ticket ticketExistente = ticketRepository.findById(ticketAtualizado.getIdTicket())
+                .orElseThrow(() -> new TicketNaoEncontradoException(ticketAtualizado.getIdTicket()));
 
         ticketExistente.setTitulo(ticketAtualizado.getTitulo());
         ticketExistente.setDescricao(ticketAtualizado.getDescricao());

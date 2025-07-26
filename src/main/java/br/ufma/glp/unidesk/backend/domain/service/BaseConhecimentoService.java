@@ -38,8 +38,9 @@ public class BaseConhecimentoService {
     }
 
     protected boolean baseConhecimentoExistePorId(Long baseConhecimentoId) {
-        return !baseConhecimentoRepository.existsById(baseConhecimentoId);
+        return baseConhecimentoRepository.existsById(baseConhecimentoId);
     }
+
 
     @Transactional
     public BaseConhecimento salvarBaseConhecimento(BaseConhecimento baseConhecimento) {
@@ -50,20 +51,22 @@ public class BaseConhecimentoService {
     }
 
     @Transactional
-    public BaseConhecimento atualizarBaseConhecimento(Long idBaseConhecimento, BaseConhecimento baseConhecimento) {
-        if (baseConhecimentoExistePorId(idBaseConhecimento)) {
-            throw new BaseConhecimentoNaoEncontradaException(idBaseConhecimento);
+    public BaseConhecimento atualizarBaseConhecimento(BaseConhecimento baseConhecimento) {
+        if (!baseConhecimentoExistePorId(baseConhecimento.getIdArtigo())) {
+            throw new BaseConhecimentoNaoEncontradaException(baseConhecimento.getIdArtigo());
         }
-        baseConhecimento.setIdArtigo(idBaseConhecimento);
         validarAtributos(baseConhecimento);
-        var categoriaCompleta = categoriaService.buscarPorIdOuFalhar(baseConhecimento.getCategoria().getIdCategoria());
+        var categoriaCompleta = categoriaService.buscarPorIdOuFalhar(
+                baseConhecimento.getCategoria().getIdCategoria()
+        );
         baseConhecimento.setCategoria(categoriaCompleta);
         return baseConhecimentoRepository.save(baseConhecimento);
     }
 
+
     @Transactional
     public void removerBaseConhecimento(Long idBaseConhecimento) {
-        if (baseConhecimentoExistePorId(idBaseConhecimento)) {
+        if (!baseConhecimentoExistePorId(idBaseConhecimento)) {
             throw new BaseConhecimentoNaoEncontradaException(idBaseConhecimento);
         }
         baseConhecimentoRepository.deleteById(idBaseConhecimento);
@@ -77,7 +80,7 @@ public class BaseConhecimentoService {
         if (baseConhecimento.getConteudo() == null || baseConhecimento.getConteudo().isBlank()) {
             throw new IllegalArgumentException("O conteúdo do artigo não pode ser vazio.");
         }
-        if( baseConhecimento.getCategoria() == null || baseConhecimento.getCategoria().getIdCategoria() == null) {
+        if (baseConhecimento.getCategoria() == null || baseConhecimento.getCategoria().getIdCategoria() == null) {
             throw new IllegalArgumentException("A categoria do artigo não pode ser nula.");
         }
         if (!categoriaService.categoriaExistePorId(baseConhecimento.getCategoria().getIdCategoria())) {

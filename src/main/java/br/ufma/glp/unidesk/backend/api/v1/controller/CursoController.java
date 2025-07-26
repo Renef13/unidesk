@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.CursoModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.CursoCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.CursoEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.CursoModel;
+import br.ufma.glp.unidesk.backend.domain.model.Curso;
 import br.ufma.glp.unidesk.backend.domain.service.CursoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,15 +51,12 @@ public class CursoController {
         );
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CursoModel atualizar(@RequestBody @Valid CursoEdicaoInput cursoEdicaoInput) {
-        return cursoModelAssembler.toModel(
-                cursoService.alterarCurso(
-                        cursoEdicaoInput.getIdCurso(),
-                        cursoEdicaoInputDisassembler.toDomainObject(cursoEdicaoInput)
-                )
-        );
+    public CursoModel atualizar(@PathVariable Long id, @RequestBody @Valid CursoEdicaoInput cursoEdicaoInput) {
+        Curso curso = cursoService.buscarCursoPorId(id);
+        cursoEdicaoInputDisassembler.copyToDomainObject(cursoEdicaoInput, curso);
+        return cursoModelAssembler.toModel(cursoService.atualizarCurso(curso));
     }
 
     @DeleteMapping("/{id}")

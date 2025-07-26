@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.RelatorioModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.RelatorioCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.RelatorioEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.RelatorioModel;
+import br.ufma.glp.unidesk.backend.domain.model.Relatorio;
 import br.ufma.glp.unidesk.backend.domain.service.RelatorioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -66,9 +67,9 @@ public class RelatorioController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public RelatorioModel atualizar(@PathVariable Long id, @RequestBody @Valid RelatorioEdicaoInput relatorioEdicaoInput) {
-        return relatorioModelAssembler.toModel(
-                relatorioService.atualizar(id, relatorioEdicaoInputDisassembler.toDomainObject(relatorioEdicaoInput))
-        );
+        Relatorio relatorioExistente = relatorioService.buscarPorIdOuFalhar(id);
+        relatorioEdicaoInputDisassembler.copyToDomainObject(relatorioEdicaoInput, relatorioExistente);
+        return relatorioModelAssembler.toModel(relatorioService.atualizar(relatorioExistente));
     }
 
     @DeleteMapping("/{id}")

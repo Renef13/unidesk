@@ -39,8 +39,8 @@ public class MensagemService {
     }
 
     @Transactional
-    public Mensagem atualizar(@NotNull Long idMensagem, @Valid @NotNull Mensagem mensagem) {
-        Mensagem existente = buscarPorIdOuFalhar(idMensagem);
+    public Mensagem atualizar(@Valid @NotNull Mensagem mensagem) {
+        Mensagem existente = buscarPorIdOuFalhar(mensagem.getIdMensagem());
         validarMensagem(mensagem);
 
         existente.setConteudo(mensagem.getConteudo());

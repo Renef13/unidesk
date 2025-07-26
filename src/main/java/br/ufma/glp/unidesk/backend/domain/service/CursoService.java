@@ -49,8 +49,8 @@ public class CursoService {
     }
 
     @Transactional
-    public Curso alterarCurso(@NotNull(message = "O id do curso não pode ser nulo") Long idCurso, @Valid @NotNull(message = "O curso não pode ser nulo") Curso curso) {
-        Curso cursoExistente = buscarCursoPorId(idCurso);
+    public Curso atualizarCurso(@Valid @NotNull(message = "O curso não pode ser nulo") Curso curso) {
+        Curso cursoExistente = buscarCursoPorId(curso.getIdCurso());
         if (!cursoExistente.getNome().equalsIgnoreCase(curso.getNome())) {
             validarNomeEmUso(curso.getNome());
         }

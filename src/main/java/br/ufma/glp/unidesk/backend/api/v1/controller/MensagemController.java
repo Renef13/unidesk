@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.MensagemModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.MensagemCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.MensagemEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.MensagemModel;
+import br.ufma.glp.unidesk.backend.domain.model.Mensagem;
 import br.ufma.glp.unidesk.backend.domain.service.MensagemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,9 +48,9 @@ public class MensagemController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public MensagemModel atualizar(@PathVariable Long id, @RequestBody @Valid MensagemEdicaoInput mensagemEdicaoInput) {
-        return mensagemModelAssembler.toModel(
-                mensagemService.atualizar(id, mensagemEdicaoInputDisassembler.toDomainObject(mensagemEdicaoInput))
-        );
+        Mensagem mensagemExistente = mensagemService.buscarPorIdOuFalhar(id);
+        mensagemEdicaoInputDisassembler.copyToDomainObject(mensagemEdicaoInput, mensagemExistente);
+        return mensagemModelAssembler.toModel(mensagemService.atualizar(mensagemExistente));
     }
 
     @DeleteMapping("/{id}")

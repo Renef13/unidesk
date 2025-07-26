@@ -1,16 +1,30 @@
 package br.ufma.glp.unidesk.backend.api.v1.dto.input;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
-public class TicketEdicaoInput extends TicketCadastroInput {
+public class TicketEdicaoInput {
 
-    @EqualsAndHashCode.Include
-    private Long idTicket;
+    private String titulo;
+
+    private String descricao;
+
+    private Long idCoordenacao;
+
+    private Long idFuncionario;
+
+    private Long idAluno;
+
+    private Long idStatus;
+
+    private Long idPrioridade;
+
+    private Long idCategoria;
 }

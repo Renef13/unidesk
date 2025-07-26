@@ -3,13 +3,11 @@ package br.ufma.glp.unidesk.backend.api.v1.dto.input;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class BaseConhecimentoCadastroInput {
 
     private String titulo;

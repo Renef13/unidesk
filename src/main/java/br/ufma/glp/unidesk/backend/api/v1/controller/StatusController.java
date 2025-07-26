@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.StatusModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.StatusCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.StatusEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.StatusModel;
+import br.ufma.glp.unidesk.backend.domain.model.Status;
 import br.ufma.glp.unidesk.backend.domain.service.StatusService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,13 +51,12 @@ public class StatusController {
                 statusService.salvar(statusCadastroInputDisassembler.toDomainObject(statusInput)));
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public StatusModel atualizar(@RequestBody @Valid StatusEdicaoInput statusInput) {
-        return statusModelAssembler.toModel(
-                statusService
-                        .atualizar(statusEdicaoInputDisassembler
-                                .toDomainObject(statusInput)));
+    public StatusModel atualizar(@PathVariable Long id,@RequestBody @Valid StatusEdicaoInput statusInput) {
+        Status statusAtual = statusService.buscarPorIdOuFalhar(id);
+        statusEdicaoInputDisassembler.copyToDomainObject(statusInput, statusAtual);
+        return statusModelAssembler.toModel(statusService.atualizar(statusAtual));
     }
 
     @DeleteMapping("/{id}")

@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.CoordenadorModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.CoordenadorCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.CoordenadorEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.CoordenadorModel;
+import br.ufma.glp.unidesk.backend.domain.model.Coordenador;
 import br.ufma.glp.unidesk.backend.domain.service.CoordenadorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,10 +47,10 @@ public class CoordenadorController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CoordenadorModel atualizar(@PathVariable Long id, @RequestBody @Valid CoordenadorEdicaoInput input) {
-        return coordenadorModelAssembler.toModel(
-                coordenadorService.atualizar(id, coordenadorEdicaoInputDisassembler.toDomainObject(input))
-        );
+    public CoordenadorModel atualizar(@PathVariable Long id, @RequestBody @Valid CoordenadorEdicaoInput coordenadorInput) {
+        Coordenador coordenador = coordenadorService.buscarPorIdOuFalhar(id);
+        coordenadorEdicaoInputDisassembler.copyToDomainObject(coordenadorInput, coordenador);
+        return coordenadorModelAssembler.toModel(coordenadorService.atualizar(coordenador));
     }
 
     @DeleteMapping("/{id}")

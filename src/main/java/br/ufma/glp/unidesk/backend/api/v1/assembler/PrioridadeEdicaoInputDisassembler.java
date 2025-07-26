@@ -11,10 +11,6 @@ import org.springframework.stereotype.Component;
 public class PrioridadeEdicaoInputDisassembler {
     private final ModelMapper modelMapper;
 
-    public Prioridade toDomainObject(PrioridadeEdicaoInput prioridadeEdicaoInput) {
-        return modelMapper.map(prioridadeEdicaoInput, Prioridade.class);
-    }
-
     public void copyToDomainObject(PrioridadeEdicaoInput prioridadeEdicaoInput, Prioridade prioridade) {
         modelMapper.map(prioridadeEdicaoInput, prioridade);
     }

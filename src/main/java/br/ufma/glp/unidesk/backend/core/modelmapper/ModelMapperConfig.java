@@ -62,6 +62,34 @@ public class ModelMapperConfig {
             }
         });
 
+        modelMapper.addMappings(new PropertyMap<CoordenadorCadastroInput, Coordenador>() {
+            @Override
+            protected void configure() {
+                skip(destination.getCoordenacao());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<CoordenadorEdicaoInput, Coordenador>() {
+            @Override
+            protected void configure() {
+                skip(destination.getCoordenacao());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<FuncionarioCoordenacaoCadastroInput, FuncionarioCoordenacao>() {
+            @Override
+            protected void configure() {
+                skip(destination.getCoordenacao());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<FuncionarioCoordenacaoEdicaoInput, FuncionarioCoordenacao>() {
+            @Override
+            protected void configure() {
+                skip(destination.getCoordenacao());
+            }
+        });
+
         modelMapper.addMappings(new PropertyMap<MensagemCadastroInput, Mensagem>() {
             @Override
             protected void configure() {

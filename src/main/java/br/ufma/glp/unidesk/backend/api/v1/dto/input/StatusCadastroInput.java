@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class StatusCadastroInput {
 
     @NotBlank(message = "O nome do status é obrigatório")

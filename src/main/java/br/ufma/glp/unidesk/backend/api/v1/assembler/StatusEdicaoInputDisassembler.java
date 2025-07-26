@@ -12,10 +12,6 @@ public class StatusEdicaoInputDisassembler {
 
     private final ModelMapper modelMapper;
 
-    public Status toDomainObject(StatusEdicaoInput statusEdicaoInput) {
-        return modelMapper.map(statusEdicaoInput, Status.class);
-    }
-
     public void copyToDomainObject(StatusEdicaoInput statusEdicaoInput, Status status) {
         modelMapper.map(statusEdicaoInput, status);
     }

@@ -50,8 +50,8 @@ public class RelatorioService {
     }
 
     @Transactional
-    public Relatorio atualizar(@NotNull Long idRelatorio, @Valid @NotNull Relatorio relatorio) {
-        Relatorio existente = buscarPorIdOuFalhar(idRelatorio);
+    public Relatorio atualizar(@Valid @NotNull Relatorio relatorio) {
+        Relatorio existente = buscarPorIdOuFalhar(relatorio.getIdRelatorio());
         validarRelatorio(relatorio);
 
         existente.setConteudo(relatorio.getConteudo());
