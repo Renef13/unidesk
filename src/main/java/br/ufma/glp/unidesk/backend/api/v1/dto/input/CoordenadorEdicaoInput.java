@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CoordenadorEdicaoInput {
 
-    private Long idUsuario;
-
     private String nome;
 
     private String email;

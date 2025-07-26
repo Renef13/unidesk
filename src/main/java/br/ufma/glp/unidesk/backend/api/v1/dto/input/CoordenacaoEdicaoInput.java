@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CoordenacaoEdicaoInput {
 
-    private Long idCoordenacao;
-
     private String nome;
 
     private Long idCurso;

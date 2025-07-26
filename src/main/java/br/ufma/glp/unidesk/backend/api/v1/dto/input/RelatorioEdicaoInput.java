@@ -12,8 +12,6 @@ import java.time.LocalDate;
 
 public class RelatorioEdicaoInput {
 
-    private Long idRelatorio;
-
     private String conteudo;
 
     private LocalDate data;

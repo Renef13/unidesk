@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TicketEdicaoInput {
 
-    private Long idTicket;
-
     private String titulo;
 
     private String descricao;

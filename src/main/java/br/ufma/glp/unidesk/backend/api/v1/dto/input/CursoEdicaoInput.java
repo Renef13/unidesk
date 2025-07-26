@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CursoEdicaoInput {
 
-    private Long idCurso;
-
     private String nome;
 
     private String campus;

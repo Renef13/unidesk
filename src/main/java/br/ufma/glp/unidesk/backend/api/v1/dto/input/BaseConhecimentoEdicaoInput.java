@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BaseConhecimentoEdicaoInput {
 
-    private Long idArtigo;
-
     private String titulo;
 
     private String conteudo;

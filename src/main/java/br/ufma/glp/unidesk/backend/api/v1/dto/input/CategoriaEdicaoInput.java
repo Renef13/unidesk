@@ -9,7 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoriaEdicaoInput {
 
-    private Long idCategoria;
-
     private String nome;
 }

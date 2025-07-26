@@ -9,7 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PrioridadeEdicaoInput {
 
-    private Long idPrioridade;
-
     private String nivel;
 }

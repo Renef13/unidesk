@@ -9,7 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StatusEdicaoInput {
 
-    private Long idStatus;
-
     private String nome;
 }

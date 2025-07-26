@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UsuarioEdicaoInput {
 
-    private Long idUsuario;
-
     private String nome;
 
     private String email;

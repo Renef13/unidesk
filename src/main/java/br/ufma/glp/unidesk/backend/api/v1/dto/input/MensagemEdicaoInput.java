@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 
 public class MensagemEdicaoInput {
 
-
-    private Long idMensagem;
-
     private String conteudo;
 
     private Long idTicket;
