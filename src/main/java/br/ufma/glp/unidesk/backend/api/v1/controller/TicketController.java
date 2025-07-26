@@ -86,8 +86,9 @@ public class TicketController {
 
     @PatchMapping("/{id}/fechar")
     @ResponseStatus(HttpStatus.OK)
-    public TicketModel fecharTicket(@PathVariable Long id, @RequestParam Long idStatus) {
-        return ticketModelAssembler.toModel(ticketService.fecharTicket(ticketService.buscarTicketPorId(id), idStatus));
+    public TicketModel fecharTicket(@PathVariable Long id) {
+        Ticket ticketAtualizado = ticketService.fecharTicket(id);
+        return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
 

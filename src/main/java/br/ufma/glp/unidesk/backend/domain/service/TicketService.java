@@ -29,6 +29,7 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final StorageService storageService;
     private final StatusRepository statusRepository;
+    private final StatusService statusService;
 
     public Page<Ticket> listarTickets(@Valid @NotNull Usuario usuario, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -64,12 +65,21 @@ public class TicketService {
 
 
     @Transactional
-    public Ticket fecharTicket(@Valid @NotNull Ticket ticket, @NotNull Long idStatus) {
-        Status novoStatus = statusRepository.findById(idStatus)
-                .orElseThrow(() -> new StatusNaoEncontradoException("Status não encontrado para o id: " + idStatus));
-        ticket.setStatus(novoStatus);
-        return ticketRepository.save(ticket);
+    public Ticket fecharTicket(@NotNull Long idTicket) {
+        Ticket ticketExistente = ticketRepository.findById(idTicket)
+                .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
+
+        Status statusFechado = statusService.buscarPorNomeOuFalhar("Fechado");
+
+        if (ticketExistente.getStatus().getIdStatus().equals(statusFechado.getIdStatus())) {
+            throw new IllegalStateException("O ticket já está fechado.");
+        }
+
+        ticketExistente.setStatus(statusFechado);
+
+        return ticketRepository.save(ticketExistente);
     }
+
 
     @Transactional
     public Ticket atualizarTicket(@Valid @NotNull Ticket ticketAtualizado) {
