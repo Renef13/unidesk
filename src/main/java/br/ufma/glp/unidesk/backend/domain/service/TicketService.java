@@ -50,15 +50,18 @@ public class TicketService {
     }
 
     @Transactional
-    public Ticket alterarStatusTicket(@Valid @NotNull Long idTicket, @Valid @NotNull Long idStatus) {
-        Ticket ticket = ticketRepository.findById(idTicket)
+    public Ticket alterarStatusTicket(@NotNull Long idTicket, @Valid @NotNull Ticket ticket) {
+        ticketRepository.findById(idTicket)
                 .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
-        Status status = statusRepository.findById(idStatus)
-                .orElseThrow(() -> new StatusNaoEncontradoException("Status não encontrado para o id: " + idStatus));
+
+        Status status = statusRepository.findById(ticket.getStatus().getIdStatus())
+                .orElseThrow(() -> new StatusNaoEncontradoException("Status não encontrado para o id: " + ticket.getStatus().getIdStatus()));
+
         ticket.setStatus(status);
-        ticketRepository.save(ticket);
-        return ticket;
+
+        return ticketRepository.save(ticket);
     }
+
 
     @Transactional
     public Ticket fecharTicket(@Valid @NotNull Ticket ticket, @NotNull Long idStatus) {

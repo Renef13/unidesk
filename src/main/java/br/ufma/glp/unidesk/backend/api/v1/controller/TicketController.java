@@ -77,8 +77,11 @@ public class TicketController {
 
     @PatchMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
-    public TicketModel alterarStatus(@PathVariable Long id, @RequestParam Long idStatus) {
-        return ticketModelAssembler.toModel(ticketService.alterarStatusTicket(id, idStatus));
+    public TicketModel alterarStatus(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
+        Ticket ticket = ticketService.buscarTicketPorId(id);
+        ticketEdicaoInputDisassembler.copyToDomainObject(ticketEdicaoInput, ticket);
+        Ticket ticketAtualizado = ticketService.alterarStatusTicket(id, ticket);
+        return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
     @PatchMapping("/{id}/fechar")
