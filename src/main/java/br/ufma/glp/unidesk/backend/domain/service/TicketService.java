@@ -69,10 +69,10 @@ public class TicketService {
     }
 
     @Transactional
-    public Ticket atualizarTicket(@NotNull Long idTicket, @Valid @NotNull Ticket ticketAtualizado) {
+    public Ticket atualizarTicket(@Valid @NotNull Ticket ticketAtualizado) {
         //TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
-        Ticket ticketExistente = ticketRepository.findById(idTicket)
-                .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
+        Ticket ticketExistente = ticketRepository.findById(ticketAtualizado.getIdTicket())
+                .orElseThrow(() -> new TicketNaoEncontradoException(ticketAtualizado.getIdTicket()));
 
         ticketExistente.setTitulo(ticketAtualizado.getTitulo());
         ticketExistente.setDescricao(ticketAtualizado.getDescricao());
