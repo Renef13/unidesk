@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.AlunoModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.AlunoCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.AlunoEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.AlunoModel;
+import br.ufma.glp.unidesk.backend.domain.model.Aluno;
 import br.ufma.glp.unidesk.backend.domain.service.AlunoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,13 +51,19 @@ public class AlunoController {
         );
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AlunoModel atualizar(@RequestBody @Valid AlunoEdicaoInput alunoEdicaoInput) {
-        return alunoModelAssembler.toModel(
-                alunoService.atualizar(alunoEdicaoInputDisassembler.toDomainObject(alunoEdicaoInput))
-        );
+    public AlunoModel atualizar(@PathVariable Long id, @RequestBody @Valid AlunoEdicaoInput alunoEdicaoInput) {
+
+        Aluno alunoAtual = alunoService.buscarPorIdOuFalhar(id);
+
+        alunoEdicaoInputDisassembler.copyToDomainObject(alunoEdicaoInput, alunoService.buscarPorIdOuFalhar(id));
+
+        Aluno alunoAtualizado = alunoService.salvar(alunoAtual);
+
+        return alunoModelAssembler.toModel(alunoAtualizado);
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -9,17 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AlunoEdicaoInput {
 
-	private Long idUsuario;
+    private String nome;
 
-	private String nome;
+    private String email;
 
-	private String email;
+    private String usuario;
 
-	private String usuario;
+    private String senha;
 
-	private String senha;
+    private String matricula;
 
-	private String matricula;
-
-	private Long idCurso;
+    private Long idCurso;
 }
