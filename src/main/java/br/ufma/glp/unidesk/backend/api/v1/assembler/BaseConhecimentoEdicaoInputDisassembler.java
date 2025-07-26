@@ -13,13 +13,13 @@ public class BaseConhecimentoEdicaoInputDisassembler {
 
     private final ModelMapper modelMapper;
 
-    public void copyToDomainObject(BaseConhecimentoEdicaoInput baseConhecimentoInput, BaseConhecimento entidadeExistente) {
-        modelMapper.map(baseConhecimentoInput, entidadeExistente);
+    public void copyToDomainObject(BaseConhecimentoEdicaoInput baseConhecimentoInput, BaseConhecimento baseConhecimento) {
+        modelMapper.map(baseConhecimentoInput, baseConhecimento);
 
         if (baseConhecimentoInput.getIdCategoria() != null) {
             Categoria categoria = new Categoria();
             categoria.setIdCategoria(baseConhecimentoInput.getIdCategoria());
-            entidadeExistente.setCategoria(categoria);
+            baseConhecimento.setCategoria(categoria);
         }
     }
 }

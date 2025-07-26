@@ -12,10 +12,6 @@ public class CategoriaEdicaoInputDisassembler {
 
     private final ModelMapper modelMapper;
 
-    public Categoria toDomainObject(CategoriaEdicaoInput categoriaEdicaoInput) {
-        return modelMapper.map(categoriaEdicaoInput, Categoria.class);
-    }
-
     public void copyToDomainObject(CategoriaEdicaoInput categoriaEdicaoInput, Categoria categoria) {
         modelMapper.map(categoriaEdicaoInput, categoria);
     }

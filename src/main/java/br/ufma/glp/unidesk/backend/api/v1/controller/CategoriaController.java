@@ -6,6 +6,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.CategoriaModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.CategoriaCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.CategoriaEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.CategoriaModel;
+import br.ufma.glp.unidesk.backend.domain.model.Categoria;
 import br.ufma.glp.unidesk.backend.domain.service.CategoriaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,13 +53,16 @@ public class CategoriaController {
                                 .toDomainObject(categoriaInput)));
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoriaModel atualizar(@RequestBody @Valid CategoriaEdicaoInput categoriaEdicaoInput) {
-        return categoriaModelAssembler.toModel(
-                categoriaService
-                        .atualizar(categoriaEdicaoInputDisassembler
-                                .toDomainObject(categoriaEdicaoInput)));
+    public CategoriaModel atualizar( @PathVariable Long id,@RequestBody @Valid CategoriaEdicaoInput categoriaEdicaoInput) {
+        Categoria categoriaExistente = categoriaService.buscarPorIdOuFalhar(id);
+
+        categoriaEdicaoInputDisassembler.copyToDomainObject(categoriaEdicaoInput, categoriaExistente);
+
+        Categoria categoriaAtualizada = categoriaService.atualizar(categoriaExistente);
+        return categoriaModelAssembler.toModel(categoriaAtualizada);
+
     }
 
     @DeleteMapping("/{id}")
