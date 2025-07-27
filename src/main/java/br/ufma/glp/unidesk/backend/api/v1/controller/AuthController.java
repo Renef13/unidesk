@@ -40,12 +40,10 @@ public class AuthController {
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UsuarioModel> me() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+        var usuario = authService.getCurrentUsuario();
+        if (usuario == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        String usuarioLogin = auth.getName();
-        var usuario = usuarioService.buscarPorUsuario(usuarioLogin);
         UsuarioModel model = usuarioModelAssembler.toModel(usuario);
         return ResponseEntity.ok(model);
     }
