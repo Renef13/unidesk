@@ -44,7 +44,8 @@ public class AuthController {
         if (usuario == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        UsuarioModel model = usuarioModelAssembler.toModel(usuario);
+        var usuarioEntity = usuarioService.buscarPorUsuario(usuario);
+        UsuarioModel model = usuarioModelAssembler.toModel(usuarioEntity);
         return ResponseEntity.ok(model);
     }
 
