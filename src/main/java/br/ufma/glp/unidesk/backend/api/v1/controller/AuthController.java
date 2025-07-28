@@ -3,10 +3,16 @@ package br.ufma.glp.unidesk.backend.api.v1.controller;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.AuthInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.AuthTokenOutput;
 import br.ufma.glp.unidesk.backend.domain.service.AuthService;
+import br.ufma.glp.unidesk.backend.domain.service.UsuarioService;
+import br.ufma.glp.unidesk.backend.api.v1.assembler.UsuarioModelAssembler;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.UsuarioModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final UsuarioService usuarioService;
+    private final UsuarioModelAssembler usuarioModelAssembler;
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
@@ -24,9 +32,21 @@ public class AuthController {
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<String> logout() {
         authService.logout();
-        //TODO: Implementar a lógica de logout pois nao está funcionando
         return ResponseEntity.ok("Logout realizado com sucesso");
     }
+
+    @GetMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<UsuarioModel> me() {
+        var usuario = authService.getCurrentUsuario();
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        var usuarioEntity = usuarioService.buscarPorUsuario(usuario);
+        UsuarioModel model = usuarioModelAssembler.toModel(usuarioEntity);
+        return ResponseEntity.ok(model);
+    }
+
 }
