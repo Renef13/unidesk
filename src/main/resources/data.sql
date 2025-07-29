@@ -15,8 +15,8 @@ VALUES ('Coordenação de Engenharia de Software', 1),
 
 
 INSERT INTO usuarios (nome, email, senha, role, usuario)
-VALUES ('João Silva', 'joao.silva@example.com', 'senha123', 'ALUNO', 'joao.silva'),
-       ('Maria Souza', 'maria.souza@example.com', 'senha123', 'ALUNO', 'maria.souza'),
+VALUES ('João Silva', 'joao.silva@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby', 'ALUNO', 'joao.silva'),
+       ('Maria Souza', 'maria.souza@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby ', 'ALUNO', 'maria.souza'),
        ('Usuario Teste', 'usuario.teste@discente.ufma.br',
         '$2a$10$HxeMIrPYXlJ6SaIE01bjQeikShHxgEFlavpqtUvyN6rnR/7LHe0mu', 'ADMIN', 'usuario.teste'),
        ('Pedro Santos', 'pedro.santos@example.com', 'senha123', 'COORDENADOR', 'pedro.santos'),
