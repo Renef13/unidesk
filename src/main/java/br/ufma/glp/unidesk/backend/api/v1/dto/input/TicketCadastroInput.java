@@ -22,7 +22,6 @@ public class TicketCadastroInput {
     @NotNull(message = "ID da coordenação é obrigatório")
     private Long idCoordenacao;
 
-    @NotNull(message = "ID do funcionário da coordenação é obrigatório")
     private Long idFuncionario;
 
     @NotNull(message = "ID do aluno é obrigatório")
