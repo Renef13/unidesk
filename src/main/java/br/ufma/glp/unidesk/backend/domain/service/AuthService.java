@@ -31,6 +31,16 @@ public class AuthService {
         return auth.getName();
     }
 
+    public Usuario getCurrentUsuarioEntity() {
+        String username = getCurrentUsuario();
+        Usuario usuario = usuarioService.buscarPorUsuario(username);
+        if (usuario == null) {
+            throw new IllegalStateException("Usuário não encontrado");
+        }
+
+        return usuario;
+    }
+
     public void logout() {
         SecurityContextHolder.clearContext();
     }
