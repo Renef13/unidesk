@@ -8,6 +8,7 @@ import br.ufma.glp.unidesk.backend.api.v1.dto.input.TicketEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketModel;
 import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
+import br.ufma.glp.unidesk.backend.domain.service.AuthService;
 import br.ufma.glp.unidesk.backend.domain.service.TicketService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,15 @@ public class TicketController {
     private final TicketModelAssembler ticketModelAssembler;
     private final TicketCadastroInputDisassembler ticketCadastroInputDisassembler;
     private final TicketEdicaoInputDisassembler ticketEdicaoInputDisassembler;
+    private final AuthService authService;
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    public Page<TicketModel> listar(@RequestParam int page, @RequestParam int size, @RequestParam Usuario usuario) {
+    public Page<TicketModel> listar(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        Usuario usuario = authService.getCurrentUsuarioEntity();
+        if (usuario == null) {
+            throw new IllegalStateException("Usuário não autenticado");
+        }
         return ticketService.listarTickets(usuario, page, size)
                 .map(ticketModelAssembler::toModel);
     }

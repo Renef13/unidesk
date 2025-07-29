@@ -1,0 +1,54 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: uni-desk-db-dev
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: uni-desk-api-dev
+    working_dir: /app
+    command: ./gradlew bootRun
+    ports:
+      - "${UNIDESK_SERVER_PORT:-8081}:${UNIDESK_SERVER_PORT:-8081}"
+    volumes:
+      - ./:/app
+      - ~/.gradle:/home/gradle/.gradle
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - UNIDESK_SERVER_PORT=${UNIDESK_SERVER_PORT:-8081}
+      - UNIDESK_API_DOCS_PATH=${UNIDESK_API_DOCS_PATH:-/api-docs}
+      - UNIDESK_DB_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - UNIDESK_DB_USERNAME=${POSTGRES_USER}
+      - UNIDESK_DB_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      - db
+
+  minio:
+    image: bitnami/minio:latest
+    container_name: minio-dev
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - JAVA_MINIO_URL=${JAVA_MINIO_URL}
+    volumes:
+      - minio_data:/data
+
+volumes:
+  db_data:
+  minio_data:

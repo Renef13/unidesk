@@ -1,6 +1,5 @@
 package br.ufma.glp.unidesk.backend.domain.model;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,7 +37,7 @@ public class Ticket {
     @Column(nullable = false)
     @NotBlank(message = "Descrição não pode ser vazia")
     private String descricao;
-    
+
     @Column(name = "id_file")
     private String idFile;
 
@@ -49,7 +48,6 @@ public class Ticket {
     @Column(name = "data_fechamento")
     private Instant dataFechamento;
 
-    //TODO: analisar se não vale a pena usar esse atributo
     @UpdateTimestamp
     @Column(name = "data_atualizacao", nullable = false)
     private Instant dataAtualizacao;
@@ -59,9 +57,8 @@ public class Ticket {
     @NotNull(message = "Coordenação é obrigatória")
     private Coordenacao coordenacao;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_func_coordenacao", nullable = false, foreignKey = @ForeignKey(name = "fk_ticket_func_coordenacao"))
-    @NotNull(message = "Funcionário da coordenação é obrigatório")
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_func_coordenacao", nullable = true, foreignKey = @ForeignKey(name = "fk_ticket_func_coordenacao"))
     private FuncionarioCoordenacao funcionario;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -84,7 +81,6 @@ public class Ticket {
     @NotNull(message = "Categoria é obrigatória")
     private Categoria categoria;
 
-    
 
     @AssertTrue(message = "Data de fechamento não pode ser anterior à data de criação")
     private boolean isFechaValida() {
