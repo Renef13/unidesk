@@ -86,12 +86,6 @@ public class TicketController {
         return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(data), file));
     }
 
-    @GetMapping("/imagem/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public String getUrlImage(@PathVariable Long idTicket) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, XmlParserException, ServerException, IllegalArgumentException, IOException {
-        return ticketService.getUrlImage(idTicket);
-    }
-
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel atualizar(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
