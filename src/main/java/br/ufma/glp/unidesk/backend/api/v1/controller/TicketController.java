@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,12 +67,14 @@ public class TicketController {
         return ticketModelAssembler.toCollectionModel(ticketService.buscarTicketsPorPeriodo(dataInicio, dataFim));
     }
 
+    @PreAuthorize("hasRole('ALUNO')")
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public TicketModel adicionar(@RequestBody @Valid TicketCadastroInput ticketInput, @RequestParam(required = false) MultipartFile file) throws Exception {
         return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(ticketInput), file));
     }
 
+    @PreAuthorize("hasRole('ALUNO' or 'FUNCIONARIO_COORDENACAO' or 'COORDENADOR')")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel atualizar(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
@@ -81,6 +84,7 @@ public class TicketController {
         return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
+    @PreAuthorize("hasRole('FUNCIONARIO_COORDENACAO' or 'COORDENADOR')")
     @PatchMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel alterarStatus(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
@@ -90,6 +94,7 @@ public class TicketController {
         return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
+    @PreAuthorize("hasRole('FUNCIONARIO_COORDENACAO' or 'COORDENADOR')")
     @PatchMapping("/{id}/fechar")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel fecharTicket(@PathVariable Long id) {
