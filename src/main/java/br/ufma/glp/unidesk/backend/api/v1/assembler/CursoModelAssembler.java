@@ -12,12 +12,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CursoModelAssembler {
     private final ModelMapper modelMapper;
+    private final CoordenacaoModelAssembler coordenacaoModelAssembler;
 
     public CursoModel toModel(Curso curso) {
         if (curso == null) {
             return null;
         }
-        return modelMapper.map(curso, CursoModel.class);
+        CursoModel model = modelMapper.map(curso, CursoModel.class);
+        model.setCoordenacao(
+                coordenacaoModelAssembler.toModel(curso.getCoordenacao())
+        );
+        return model;
     }
 
     public List<CursoModel> toCollectionModel(List<Curso> cursos) {

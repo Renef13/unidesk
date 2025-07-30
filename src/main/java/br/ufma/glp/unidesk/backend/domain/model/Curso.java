@@ -1,20 +1,12 @@
 package br.ufma.glp.unidesk.backend.domain.model;
 
 
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import jakarta.persistence.Table;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.FetchType;
-import java.util.List;
 
 
 @Entity
@@ -39,7 +31,6 @@ public class Curso {
     @NotBlank(message = "O campus do curso não pode ser vazio ou nulo")
     private String campus;
 
-    // Add relationship with coordinations
-    @OneToMany(mappedBy = "curso", fetch = FetchType.EAGER)
-    private List<Coordenacao> coordenacoes;
+    @OneToOne(mappedBy = "curso", fetch = FetchType.EAGER)
+    private Coordenacao coordenacao;
 }

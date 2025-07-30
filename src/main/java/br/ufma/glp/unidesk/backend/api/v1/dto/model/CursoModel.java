@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,5 +17,5 @@ public class CursoModel {
     private String campus;
 
     // Add coordinations list
-    private List<CoordenacaoModel> coordenacoes;
+    private CoordenacaoModel coordenacao;
 }
