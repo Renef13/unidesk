@@ -7,6 +7,12 @@ import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.repository.StatusRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.TicketRepository;
+import io.minio.errors.ErrorResponseException;
+import io.minio.errors.InsufficientDataException;
+import io.minio.errors.InternalException;
+import io.minio.errors.InvalidResponseException;
+import io.minio.errors.ServerException;
+import io.minio.errors.XmlParserException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.List;
 
@@ -108,6 +117,11 @@ public class TicketService {
             throw new TicketNaoEncontradoException("Nenhum ticket encontrado para a categoria: " + nomeCategoria);
         }
         return tickets;
+    }
+
+    public String getUrlImage(Long idTicket) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, XmlParserException, ServerException, IllegalArgumentException, IOException {
+        String idFile = ticketRepository.findByIdTicket(idTicket).get().getIdFile();
+        return storageService.getUrl(idFile);
     }
 
     public List<Ticket> buscarTicketsPorStatusEspecifico(@Valid @NotNull Usuario usuario, @Valid @NotNull Long idStatus) {
