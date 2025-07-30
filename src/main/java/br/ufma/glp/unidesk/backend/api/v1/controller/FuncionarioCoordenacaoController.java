@@ -11,6 +11,7 @@ import br.ufma.glp.unidesk.backend.domain.service.FuncionarioCoordenacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class FuncionarioCoordenacaoController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('FUNCIONARIO_COORDENACAO' or hasRole('COORDENADOR'))")
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public FuncionarioCoordenacaoModel adicionar(@RequestBody @Valid FuncionarioCoordenacaoCadastroInput input) {
@@ -58,6 +60,7 @@ public class FuncionarioCoordenacaoController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('FUNCIONARIO_COORDENACAO')")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public FuncionarioCoordenacaoModel atualizar(@PathVariable Long id, @RequestBody @Valid FuncionarioCoordenacaoEdicaoInput input) {
@@ -66,6 +69,7 @@ public class FuncionarioCoordenacaoController {
         return funcionarioCoordenacaoModelAssembler.toModel(funcionarioCoordenacaoService.atualizar(funcionarioExistente));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('COORDENADOR')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {

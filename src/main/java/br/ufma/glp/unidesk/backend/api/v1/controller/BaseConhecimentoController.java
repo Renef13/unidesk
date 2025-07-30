@@ -12,6 +12,7 @@ import br.ufma.glp.unidesk.backend.domain.service.FuncionarioCoordenacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +46,7 @@ public class BaseConhecimentoController {
         return baseConhecimentoModelAssembler.toModel(baseConhecimentoService.buscarPorTituloOuFalhar(nome));
     }
 
+    @PreAuthorize( "hasRole('COORDENADOR') or hasRole('FUNCIONARIO_COORDENACAO')" )
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public BaseConhecimentoModel criarFaq(@RequestBody @Valid BaseConhecimentoCadastroInput baseConhecimentoCadastroInput) {
@@ -53,6 +55,7 @@ public class BaseConhecimentoController {
         );
     }
 
+    @PreAuthorize( "hasRole('COORDENADOR') or hasRole('FUNCIONARIO_COORDENACAO')" )
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public BaseConhecimentoModel editarFaq(@PathVariable Long id, @RequestBody @Valid BaseConhecimentoEdicaoInput baseConhecimentoEdicaoInput) {
@@ -66,7 +69,7 @@ public class BaseConhecimentoController {
         return baseConhecimentoModelAssembler.toModel(atualizado);
     }
 
-
+    @PreAuthorize( "hasRole('COORDENADOR') or hasRole('FUNCIONARIO_COORDENACAO')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarFaq(@PathVariable Long id) {
