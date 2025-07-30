@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -79,7 +80,8 @@ public class TicketController {
         return ticketModelAssembler.toCollectionModel(ticketService.buscarTicketsPorPeriodo(dataInicio, dataFim));
     }
 
-    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ALUNO')")
+    @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public TicketModel adicionar(@RequestPart("data") @Valid TicketCadastroInput data, @RequestParam(required = false) MultipartFile file) throws Exception {
         return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(data), file));
