@@ -12,6 +12,9 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.FetchType;
+import java.util.List;
 
 
 @Entity
@@ -35,4 +38,8 @@ public class Curso {
     @Column(name = "campus", nullable = false, length = 100)
     @NotBlank(message = "O campus do curso não pode ser vazio ou nulo")
     private String campus;
+
+    // Add relationship with coordinations
+    @OneToMany(mappedBy = "curso", fetch = FetchType.EAGER)
+    private List<Coordenacao> coordenacoes;
 }

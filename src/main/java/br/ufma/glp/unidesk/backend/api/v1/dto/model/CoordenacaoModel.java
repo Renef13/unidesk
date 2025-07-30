@@ -1,5 +1,6 @@
 package br.ufma.glp.unidesk.backend.api.v1.dto.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,5 +14,7 @@ public class CoordenacaoModel {
 
     private String nome;
 
+    @JsonIgnore
     private CursoModel curso;
+
 }
