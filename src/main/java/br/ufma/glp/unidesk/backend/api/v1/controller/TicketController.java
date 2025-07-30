@@ -82,7 +82,7 @@ public class TicketController {
 
     @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public TicketModel adicionar(@RequestPart("data") @Valid TicketCadastroInput data, @RequestParam("file") MultipartFile file) throws Exception {
+    public TicketModel adicionar(@RequestPart("data") @Valid TicketCadastroInput data, @RequestParam(required = false) MultipartFile file) throws Exception {
         return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(data), file));
     }
 
