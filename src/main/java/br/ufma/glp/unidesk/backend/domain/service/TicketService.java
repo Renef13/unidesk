@@ -2,9 +2,7 @@ package br.ufma.glp.unidesk.backend.domain.service;
 
 import br.ufma.glp.unidesk.backend.domain.exception.StatusNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.TicketNaoEncontradoException;
-import br.ufma.glp.unidesk.backend.domain.model.Status;
-import br.ufma.glp.unidesk.backend.domain.model.Ticket;
-import br.ufma.glp.unidesk.backend.domain.model.Usuario;
+import br.ufma.glp.unidesk.backend.domain.model.*;
 import br.ufma.glp.unidesk.backend.domain.repository.StatusRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.TicketRepository;
 import jakarta.validation.Valid;
@@ -30,14 +28,24 @@ public class TicketService {
     private final StorageService storageService;
     private final StatusRepository statusRepository;
     private final StatusService statusService;
+    private final CoordenadorService coordenadorService;
+    private final FuncionarioCoordenacaoService funcionarioCoordenacaoService;
 
     public Page<Ticket> listarTickets(@Valid @NotNull Usuario usuario, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
         if (isAdmin) {
             return ticketRepository.findAll(pageable);
-        } else {
+        } else if (usuario.getRole() == UsuarioRole.ALUNO) {
             return ticketRepository.findByAlunoIdUsuario(usuario.getIdUsuario(), pageable);
+        } else if (usuario.getRole() == UsuarioRole.COORDENADOR) {
+            Coordenacao coord = coordenadorService.buscarPorIdOuFalhar(usuario.getIdUsuario()).getCoordenacao();
+            return ticketRepository.findByCoordenacaoIdCoordenacao(coord.getIdCoordenacao(), pageable);
+        } else if (usuario.getRole() == UsuarioRole.FUNCIONARIO_COORDENACAO) {
+            FuncionarioCoordenacao func = funcionarioCoordenacaoService.buscarPorIdOuFalhar(usuario.getIdUsuario());
+            return ticketRepository.findByFuncionarioIdUsuario(func.getIdUsuario(), pageable);
+        } else {
+            return Page.empty(pageable);
         }
     }
 
