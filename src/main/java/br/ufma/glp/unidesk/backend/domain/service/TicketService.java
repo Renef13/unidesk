@@ -48,7 +48,7 @@ public class TicketService {
     private final StatusService statusService;
     private final CoordenacaoRepository coordenacaoRepository;
     private final FuncionarioCoordenacaoRepository funcionarioCoordenacaoRepository;
-    private final CoordenacaoService coordenacaoService;
+    private final CoordenadorService coordenadorService;
     private final FuncionarioCoordenacaoService funcionarioCoordenacaoService;
 
     public Page<Ticket> listarTickets(@Valid @NotNull Usuario usuario, int pageNumber, int pageSize) {
