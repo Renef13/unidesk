@@ -5,6 +5,7 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketEdicaoInputDisassemble
 import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.TicketCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.TicketEdicaoInput;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.DashboardModel;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketModel;
 import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
@@ -114,5 +115,10 @@ public class TicketController {
         return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
+    @GetMapping("/dashboard")
+    @ResponseStatus(HttpStatus.OK)
+    public DashboardModel statusDashboard() {
+        return ticketService.dashboardTickets();
+    }
 
 }

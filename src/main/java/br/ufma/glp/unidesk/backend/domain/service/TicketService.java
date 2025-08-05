@@ -1,5 +1,6 @@
 package br.ufma.glp.unidesk.backend.domain.service;
 
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.DashboardModel;
 import br.ufma.glp.unidesk.backend.domain.exception.CoordenacaoNaoEncontradaException;
 import br.ufma.glp.unidesk.backend.domain.exception.FuncionarioCoordenacaoNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.StatusNaoEncontradoException;
@@ -31,6 +32,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -169,5 +172,41 @@ public class TicketService {
             throw new TicketNaoEncontradoException("Nao encontrado tickets no periodo selecionado");
         }
         return ticketsNoPeriodo;
+    }
+
+    public DashboardModel dashboardTickets() {
+        Long totalTickets = ticketRepository.count();
+
+        Map<String, Long> contagens = countTicketsByAllStatus();
+
+        long totalTicketsResolvidos = contagens.getOrDefault("Fechado", 0L);
+        long totalTicketsAbertos = contagens.getOrDefault("Aberto", 0L);
+        long totalTicketsPendentes = contagens.getOrDefault("Pendente", 0L);
+        long totalTicketsEmAndamento = contagens.getOrDefault("Em Andamento", 0L);
+
+        
+        Long porcentagemProgresso = (totalTicketsEmAndamento + totalTicketsPendentes + totalTicketsResolvidos) / totalTickets * 100;
+        Long porcentagemAbertos = totalTicketsAbertos  / totalTickets * 100;
+        Long porcentagemResolvidos = totalTicketsResolvidos / totalTickets * 100;
+        Long porcentagemAndamento = totalTicketsEmAndamento / totalTickets * 100;
+        DashboardModel dashboardModel = new DashboardModel();
+        dashboardModel.setTotalTickets(totalTickets);
+        dashboardModel.setTotalTicketsResolvidos(totalTicketsResolvidos);
+        dashboardModel.setTotalTicketsAbertos(totalTicketsAbertos);
+        dashboardModel.setTotalTicketsPendentes(totalTicketsPendentes);
+        dashboardModel.setTotalTicketsEmAndamento(totalTicketsEmAndamento);
+        dashboardModel.setPorcentagemProgresso(porcentagemProgresso);
+        dashboardModel.setPorcentagemAbertos(porcentagemAbertos);
+        dashboardModel.setPorcentagemResolvidos(porcentagemResolvidos);
+        dashboardModel.setPorcentagemAndamento(porcentagemAndamento);
+        return dashboardModel;
+    }
+
+    public Map<String, Long> countTicketsByAllStatus() {
+        List<Object[]> resultados = ticketRepository.countTicketsByStatus();
+        return resultados.stream().collect(Collectors.toMap(
+            r -> (String) r[0],
+            r -> (Long) r[1]
+        ));
     }
 }

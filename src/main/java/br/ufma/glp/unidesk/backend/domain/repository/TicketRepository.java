@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -209,4 +210,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      */
 
     List<Ticket> findByCategoriaNomeIgnoreCase(@NotNull String nomeCategoria);
+
+    Long countByStatus(Status statusFechado);
+
+    @Query("SELECT t.status.nome, COUNT(t) FROM Ticket t GROUP BY t.status.nome")
+    List<Object[]> countTicketsByStatus();
 }
