@@ -37,18 +37,24 @@ public class FuncionarioCoordenacaoTest {
 
     @Test
     void equalsEHashCode_mesmoIdMatriculaCoordenacao_igualdade() {
-        Coordenacao coord1 = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
+        Coordenacao coordenacao = new Coordenacao();
+        coordenacao.setIdCoordenacao(1L);
+        coordenacao.setNome("Coordenação Teste");
+
+        Curso curso = new Curso(1L, "Curso", "Campus", coordenacao);
+        coordenacao.setCurso(curso);
+
         DummyFuncionario f1 = new DummyFuncionario(1L, "Nome1", "e1@discente.ufma.br", "pass1",
-                                                   "MATR1", coord1, UsuarioRole.FUNCIONARIO_COORDENACAO, "usuario1");
+                                                   "MATR1", coordenacao, UsuarioRole.FUNCIONARIO_COORDENACAO, "usuario1");
         DummyFuncionario f2 = new DummyFuncionario(1L, "Nome2", "e2@discente.ufma.br", "pass2",
-                                                   "MATR1", coord1, UsuarioRole.FUNCIONARIO_COORDENACAO, "usuario2");
+                                                   "MATR1", coordenacao, UsuarioRole.FUNCIONARIO_COORDENACAO, "usuario2");
         assertEquals(f1, f2);
         assertEquals(f1.hashCode(), f2.hashCode());
     }
 
     @Test
     void equals_idsDiferentes_naoIguais() {
-        Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
+        Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus", null));
         DummyFuncionario f1 = new DummyFuncionario(1L, "Nome", "e@discente.ufma.br", "pass",
                                                    "MATR", coord, UsuarioRole.FUNCIONARIO_COORDENACAO, "usuario1");
         DummyFuncionario f2 = new DummyFuncionario(2L, "Nome", "e@discente.ufma.br", "pass",
@@ -58,7 +64,7 @@ public class FuncionarioCoordenacaoTest {
 
     @Test
     void funcionarioValido_semViolacoes() {
-        Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
+        Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus", null));
         DummyFuncionario f = new DummyFuncionario(1L, "Nome", "teste@discente.ufma.br", "senha",
                                                   "MATR", coord, UsuarioRole.FUNCIONARIO_COORDENACAO, "usuario");
         Set<ConstraintViolation<FuncionarioCoordenacao>> violations = validator.validate(f);
@@ -67,7 +73,7 @@ public class FuncionarioCoordenacaoTest {
 
     @Test
     void matriculaEmBranco_violaNotBlank() {
-        Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
+        Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus", null));
         DummyFuncionario f = new DummyFuncionario(1L, "Nome", "teste@discente.ufma.br", "senha",
                                                   "   ", coord, UsuarioRole.FUNCIONARIO_COORDENACAO, "usuario");
         Set<ConstraintViolation<FuncionarioCoordenacao>> violations = validator.validate(f);
@@ -78,7 +84,7 @@ public class FuncionarioCoordenacaoTest {
     @Test
     void matriculaMuitoLonga_violaSize() {
         String longo = "a".repeat(21);
-        Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus"));
+        Coordenacao coord = new Coordenacao(1L, "Coord", new Curso(1L, "Curso", "Campus", null));
         DummyFuncionario f = new DummyFuncionario(1L, "Nome", "teste@discente.ufma.br", "senha",
                                                   longo, coord, UsuarioRole.FUNCIONARIO_COORDENACAO, "usuario");
         Set<ConstraintViolation<FuncionarioCoordenacao>> violations = validator.validate(f);
@@ -93,5 +99,19 @@ public class FuncionarioCoordenacaoTest {
         Set<ConstraintViolation<FuncionarioCoordenacao>> violations = validator.validate(f);
         assertFalse(violations.isEmpty());
         assertTrue(violations.stream().anyMatch(v -> "coordenacao".equals(v.getPropertyPath().toString())));
+    }
+
+    @Test
+    void exemploDeTeste() {
+        Coordenacao coordenacao = new Coordenacao();
+        coordenacao.setIdCoordenacao(1L);
+        coordenacao.setNome("Coordenação Teste");
+
+        Curso curso = new Curso(1L, "Curso", "Campus", coordenacao);
+        coordenacao.setCurso(curso);
+
+        Coordenacao coord = new Coordenacao(1L, "Coord", curso);
+
+        assertNotNull(coord);
     }
 }

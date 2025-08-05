@@ -38,15 +38,30 @@ class AlunoTest {
 
     @Test
     void equalsEHashCode_mesmoObjeto_deveSerIguais() {
-        DummyAluno a1 = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", "mat1", new Curso(1L, "Cur", "Campus"));
-        DummyAluno a2 = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", "mat1", new Curso(1L, "Cur", "Campus"));
+        Coordenacao coordenacao = new Coordenacao();
+        coordenacao.setIdCoordenacao(1L);
+        coordenacao.setNome("Coordenação Teste");
+
+        Curso curso = new Curso(1L, "Cur", "Campus", coordenacao);
+        coordenacao.setCurso(curso);
+
+        DummyAluno a1 = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", "mat1", curso);
+        DummyAluno a2 = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", "mat1", curso);
+
         assertEquals(a1, a2);
         assertEquals(a1.hashCode(), a2.hashCode());
     }
 
     @Test
     void matriculaEmBranco_deveGerarViolacaoNotBlank() {
-        DummyAluno aluno = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", "   ", new Curso(1L, "Cur", "Campus"));
+        Coordenacao coordenacao = new Coordenacao();
+        coordenacao.setIdCoordenacao(1L);
+        coordenacao.setNome("Coordenação Teste");
+
+        Curso curso = new Curso(1L, "Cur", "Campus", coordenacao);
+        coordenacao.setCurso(curso);
+
+        DummyAluno aluno = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", "   ", curso);
         Set<ConstraintViolation<Aluno>> violacoes = validator.validate(aluno);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream().anyMatch(v -> "matricula".equals(v.getPropertyPath().toString())));
@@ -54,7 +69,14 @@ class AlunoTest {
 
     @Test
     void matriculaNula_deveGerarViolacaoNotBlank() {
-        DummyAluno aluno = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", null, new Curso(1L, "Cur", "Campus"));
+        Coordenacao coordenacao = new Coordenacao();
+        coordenacao.setIdCoordenacao(1L);
+        coordenacao.setNome("Coordenação Teste");
+
+        Curso curso = new Curso(1L, "Cur", "Campus", coordenacao);
+        coordenacao.setCurso(curso);
+
+        DummyAluno aluno = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", null, curso);
         Set<ConstraintViolation<Aluno>> violacoes = validator.validate(aluno);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream().anyMatch(v -> "matricula".equals(v.getPropertyPath().toString())));
@@ -62,8 +84,15 @@ class AlunoTest {
 
     @Test
     void matriculaMuitoLonga_deveGerarViolacaoSize() {
+        Coordenacao coordenacao = new Coordenacao();
+        coordenacao.setIdCoordenacao(1L);
+        coordenacao.setNome("Coordenação Teste");
+
+        Curso curso = new Curso(1L, "Cur", "Campus", coordenacao);
+        coordenacao.setCurso(curso);
+
         String muitoLonga = "123456789012345678901"; // 21 caracteres
-        DummyAluno aluno = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", muitoLonga, new Curso(1L, "Cur", "Campus"));
+        DummyAluno aluno = new DummyAluno(1L, "nome", "teste@discente.ufma.br", "senha", muitoLonga, curso);
         Set<ConstraintViolation<Aluno>> violacoes = validator.validate(aluno);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream().anyMatch(v -> "matricula".equals(v.getPropertyPath().toString())));

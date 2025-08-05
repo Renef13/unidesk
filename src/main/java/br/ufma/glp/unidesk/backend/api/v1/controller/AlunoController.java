@@ -11,6 +11,7 @@ import br.ufma.glp.unidesk.backend.domain.service.AlunoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,24 +26,28 @@ public class AlunoController {
     private final AlunoCadastroInputDisassembler alunoCadastroInputDisassembler;
     private final AlunoEdicaoInputDisassembler alunoEdicaoInputDisassembler;
 
+    @PreAuthorize( "hasRole('ADMIN')")
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
     public List<AlunoModel> listar() {
         return alunoModelAssembler.toCollectionModel(alunoService.listarTodos());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AlunoModel buscarPorId(@PathVariable Long id) {
         return alunoModelAssembler.toModel(alunoService.buscarPorIdOuFalhar(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/buscar")
     @ResponseStatus(HttpStatus.OK)
     public AlunoModel buscarPorNome(@RequestParam String nome) {
         return alunoModelAssembler.toModel(alunoService.buscarPorNomeOuFalhar(nome));
     }
 
+@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public AlunoModel adicionar(@RequestBody @Valid AlunoCadastroInput alunoInput) {
@@ -51,6 +56,7 @@ public class AlunoController {
         );
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('ALUNO')")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AlunoModel atualizar(@PathVariable Long id, @RequestBody @Valid AlunoEdicaoInput alunoEdicaoInput) {
@@ -64,7 +70,7 @@ public class AlunoController {
         return alunoModelAssembler.toModel(alunoAtualizado);
     }
 
-
+    @PreAuthorize( "hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {

@@ -19,37 +19,93 @@ public class CoordenacaoTest {
         validator = factory.getValidator();
     }
 
-    static class DummyCoordenacao extends Coordenacao {
-        DummyCoordenacao(Long idCoordenacao, String nome, Curso curso) {
-            super(idCoordenacao, nome, curso);
-        }
-    }
-
     @Test
     void equalsEHashCode_mesmoId_deveSerIguais() {
-        DummyCoordenacao c1 = new DummyCoordenacao(1L, "Coord1", new Curso(1L, "Curso1", "Campus1"));
-        DummyCoordenacao c2 = new DummyCoordenacao(1L, "Coord2", new Curso(2L, "Curso2", "Campus2"));
-        assertEquals(c1, c2);
-        assertEquals(c1.hashCode(), c2.hashCode());
+        Curso curso1 = new Curso();
+        Curso curso2 = new Curso();
+        Coordenacao coord1 = new Coordenacao();
+        Coordenacao coord2 = new Coordenacao();
+
+        curso1.setIdCurso(1L);
+        curso1.setNome("Curso1");
+        curso1.setCampus("Campus1");
+
+        curso2.setIdCurso(2L);
+        curso2.setNome("Curso2");
+        curso2.setCampus("Campus2");
+
+        coord1.setIdCoordenacao(1L);
+        coord1.setNome("Coord1");
+        coord1.setCurso(curso1);
+
+        coord2.setIdCoordenacao(1L);
+        coord2.setNome("Coord2");
+        coord2.setCurso(curso2);
+
+        curso1.setCoordenacao(coord1);
+        curso2.setCoordenacao(coord2);
+
+        assertEquals(coord1, coord2);
+        assertEquals(coord1.hashCode(), coord2.hashCode());
     }
 
     @Test
     void equalsEHashCode_idsDiferentes_naoDevemSerIguais() {
-        DummyCoordenacao c1 = new DummyCoordenacao(1L, "Coord1", new Curso(1L, "Curso1", "Campus1"));
-        DummyCoordenacao c2 = new DummyCoordenacao(2L, "Coord1", new Curso(1L, "Curso1", "Campus1"));
-        assertNotEquals(c1, c2);
+        Curso curso = new Curso();
+        Coordenacao coord1 = new Coordenacao();
+        Coordenacao coord2 = new Coordenacao();
+
+        curso.setIdCurso(1L);
+        curso.setNome("Curso1");
+        curso.setCampus("Campus1");
+
+        coord1.setIdCoordenacao(1L);
+        coord1.setNome("Coord1");
+        coord1.setCurso(curso);
+
+        coord2.setIdCoordenacao(2L);
+        coord2.setNome("Coord1");
+        coord2.setCurso(curso);
+
+        curso.setCoordenacao(coord1);
+
+        assertNotEquals(coord1, coord2);
     }
 
     @Test
     void coordenacaoValida_semViolacoes() {
-        DummyCoordenacao coord = new DummyCoordenacao(1L, "Coord1", new Curso(1L, "Curso1", "Campus1"));
+        Curso curso = new Curso();
+        Coordenacao coord = new Coordenacao();
+
+        curso.setIdCurso(1L);
+        curso.setNome("Curso1");
+        curso.setCampus("Campus1");
+
+        coord.setIdCoordenacao(1L);
+        coord.setNome("Coord1");
+        coord.setCurso(curso);
+
+        curso.setCoordenacao(coord);
+
         Set<ConstraintViolation<Coordenacao>> violacoes = validator.validate(coord);
         assertTrue(violacoes.isEmpty());
     }
 
     @Test
     void nomeEmBranco_deveGerarViolacaoNotBlank() {
-        DummyCoordenacao coord = new DummyCoordenacao(1L, "   ", new Curso(1L, "Curso1", "Campus1"));
+        Curso curso = new Curso();
+        Coordenacao coord = new Coordenacao();
+
+        curso.setIdCurso(1L);
+        curso.setNome("Curso1");
+        curso.setCampus("Campus1");
+
+        coord.setIdCoordenacao(1L);
+        coord.setNome("   ");
+        coord.setCurso(curso);
+
+        curso.setCoordenacao(coord);
+
         Set<ConstraintViolation<Coordenacao>> violacoes = validator.validate(coord);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream().anyMatch(v -> "nome".equals(v.getPropertyPath().toString())));
@@ -57,7 +113,19 @@ public class CoordenacaoTest {
 
     @Test
     void nomeNulo_deveGerarViolacaoNotBlank() {
-        DummyCoordenacao coord = new DummyCoordenacao(1L, null, new Curso(1L, "Curso1", "Campus1"));
+        Curso curso = new Curso();
+        Coordenacao coord = new Coordenacao();
+
+        curso.setIdCurso(1L);
+        curso.setNome("Curso1");
+        curso.setCampus("Campus1");
+
+        coord.setIdCoordenacao(1L);
+        coord.setNome(null);
+        coord.setCurso(curso);
+
+        curso.setCoordenacao(coord);
+
         Set<ConstraintViolation<Coordenacao>> violacoes = validator.validate(coord);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream().anyMatch(v -> "nome".equals(v.getPropertyPath().toString())));
@@ -65,8 +133,20 @@ public class CoordenacaoTest {
 
     @Test
     void nomeMaiorQue100Caracteres_deveGerarViolacaoSize() {
+        Curso curso = new Curso();
+        Coordenacao coord = new Coordenacao();
+
+        curso.setIdCurso(1L);
+        curso.setNome("Curso1");
+        curso.setCampus("Campus1");
+
         String nomeGrande = "a".repeat(101);
-        DummyCoordenacao coord = new DummyCoordenacao(1L, nomeGrande, new Curso(1L, "Curso1", "Campus1"));
+        coord.setIdCoordenacao(1L);
+        coord.setNome(nomeGrande);
+        coord.setCurso(curso);
+
+        curso.setCoordenacao(coord);
+
         Set<ConstraintViolation<Coordenacao>> violacoes = validator.validate(coord);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream().anyMatch(v -> "nome".equals(v.getPropertyPath().toString())));
@@ -74,7 +154,12 @@ public class CoordenacaoTest {
 
     @Test
     void cursoNulo_deveGerarViolacaoNotNull() {
-        DummyCoordenacao coord = new DummyCoordenacao(1L, "Coord1", null);
+        Coordenacao coord = new Coordenacao();
+
+        coord.setIdCoordenacao(1L);
+        coord.setNome("Coord1");
+        coord.setCurso(null);
+
         Set<ConstraintViolation<Coordenacao>> violacoes = validator.validate(coord);
         assertFalse(violacoes.isEmpty());
         assertTrue(violacoes.stream().anyMatch(v -> "curso".equals(v.getPropertyPath().toString())));

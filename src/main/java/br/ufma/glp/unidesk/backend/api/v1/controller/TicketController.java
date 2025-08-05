@@ -86,6 +86,7 @@ public class TicketController {
         return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(data), file));
     }
 
+    @PreAuthorize("hasRole('ALUNO' or 'FUNCIONARIO_COORDENACAO' or 'COORDENADOR')")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel atualizar(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
@@ -95,6 +96,7 @@ public class TicketController {
         return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
+    @PreAuthorize("hasRole('FUNCIONARIO_COORDENACAO' or 'COORDENADOR')")
     @PatchMapping("/{id}/status")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel alterarStatus(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
@@ -104,6 +106,7 @@ public class TicketController {
         return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
+    @PreAuthorize("hasRole('FUNCIONARIO_COORDENACAO' or 'COORDENADOR')")
     @PatchMapping("/{id}/fechar")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel fecharTicket(@PathVariable Long id) {

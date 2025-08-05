@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +42,7 @@ public class CoordenacaoService {
         return coordenacoes;
     }
 
-    public List<Coordenacao> buscarPorCurso(Long idCurso) {
+    public Optional<Coordenacao> buscarPorCurso(Long idCurso) {
         return coordenacaoRepository.findByCursoIdCurso(idCurso);
     }
 
@@ -86,6 +87,6 @@ public class CoordenacaoService {
     }
 
     public boolean existePorCurso(Long idCurso) {
-        return cursoRepository.existsById(idCurso);
+        return coordenacaoRepository.findByCursoIdCurso(idCurso).isPresent();
     }
 }

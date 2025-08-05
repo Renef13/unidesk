@@ -11,6 +11,7 @@ import br.ufma.glp.unidesk.backend.domain.service.CoordenadorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class CoordenadorController {
         return coordenadorModelAssembler.toModel(coordenadorService.buscarPorIdOuFalhar(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('FUNCIONARIO_COORDENACAO')")
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public CoordenadorModel adicionar(@RequestBody @Valid CoordenadorCadastroInput input) {
@@ -44,7 +46,7 @@ public class CoordenadorController {
                 coordenadorService.salvar(coordenadorCadastroInputDisassembler.toDomainObject(input))
         );
     }
-
+    @PreAuthorize("hasRole('COORDENADOR') or hasRole('FUNCIONARIO_COORDENACAO')")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public CoordenadorModel atualizar(@PathVariable Long id, @RequestBody @Valid CoordenadorEdicaoInput coordenadorInput) {
@@ -53,18 +55,21 @@ public class CoordenadorController {
         return coordenadorModelAssembler.toModel(coordenadorService.atualizar(coordenador));
     }
 
+    @PreAuthorize( "hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {
         coordenadorService.excluir(id);
     }
 
+    @PreAuthorize( "hasRole('FUNCIONARIO_COORDENACAO' or hasRole('ADMIN'))" )
     @PutMapping("/{id}/ativar")
     @ResponseStatus(HttpStatus.OK)
     public CoordenadorModel ativar(@PathVariable Long id) {
         return coordenadorModelAssembler.toModel(coordenadorService.ativar(id));
     }
 
+    @PreAuthorize( "hasRole('FUNCIONARIO_COORDENACAO' or hasRole('ADMIN'))" )
     @PutMapping("/{id}/desativar")
     @ResponseStatus(HttpStatus.OK)
     public CoordenadorModel desativar(@PathVariable Long id) {

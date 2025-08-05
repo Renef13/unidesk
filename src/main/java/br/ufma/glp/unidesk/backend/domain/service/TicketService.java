@@ -4,8 +4,11 @@ import br.ufma.glp.unidesk.backend.domain.exception.CoordenacaoNaoEncontradaExce
 import br.ufma.glp.unidesk.backend.domain.exception.FuncionarioCoordenacaoNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.StatusNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.TicketNaoEncontradoException;
+<<<<<<< HEAD
 import br.ufma.glp.unidesk.backend.domain.repository.CoordenacaoRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.FuncionarioCoordenacaoRepository;
+=======
+>>>>>>> 8ad15128f548124b2e068fd8f97a111a1928f106
 import br.ufma.glp.unidesk.backend.domain.model.*;
 import br.ufma.glp.unidesk.backend.domain.repository.StatusRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.TicketRepository;
@@ -51,8 +54,16 @@ public class TicketService {
         boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
         if (isAdmin) {
             return ticketRepository.findAll(pageable);
-        } else {
+        } else if (usuario.getRole() == UsuarioRole.ALUNO) {
             return ticketRepository.findByAlunoIdUsuario(usuario.getIdUsuario(), pageable);
+        } else if (usuario.getRole() == UsuarioRole.COORDENADOR) {
+            Coordenacao coord = coordenadorService.buscarPorIdOuFalhar(usuario.getIdUsuario()).getCoordenacao();
+            return ticketRepository.findByCoordenacaoIdCoordenacao(coord.getIdCoordenacao(), pageable);
+        } else if (usuario.getRole() == UsuarioRole.FUNCIONARIO_COORDENACAO) {
+            FuncionarioCoordenacao func = funcionarioCoordenacaoService.buscarPorIdOuFalhar(usuario.getIdUsuario());
+            return ticketRepository.findByFuncionarioIdUsuario(func.getIdUsuario(), pageable);
+        } else {
+            return Page.empty(pageable);
         }
     }
 

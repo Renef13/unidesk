@@ -41,7 +41,7 @@ public interface CoordenacaoRepository extends JpaRepository<Coordenacao, Long> 
      * @param curso Curso das coordenações.
      * @return Lista de coordenações do curso informado.
      */
-    List<Coordenacao> findByCurso(Curso curso);
+    Optional<Coordenacao> findByCurso(Curso curso);
 
     /**
      * Busca coordenações pelo ID do curso.
@@ -49,7 +49,7 @@ public interface CoordenacaoRepository extends JpaRepository<Coordenacao, Long> 
      * @param idCurso ID do curso.
      * @return Lista de coordenações do curso informado.
      */
-    List<Coordenacao> findByCursoIdCurso(Long idCurso);
+    Optional<Coordenacao> findByCursoIdCurso(Long idCurso);
 
     /**
      * Verifica se existe uma coordenação com o nome informado.
