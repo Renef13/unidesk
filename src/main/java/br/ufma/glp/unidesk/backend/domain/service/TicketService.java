@@ -11,6 +11,7 @@ import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.repository.CoordenacaoRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.FuncionarioCoordenacaoRepository;
+import br.ufma.glp.unidesk.backend.domain.model.*;
 import br.ufma.glp.unidesk.backend.domain.repository.StatusRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.TicketRepository;
 import io.minio.errors.ErrorResponseException;
@@ -47,6 +48,8 @@ public class TicketService {
     private final StatusService statusService;
     private final CoordenacaoRepository coordenacaoRepository;
     private final FuncionarioCoordenacaoRepository funcionarioCoordenacaoRepository;
+    private final CoordenacaoService coordenacaoService;
+    private final FuncionarioCoordenacaoService funcionarioCoordenacaoService;
 
     public Page<Ticket> listarTickets(@Valid @NotNull Usuario usuario, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
