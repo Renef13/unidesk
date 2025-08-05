@@ -99,7 +99,7 @@ public class TicketService {
 
 
     @Transactional
-    public Ticket atualizarTicket(@Valid @NotNull Ticket ticketAtualizado) {
+    public Ticket atualizarTicket(@NotNull Ticket ticketAtualizado) {
         //TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
         Ticket ticketExistente = ticketRepository.findById(ticketAtualizado.getIdTicket())
                 .orElseThrow(() -> new TicketNaoEncontradoException(ticketAtualizado.getIdTicket()));
@@ -125,7 +125,7 @@ public class TicketService {
             ticketExistente.setIdFile(ticketAtualizado.getIdFile());
         }
 
-        return ticketRepository.save(ticketExistente);
+        return ticketExistente;
     }
 
     public Ticket buscarTicketPorId(@Valid @NotNull(message = "O Id do ticket nao pode ser nulo") Long idTicket) {
