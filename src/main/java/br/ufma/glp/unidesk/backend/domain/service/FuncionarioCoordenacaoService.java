@@ -5,6 +5,9 @@ import br.ufma.glp.unidesk.backend.domain.exception.FuncionarioCoordenacaoNaoEnc
 import br.ufma.glp.unidesk.backend.domain.exception.FuncionarioCoordenacaoSemCoordenacaoException;
 import br.ufma.glp.unidesk.backend.domain.model.Coordenacao;
 import br.ufma.glp.unidesk.backend.domain.model.FuncionarioCoordenacao;
+import br.ufma.glp.unidesk.backend.domain.model.Usuario;
+import br.ufma.glp.unidesk.backend.domain.model.UsuarioRole;
+import br.ufma.glp.unidesk.backend.domain.model.Coordenador;
 import br.ufma.glp.unidesk.backend.domain.repository.FuncionarioCoordenacaoRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -12,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 
@@ -24,8 +28,16 @@ public class FuncionarioCoordenacaoService {
     private final CoordenacaoService coordenacaoService;
     private final UsuarioService usuarioService;
 
-    public List<FuncionarioCoordenacao> listarTodos() {
-        return funcionarioCoordenacaoRepository.findAll();
+    public List<FuncionarioCoordenacao> listarTodos(Usuario usuario) {
+        if (usuario.getRole() == UsuarioRole.ADMIN) {
+            return funcionarioCoordenacaoRepository.findAll();
+        }
+        if (usuario.getRole() == UsuarioRole.COORDENADOR) {
+            Coordenador coordenador = (Coordenador) usuario;
+            Long idCoord = coordenador.getCoordenacao().getIdCoordenacao();
+            return funcionarioCoordenacaoRepository.findByCoordenacaoIdCoordenacao(idCoord);
+        }
+        throw new AccessDeniedException("Acesso negado");
     }
 
     public FuncionarioCoordenacao buscarPorIdOuFalhar(@NotNull Long idFuncionario) {

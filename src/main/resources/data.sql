@@ -82,9 +82,8 @@ INSERT INTO tickets (titulo, descricao, data_criacao, data_atualizacao, id_coord
                      id_status, id_prioridade, id_categoria)
 VALUES ('Problema com acesso ao sistema', 'Não consigo logar no sistema acadêmico.', NOW(), NOW(), 1, 6, 1, 1, 3, 1),
        ('Dúvida sobre nota', 'Minha nota de cálculo não aparece no histórico.', NOW(), NOW(), 2, 7, 2, 1, 2, 3),
-       ('Solicitação de material', 'Preciso de acesso aos slides da aula de Banco de Dados.', NOW(), NOW(), 1, 6, 1, 1,
-        1, 3),
-       ('Erro no boleto', 'O valor do boleto de mensalidade está incorreto.', NOW(), NOW(), 2, 6, 2, 1, 4, 2);
+       ('Solicitação de material', 'Preciso de acesso aos slides da aula de Banco de Dados.', NOW(), NOW(), 1, 6, 1, 1,1, 3),
+        ('Problema de infraestrutura', 'A internet do laboratório está muito lenta.', NOW(), NOW(), 2, 7, 3, 1, 4, 4);
 
 
 
