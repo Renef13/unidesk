@@ -10,6 +10,12 @@ import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.service.AuthService;
 import br.ufma.glp.unidesk.backend.domain.service.TicketService;
+import io.minio.errors.ErrorResponseException;
+import io.minio.errors.InsufficientDataException;
+import io.minio.errors.InternalException;
+import io.minio.errors.InvalidResponseException;
+import io.minio.errors.ServerException;
+import io.minio.errors.XmlParserException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +24,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.List;
 
@@ -45,8 +54,11 @@ public class TicketController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TicketModel buscarPorId(@PathVariable Long id) {
-        return ticketModelAssembler.toModel(ticketService.buscarTicketPorId(id));
+    public TicketModel buscarPorId(@PathVariable Long id) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, XmlParserException, ServerException, IllegalArgumentException, IOException {
+        TicketModel ticketModel = ticketModelAssembler.toModel(ticketService.buscarTicketPorId(id));
+        String urlImage = ticketService.getUrlImage(id);
+        ticketModel.setUrlImage(urlImage);
+        return ticketModel;
     }
 
     @GetMapping("/categoria")
@@ -70,8 +82,8 @@ public class TicketController {
     @PreAuthorize("hasRole('ALUNO')")
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public TicketModel adicionar(@RequestBody @Valid TicketCadastroInput ticketInput, @RequestParam(required = false) MultipartFile file) throws Exception {
-        return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(ticketInput), file));
+    public TicketModel adicionar(@RequestPart("data") @Valid TicketCadastroInput data, @RequestParam(required = false) MultipartFile file) throws Exception {
+        return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(data), file));
     }
 
     @PreAuthorize("hasRole('ALUNO' or 'FUNCIONARIO_COORDENACAO' or 'COORDENADOR')")

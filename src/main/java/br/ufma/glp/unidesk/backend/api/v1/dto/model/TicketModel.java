@@ -27,6 +27,8 @@ public class TicketModel {
     private Instant dataAtualizacao;
     
     private CoordenacaoModel coordenacao;
+
+    private String urlImage;
     
     private FuncionarioCoordenacaoModel funcionario;
     
