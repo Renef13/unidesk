@@ -4,11 +4,6 @@ import br.ufma.glp.unidesk.backend.domain.exception.CoordenacaoNaoEncontradaExce
 import br.ufma.glp.unidesk.backend.domain.exception.FuncionarioCoordenacaoNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.StatusNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.TicketNaoEncontradoException;
-import br.ufma.glp.unidesk.backend.domain.model.Coordenacao;
-import br.ufma.glp.unidesk.backend.domain.model.FuncionarioCoordenacao;
-import br.ufma.glp.unidesk.backend.domain.model.Status;
-import br.ufma.glp.unidesk.backend.domain.model.Ticket;
-import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.repository.CoordenacaoRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.FuncionarioCoordenacaoRepository;
 import br.ufma.glp.unidesk.backend.domain.model.*;
