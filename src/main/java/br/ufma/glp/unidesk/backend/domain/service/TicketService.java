@@ -90,7 +90,9 @@ public class TicketService {
         Status status = statusRepository.findById(ticket.getStatus().getIdStatus())
                 .orElseThrow(() -> new StatusNaoEncontradoException(
                         "Status não encontrado para o id: " + ticket.getStatus().getIdStatus()));
-
+        if(status.getNome().equals("Fechado")) {
+            ticket.setDataFechamento(Instant.now());
+        }
         ticket.setStatus(status);
 
         return ticketRepository.save(ticket);
@@ -136,9 +138,13 @@ public class TicketService {
                     .orElseThrow(() -> new FuncionarioCoordenacaoNaoEncontradoException("Funcionario nao encontrado"));
             ticketExistente.setFuncionario(funcionarioCoord);
         }
-        if (ticketAtualizado.getStatus() != null) {
+        if (ticketAtualizado.getStatus() != null) {            
             Status status = statusRepository.findById(ticketAtualizado.getStatus().getIdStatus())
-                    .orElseThrow(() -> new StatusNaoEncontradoException("Status nao encontrado"));
+                .orElseThrow(() -> new StatusNaoEncontradoException(
+                        "Status não encontrado para o id: " + ticketAtualizado.getStatus().getIdStatus()));
+            if(status.getNome().equals("Fechado")) {
+                ticketExistente.setDataFechamento(Instant.now());
+            }
             ticketExistente.setStatus(status);
         }
         if (ticketAtualizado.getIdFile() != null) {
