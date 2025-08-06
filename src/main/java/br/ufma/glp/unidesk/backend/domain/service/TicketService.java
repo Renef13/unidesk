@@ -1,6 +1,7 @@
 package br.ufma.glp.unidesk.backend.domain.service;
 
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.DashboardModel;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketPorMesModel;
 import br.ufma.glp.unidesk.backend.domain.exception.CoordenacaoNaoEncontradaException;
 import br.ufma.glp.unidesk.backend.domain.exception.FuncionarioCoordenacaoNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.StatusNaoEncontradoException;
@@ -31,6 +32,10 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -68,7 +73,8 @@ public class TicketService {
     }
 
     @Transactional
-    public Ticket novoTicket(@Valid @NotNull(message = "O Ticket nao pode ser nulo") Ticket ticket, MultipartFile file) throws Exception {
+    public Ticket novoTicket(@Valid @NotNull(message = "O Ticket nao pode ser nulo") Ticket ticket, MultipartFile file)
+            throws Exception {
         if (file != null) {
             String idFile = storageService.uploadFile(file);
             ticket.setIdFile(idFile);
@@ -82,13 +88,13 @@ public class TicketService {
                 .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
 
         Status status = statusRepository.findById(ticket.getStatus().getIdStatus())
-                .orElseThrow(() -> new StatusNaoEncontradoException("Status não encontrado para o id: " + ticket.getStatus().getIdStatus()));
+                .orElseThrow(() -> new StatusNaoEncontradoException(
+                        "Status não encontrado para o id: " + ticket.getStatus().getIdStatus()));
 
         ticket.setStatus(status);
 
         return ticketRepository.save(ticket);
     }
-
 
     @Transactional
     public Ticket fecharTicket(@NotNull Long idTicket) {
@@ -106,31 +112,35 @@ public class TicketService {
         return ticketRepository.save(ticketExistente);
     }
 
-
     @Transactional
     public Ticket atualizarTicket(@NotNull Ticket ticketAtualizado) {
-        //TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
+        // TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
         Ticket ticketExistente = ticketRepository.findById(ticketAtualizado.getIdTicket())
                 .orElseThrow(() -> new TicketNaoEncontradoException(ticketAtualizado.getIdTicket()));
-        if(ticketAtualizado.getTitulo() != null) {
+        if (ticketAtualizado.getTitulo() != null) {
             ticketExistente.setTitulo(ticketAtualizado.getTitulo());
         }
-        if(ticketAtualizado.getDescricao() != null) {
+        if (ticketAtualizado.getDescricao() != null) {
             ticketExistente.setDescricao(ticketAtualizado.getDescricao());
         }
-        if(ticketAtualizado.getCoordenacao() != null) {
-            Coordenacao coordenacao = coordenacaoRepository.findById(ticketAtualizado.getCoordenacao().getIdCoordenacao()).orElseThrow(() -> new CoordenacaoNaoEncontradaException("Coordenacao nao encontrada"));
+        if (ticketAtualizado.getCoordenacao() != null) {
+            Coordenacao coordenacao = coordenacaoRepository
+                    .findById(ticketAtualizado.getCoordenacao().getIdCoordenacao())
+                    .orElseThrow(() -> new CoordenacaoNaoEncontradaException("Coordenacao nao encontrada"));
             ticketExistente.setCoordenacao(coordenacao);
         }
-        if(ticketAtualizado.getFuncionario() != null) {
-            FuncionarioCoordenacao funcionarioCoord = funcionarioCoordenacaoRepository.findById(ticketAtualizado.getFuncionario().getIdUsuario()).orElseThrow(() -> new FuncionarioCoordenacaoNaoEncontradoException("Funcionario nao encontrado"));
+        if (ticketAtualizado.getFuncionario() != null) {
+            FuncionarioCoordenacao funcionarioCoord = funcionarioCoordenacaoRepository
+                    .findById(ticketAtualizado.getFuncionario().getIdUsuario())
+                    .orElseThrow(() -> new FuncionarioCoordenacaoNaoEncontradoException("Funcionario nao encontrado"));
             ticketExistente.setFuncionario(funcionarioCoord);
         }
-        if(ticketAtualizado.getStatus() != null) {
-            Status status = statusRepository.findById(ticketAtualizado.getStatus().getIdStatus()).orElseThrow(() -> new StatusNaoEncontradoException("Status nao encontrado"));
+        if (ticketAtualizado.getStatus() != null) {
+            Status status = statusRepository.findById(ticketAtualizado.getStatus().getIdStatus())
+                    .orElseThrow(() -> new StatusNaoEncontradoException("Status nao encontrado"));
             ticketExistente.setStatus(status);
         }
-        if(ticketAtualizado.getIdFile() != null) {
+        if (ticketAtualizado.getIdFile() != null) {
             ticketExistente.setIdFile(ticketAtualizado.getIdFile());
         }
 
@@ -150,12 +160,15 @@ public class TicketService {
         return tickets;
     }
 
-    public String getUrlImage(Long idTicket) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, XmlParserException, ServerException, IllegalArgumentException, IOException {
+    public String getUrlImage(Long idTicket) throws InvalidKeyException, ErrorResponseException,
+            InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException,
+            XmlParserException, ServerException, IllegalArgumentException, IOException {
         String idFile = ticketRepository.findByIdTicket(idTicket).get().getIdFile();
         return storageService.getUrl(idFile);
     }
 
-    public List<Ticket> buscarTicketsPorStatusEspecifico(@Valid @NotNull Usuario usuario, @Valid @NotNull Long idStatus) {
+    public List<Ticket> buscarTicketsPorStatusEspecifico(@Valid @NotNull Usuario usuario,
+            @Valid @NotNull Long idStatus) {
 
         boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
         Status statusTipo = statusRepository.findByIdStatus(idStatus)
@@ -184,9 +197,10 @@ public class TicketService {
         long totalTicketsPendentes = contagens.getOrDefault("Pendente", 0L);
         long totalTicketsEmAndamento = contagens.getOrDefault("Em Andamento", 0L);
 
-        
-        Long porcentagemProgresso = (totalTicketsEmAndamento + totalTicketsPendentes + totalTicketsResolvidos) / totalTickets * 100;
-        Long porcentagemAbertos = (totalTicketsAbertos  / totalTickets) * 100;
+
+        Long porcentagemProgresso = (totalTicketsEmAndamento + totalTicketsPendentes + totalTicketsResolvidos)/ totalTickets * 100;
+        Double porcentagemAbertos = (double) (totalTicketsAbertos / totalTickets) * 100;
+
         Long porcentagemResolvidos = totalTicketsResolvidos / totalTickets * 100;
         Long porcentagemAndamento = totalTicketsEmAndamento / totalTickets * 100;
         DashboardModel dashboardModel = new DashboardModel();
@@ -205,8 +219,25 @@ public class TicketService {
     public Map<String, Long> countTicketsByAllStatus() {
         List<Object[]> resultados = ticketRepository.countTicketsByStatus();
         return resultados.stream().collect(Collectors.toMap(
-            r -> (String) r[0],
-            r -> (Long) r[1]
-        ));
+                r -> (String) r[0],
+                r -> (Long) r[1]));
     }
+
+    public List<TicketPorMesModel> obterTicketsPorMes() {
+        Status statusFechado = statusRepository.findByNome("Fechado").get();
+        List<Ticket> tickets = ticketRepository.findByStatus(statusFechado);
+
+        Map<Integer, Long> mapaMeses = tickets.stream()
+                .collect(Collectors.groupingBy(t -> ZonedDateTime.ofInstant(t.getDataFechamento(), ZoneId.of("America/Sao_Paulo"))
+                                .getMonthValue(),
+                        Collectors.counting()));
+
+        List<TicketPorMesModel> lista = new ArrayList<>();
+        for (int mes = 1; mes <= 12; mes++) {
+            lista.add(new TicketPorMesModel(mes, mapaMeses.getOrDefault(mes, 0L)));
+        }
+
+        return lista;
+    }
+
 }

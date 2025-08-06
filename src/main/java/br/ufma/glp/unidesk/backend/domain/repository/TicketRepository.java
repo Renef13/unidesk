@@ -215,4 +215,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     @Query("SELECT t.status.nome, COUNT(t) FROM Ticket t GROUP BY t.status.nome")
     List<Object[]> countTicketsByStatus();
+
+    @Query("SELECT FUNCTION('MONTH', t.dataFechamento) as mes, COUNT(t) as total " +
+           "FROM Ticket t " +
+           "WHERE t.status.nome = 'Fechado' " +
+           "GROUP BY FUNCTION('MONTH', t.dataFechamento) " +
+           "ORDER BY mes")
+    List<Object[]> countTicketsFechadosPorMes();
 }
