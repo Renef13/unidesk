@@ -1,4 +1,4 @@
-# Sistema de Help-Desk Universitário - Backend
+ao# Sistema de Help-Desk Universitário - Backend
 
 ## 📋 Sobre o Projeto
 
@@ -65,6 +65,18 @@ O backend do Sistema de Help-Desk Universitário é uma API REST desenvolvida em
 
 - **Caio, Kevin & Renef** - Desenvolvedores Backend/Frontend
 - **Caio, Kevin & Renef** - DevOps e Arquitetura
+
+## 🔒 Usuários Pré-Carregados
+
+| Nome            | Login             | Papel                      |
+| --------------- | ----------------- | -------------------------- |
+| João Silva      | joao.silva        | ALUNO                      |
+| Maria Souza     | maria.souza       | ALUNO                      |
+| Usuário Teste   | usuario.teste     | ADMIN                      |
+| Pedro Santos    | pedro.santos      | COORDENADOR                |
+| Ana Oliveira    | ana.oliveira      | COORDENADOR                |
+| Carlos Pereira  | carlos.pereira    | FUNCIONARIO_COORDENACAO    |
+| Mariana Costa   | usuario.admin     | FUNCIONARIO_COORDENACAO    |
 
 ## 📄 Licença
 
