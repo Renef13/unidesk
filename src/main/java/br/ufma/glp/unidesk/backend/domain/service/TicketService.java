@@ -224,7 +224,7 @@ public class TicketService {
                 r -> (Long) r[1]));
     }
 
-    public List<TicketPorMesModel> obterTicketsPorMes() {
+    public List<TicketPorMesModel> obterTicketsPorMesFechado() {
         Status statusFechado = statusRepository.findByNome("Fechado").orElseThrow(() -> new StatusNaoEncontradoException("Status Fechado nao encontrado"));
         List<Ticket> tickets = ticketRepository.findByStatus(statusFechado);
 
