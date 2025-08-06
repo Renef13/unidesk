@@ -1,8 +1,11 @@
 package br.ufma.glp.unidesk.backend.domain.service;
 
+import org.springframework.security.access.AccessDeniedException;
 import br.ufma.glp.unidesk.backend.domain.exception.*;
 import br.ufma.glp.unidesk.backend.domain.model.Aluno;
 import br.ufma.glp.unidesk.backend.domain.model.Curso;
+import br.ufma.glp.unidesk.backend.domain.model.Usuario;
+import br.ufma.glp.unidesk.backend.domain.model.UsuarioRole;
 import br.ufma.glp.unidesk.backend.domain.repository.AlunoRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.CursoRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.TicketRepository;
@@ -25,6 +28,9 @@ public class AlunoService {
     private final CursoRepository cursoRepository;
     private final TicketRepository ticketRepository;
     private final UsuarioService usuarioService;
+    private final AuthService authService;
+    private final CoordenadorService coordenadorService;
+    private final FuncionarioCoordenacaoService funcionarioCoordenacaoService;
 
     public List<Aluno> listarTodos() {
         return alunoRepository.findAll();
@@ -33,6 +39,35 @@ public class AlunoService {
     public Aluno buscarPorIdOuFalhar(Long idAluno) {
         return alunoRepository.findById(idAluno)
                 .orElseThrow(() -> new AlunoNaoEncontradoException(idAluno));
+    }
+
+    public List<Aluno> listarPorCursoAtual() {
+        Usuario usuarioLogado = authService.getCurrentUsuarioEntity();
+        if (usuarioLogado == null || usuarioLogado.getRole() == UsuarioRole.ALUNO) {
+            throw new AlunoNaoEncontradoException("Usuário não autenticado ou é um aluno e não pode listar alunos por curso atual");
+        }
+
+        // Verifica o papel do usuário logado e busca os alunos do curso correspondente
+        switch (usuarioLogado.getRole()) {
+            // Coordenador pode ver alunos do curso que coordena
+            case COORDENADOR:
+                Curso cursoCoordenador = coordenadorService.buscarPorIdOuFalhar(usuarioLogado.getIdUsuario())
+                        .getCoordenacao()
+                        .getCurso();
+                return alunoRepository.findByCurso(cursoCoordenador);
+            // Funcionário de coordenação pode ver alunos do curso que tem acesso
+            case FUNCIONARIO_COORDENACAO:
+                Curso cursoFuncionario = funcionarioCoordenacaoService.buscarPorIdOuFalhar(usuarioLogado.getIdUsuario())
+                        .getCoordenacao()
+                        .getCurso();
+                return alunoRepository.findByCurso(cursoFuncionario);
+            // Admin pode ver todos os alunos
+            case ADMIN:
+                return alunoRepository.findAll();
+            default:
+                throw new AlunoNaoEncontradoException("Usuário não tem permissão para listar alunos por curso atual");
+        }
+
     }
 
     public Aluno buscarPorMatriculaOuFalhar(String matricula) {
