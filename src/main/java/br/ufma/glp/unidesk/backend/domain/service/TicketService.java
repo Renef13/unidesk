@@ -1,5 +1,7 @@
 package br.ufma.glp.unidesk.backend.domain.service;
 
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.DashboardModel;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketPorMesModel;
 import br.ufma.glp.unidesk.backend.domain.exception.CoordenacaoNaoEncontradaException;
 import br.ufma.glp.unidesk.backend.domain.exception.FuncionarioCoordenacaoNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.StatusNaoEncontradoException;
@@ -28,7 +30,13 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,7 +71,8 @@ public class TicketService {
     }
 
     @Transactional
-    public Ticket novoTicket(@Valid @NotNull(message = "O Ticket nao pode ser nulo") Ticket ticket, MultipartFile file) throws Exception {
+    public Ticket novoTicket(@Valid @NotNull(message = "O Ticket nao pode ser nulo") Ticket ticket, MultipartFile file)
+            throws Exception {
         if (file != null) {
             String idFile = storageService.uploadFile(file);
             ticket.setIdFile(idFile);
@@ -77,13 +86,15 @@ public class TicketService {
                 .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
 
         Status status = statusRepository.findById(ticket.getStatus().getIdStatus())
-                .orElseThrow(() -> new StatusNaoEncontradoException("Status não encontrado para o id: " + ticket.getStatus().getIdStatus()));
-
+                .orElseThrow(() -> new StatusNaoEncontradoException(
+                        "Status não encontrado para o id: " + ticket.getStatus().getIdStatus()));
+        if(status.getNome().equals("Fechado")) {
+            ticket.setDataFechamento(Instant.now());
+        }
         ticket.setStatus(status);
 
         return ticketRepository.save(ticket);
     }
-
 
     @Transactional
     public Ticket fecharTicket(@NotNull Long idTicket) {
@@ -97,35 +108,44 @@ public class TicketService {
         }
 
         ticketExistente.setStatus(statusFechado);
+        ticketExistente.setDataFechamento(Instant.now());
 
         return ticketRepository.save(ticketExistente);
     }
 
-
     @Transactional
     public Ticket atualizarTicket(@NotNull Ticket ticketAtualizado) {
-        //TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
+        // TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
         Ticket ticketExistente = ticketRepository.findById(ticketAtualizado.getIdTicket())
                 .orElseThrow(() -> new TicketNaoEncontradoException(ticketAtualizado.getIdTicket()));
-        if(ticketAtualizado.getTitulo() != null) {
+        if (ticketAtualizado.getTitulo() != null) {
             ticketExistente.setTitulo(ticketAtualizado.getTitulo());
         }
-        if(ticketAtualizado.getDescricao() != null) {
+        if (ticketAtualizado.getDescricao() != null) {
             ticketExistente.setDescricao(ticketAtualizado.getDescricao());
         }
-        if(ticketAtualizado.getCoordenacao() != null) {
-            Coordenacao coordenacao = coordenacaoRepository.findById(ticketAtualizado.getCoordenacao().getIdCoordenacao()).orElseThrow(() -> new CoordenacaoNaoEncontradaException("Coordenacao nao encontrada"));
+        if (ticketAtualizado.getCoordenacao() != null) {
+            Coordenacao coordenacao = coordenacaoRepository
+                    .findById(ticketAtualizado.getCoordenacao().getIdCoordenacao())
+                    .orElseThrow(() -> new CoordenacaoNaoEncontradaException("Coordenacao nao encontrada"));
             ticketExistente.setCoordenacao(coordenacao);
         }
-        if(ticketAtualizado.getFuncionario() != null) {
-            FuncionarioCoordenacao funcionarioCoord = funcionarioCoordenacaoRepository.findById(ticketAtualizado.getFuncionario().getIdUsuario()).orElseThrow(() -> new FuncionarioCoordenacaoNaoEncontradoException("Funcionario nao encontrado"));
+        if (ticketAtualizado.getFuncionario() != null) {
+            FuncionarioCoordenacao funcionarioCoord = funcionarioCoordenacaoRepository
+                    .findById(ticketAtualizado.getFuncionario().getIdUsuario())
+                    .orElseThrow(() -> new FuncionarioCoordenacaoNaoEncontradoException("Funcionario nao encontrado"));
             ticketExistente.setFuncionario(funcionarioCoord);
         }
-        if(ticketAtualizado.getStatus() != null) {
-            Status status = statusRepository.findById(ticketAtualizado.getStatus().getIdStatus()).orElseThrow(() -> new StatusNaoEncontradoException("Status nao encontrado"));
+        if (ticketAtualizado.getStatus() != null) {            
+            Status status = statusRepository.findById(ticketAtualizado.getStatus().getIdStatus())
+                .orElseThrow(() -> new StatusNaoEncontradoException(
+                        "Status não encontrado para o id: " + ticketAtualizado.getStatus().getIdStatus()));
+            if(status.getNome().equals("Fechado")) {
+                ticketExistente.setDataFechamento(Instant.now());
+            }
             ticketExistente.setStatus(status);
         }
-        if(ticketAtualizado.getIdFile() != null) {
+        if (ticketAtualizado.getIdFile() != null) {
             ticketExistente.setIdFile(ticketAtualizado.getIdFile());
         }
 
@@ -145,12 +165,15 @@ public class TicketService {
         return tickets;
     }
 
-    public String getUrlImage(Long idTicket) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, XmlParserException, ServerException, IllegalArgumentException, IOException {
+    public String getUrlImage(Long idTicket) throws InvalidKeyException, ErrorResponseException,
+            InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException,
+            XmlParserException, ServerException, IllegalArgumentException, IOException {
         String idFile = ticketRepository.findByIdTicket(idTicket).get().getIdFile();
         return storageService.getUrl(idFile);
     }
 
-    public List<Ticket> buscarTicketsPorStatusEspecifico(@Valid @NotNull Usuario usuario, @Valid @NotNull Long idStatus) {
+    public List<Ticket> buscarTicketsPorStatusEspecifico(@Valid @NotNull Usuario usuario,
+            @Valid @NotNull Long idStatus) {
 
         boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
         Status statusTipo = statusRepository.findByIdStatus(idStatus)
@@ -168,6 +191,7 @@ public class TicketService {
         }
         return ticketsNoPeriodo;
     }
+
 
     public Page<Ticket> buscarTicketsComFiltros(Usuario usuario, String texto, Long statusId, Long prioridadeId, Long cursoId, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -201,4 +225,88 @@ public class TicketService {
 
         return ticketRepository.findAll(spec, pageable);
     }
+
+    public DashboardModel dashboardTickets(Usuario usuario) {
+        
+        Map<String, Long> contagens = countTicketsByAllStatus(usuario);
+
+        long totalTicketsResolvidos = contagens.getOrDefault("Fechado", 0L);
+        long totalTicketsAbertos = contagens.getOrDefault("Aberto", 0L);
+        long totalTicketsPendentes = contagens.getOrDefault("Pendente", 0L);
+        long totalTicketsEmAndamento = contagens.getOrDefault("Em Andamento", 0L);
+
+        long totalTickets = totalTicketsAbertos + totalTicketsPendentes + totalTicketsResolvidos + totalTicketsEmAndamento;
+
+
+        DashboardModel dashboardModel = new DashboardModel();
+        if(totalTickets != 0){
+            Double porcentagemProgresso = ((double)totalTicketsEmAndamento + totalTicketsPendentes + totalTicketsResolvidos)/ totalTickets * 100;
+            Double porcentagemAbertos =  ((double)totalTicketsAbertos / totalTickets) * 100;
+            Double porcentagemResolvidos = ((double)totalTicketsResolvidos / totalTickets) * 100;
+            Double porcentagemAndamento = ((double)totalTicketsEmAndamento / totalTickets) * 100;
+            dashboardModel.setPorcentagemProgresso(porcentagemProgresso);
+            dashboardModel.setPorcentagemAbertos(porcentagemAbertos);
+            dashboardModel.setPorcentagemResolvidos(porcentagemResolvidos);
+            dashboardModel.setPorcentagemAndamento(porcentagemAndamento);
+        }
+        dashboardModel.setTotalTickets(totalTickets);
+        dashboardModel.setTotalTicketsResolvidos(totalTicketsResolvidos);
+        dashboardModel.setTotalTicketsAbertos(totalTicketsAbertos);
+        dashboardModel.setTotalTicketsPendentes(totalTicketsPendentes);
+        dashboardModel.setTotalTicketsEmAndamento(totalTicketsEmAndamento);
+        return dashboardModel;
+    }
+
+    public Map<String, Long> countTicketsByAllStatus(Usuario usuario) {
+        List<Object[]> resultados;
+
+        if (usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"))) {
+            resultados = ticketRepository.countTicketsByStatus();
+        } else if (usuario.getRole() == UsuarioRole.ALUNO) {
+            resultados = ticketRepository.countTicketsByStatusAndAluno(usuario.getIdUsuario());
+        } else if (usuario.getRole() == UsuarioRole.COORDENADOR) {
+            Coordenacao coord = coordenadorService.buscarPorIdOuFalhar(usuario.getIdUsuario()).getCoordenacao();
+            resultados = ticketRepository.countTicketsByStatusAndCoordenacao(coord.getIdCoordenacao());
+        } else if (usuario.getRole() == UsuarioRole.FUNCIONARIO_COORDENACAO) {
+            FuncionarioCoordenacao func = funcionarioCoordenacaoService.buscarPorIdOuFalhar(usuario.getIdUsuario());
+            resultados = ticketRepository.countTicketsByStatusAndFuncionario(func.getIdUsuario());
+        } else {
+            resultados = List.of();
+        }
+
+        return resultados.stream().collect(Collectors.toMap(r -> (String) r[0], r -> (Long) r[1]));
+    }
+
+    public List<TicketPorMesModel> obterTicketsPorMesFechado(Usuario usuario) {
+        Status statusFechado = statusRepository.findByNome("Fechado").orElseThrow(() -> new StatusNaoEncontradoException("Status Fechado nao encontrado"));
+        List<Ticket> tickets = null;
+        if (usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"))) {
+            tickets = ticketRepository.findByStatus(statusFechado);
+        } else if (usuario.getRole() == UsuarioRole.ALUNO) {
+            tickets = ticketRepository.findByAlunoIdUsuarioAndStatus(usuario.getIdUsuario(), statusFechado);
+        } else if (usuario.getRole() == UsuarioRole.COORDENADOR) {
+            Coordenacao coord = coordenadorService.buscarPorIdOuFalhar(usuario.getIdUsuario()).getCoordenacao();
+            tickets = ticketRepository.findByCoordenacaoAndStatus(coord.getIdCoordenacao(), statusFechado);
+        } else if (usuario.getRole() == UsuarioRole.FUNCIONARIO_COORDENACAO) {
+            FuncionarioCoordenacao func = funcionarioCoordenacaoService.buscarPorIdOuFalhar(usuario.getIdUsuario());
+            tickets = ticketRepository.findByFuncionarioAndStatus(func.getIdUsuario(), statusFechado);
+        }
+
+        if(tickets != null) {
+            Map<Integer, Long> mapaMeses = tickets.stream()
+                    .filter(t -> t.getDataFechamento() != null)
+                    .collect(Collectors.groupingBy(t -> ZonedDateTime.ofInstant(t.getDataFechamento(), ZoneId.of("America/Sao_Paulo"))
+                                    .getMonthValue(),
+                            Collectors.counting()));
+    
+            List<TicketPorMesModel> lista = new ArrayList<>();
+            for (int mes = 1; mes <= 12; mes++) {
+                lista.add(new TicketPorMesModel(mes, mapaMeses.getOrDefault(mes, 0L)));
+            }
+    
+            return lista;
+        }
+        return null;
+    }
+
 }
