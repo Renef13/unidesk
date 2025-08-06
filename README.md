@@ -12,6 +12,14 @@ O backend do Sistema de Help-Desk Universitário é uma API REST desenvolvida em
 - Organizar o fluxo de trabalho da coordenação
 - Fornecer base de conhecimento com soluções comuns
 
+## 🚀 Como executar com Docker Compose
+
+1\. Certifique\-se de ter **Docker** e **Docker Compose** instalados  
+2\. Na raiz do projeto, execute:
+   ```bash
+   docker compose up -d
+   ```
+
 ## 🏗️ Arquitetura
 
 ### Stack Tecnológica
@@ -68,15 +76,15 @@ O backend do Sistema de Help-Desk Universitário é uma API REST desenvolvida em
 
 ## 🔒 Usuários Pré-Carregados
 
-| Nome            | Login             | Papel                      |
-| --------------- | ----------------- | -------------------------- |
-| João Silva      | joao.silva        | ALUNO                      |
-| Maria Souza     | maria.souza       | ALUNO                      |
-| Usuário Teste   | usuario.teste     | ADMIN                      |
-| Pedro Santos    | pedro.santos      | COORDENADOR                |
-| Ana Oliveira    | ana.oliveira      | COORDENADOR                |
-| Carlos Pereira  | carlos.pereira    | FUNCIONARIO_COORDENACAO    |
-| Mariana Costa   | usuario.admin     | FUNCIONARIO_COORDENACAO    |
+| Nome            | Login             | Papel                      | Senha    | Coordenação                           |
+| --------------- | ----------------- | -------------------------- | -------- | ------------------------------------- |
+| João Silva      | joao.silva        | ALUNO                      | senha123 | Coordenação de Engenharia de Software |
+| Maria Souza     | maria.souza       | ALUNO                      | senha123 | Coordenação de Ciência da Computação  |
+| Usuário Teste   | usuario.teste     | ADMIN                      | senha123 | —                                     |
+| Pedro Santos    | pedro.santos      | COORDENADOR                | senha123 | Coordenação de Engenharia de Software |
+| Ana Oliveira    | ana.oliveira      | COORDENADOR                | senha123 | Coordenação de Ciência da Computação  |
+| Carlos Pereira  | carlos.pereira    | FUNCIONARIO_COORDENACAO    | senha123 | Coordenação de Engenharia de Software |
+| Mariana Costa   | usuario.admin     | FUNCIONARIO_COORDENACAO    | senha123 | Coordenação de Ciência da Computação  |
 
 ## 📄 Licença
 
@@ -84,5 +92,5 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ---
 
-**Versão da API:** 1.0.0  
-**Última atualização:** Janeiro 2025
+**Versão da API:** 0.1.0  
+**Última atualização:** Agosto 2025
