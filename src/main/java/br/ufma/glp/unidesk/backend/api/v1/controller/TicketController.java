@@ -5,7 +5,9 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketEdicaoInputDisassemble
 import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.TicketCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.TicketEdicaoInput;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.DashboardModel;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketModel;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketPorMesModel;
 import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.service.AuthService;
@@ -29,6 +31,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -114,5 +117,17 @@ public class TicketController {
         return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
+    @GetMapping("/dashboard")
+    @ResponseStatus(HttpStatus.OK)
+    public DashboardModel statusDashboard() {
+        Usuario usuario = authService.getCurrentUsuarioEntity();
+        return ticketService.dashboardTickets(usuario);
+    }
 
+    @GetMapping("/tickets-por-mes")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TicketPorMesModel> ticketsFechadosPorMes() {
+        Usuario usuario = authService.getCurrentUsuarioEntity();
+        return ticketService.obterTicketsPorMesFechado(usuario);
+    }
 }

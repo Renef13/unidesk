@@ -12,6 +12,8 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -209,4 +211,37 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      */
 
     List<Ticket> findByCategoriaNomeIgnoreCase(@NotNull String nomeCategoria);
+
+    Long countByStatus(Status statusFechado);
+
+    @Query("SELECT t.status.nome, COUNT(t) FROM Ticket t GROUP BY t.status.nome")
+    List<Object[]> countTicketsByStatus();
+
+    @Query("SELECT t.status.nome, COUNT(t) " +
+           "FROM Ticket t " +
+           "WHERE t.aluno.idUsuario = :idAluno " +
+           "GROUP BY t.status.nome")
+    List<Object[]> countTicketsByStatusAndAluno(@Param("idAluno") Long idAluno);
+
+    
+    @Query("SELECT t.status.nome, COUNT(t) " +
+           "FROM Ticket t " +
+           "WHERE t.coordenacao.idCoordenacao = :idCoordenacao " +
+           "GROUP BY t.status.nome")
+    List<Object[]> countTicketsByStatusAndCoordenacao(@Param("idCoordenacao") Long idCoordenacao);
+
+    
+    @Query("SELECT t.status.nome, COUNT(t) " +
+           "FROM Ticket t " +
+           "WHERE t.funcionario.idUsuario = :idFuncionario " +
+           "GROUP BY t.status.nome")
+    List<Object[]> countTicketsByStatusAndFuncionario(@Param("idFuncionario") Long idFuncionario);
+
+    List<Ticket> findByAlunoIdUsuarioAndStatus(Long idAluno, Status status);
+
+    @Query("SELECT t FROM Ticket t WHERE t.coordenacao.idCoordenacao = :idCoordenacao AND t.status = :status")
+    List<Ticket> findByCoordenacaoAndStatus(@Param("idCoordenacao") Long idCoordenacao, @Param("status") Status status);
+
+    @Query("SELECT t FROM Ticket t WHERE t.funcionario.idUsuario = :idFuncionario AND t.status = :status")
+    List<Ticket> findByFuncionarioAndStatus(@Param("idFuncionario") Long idFuncionario, @Param("status") Status status);
 }
