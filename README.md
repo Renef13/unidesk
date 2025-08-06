@@ -1,4 +1,4 @@
-ao# Sistema de Help-Desk Universitário - Backend
+# Sistema de Help-Desk Universitário - Backend
 
 ## 📋 Sobre o Projeto
 
