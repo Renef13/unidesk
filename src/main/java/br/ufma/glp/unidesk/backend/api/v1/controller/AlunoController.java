@@ -33,6 +33,12 @@ public class AlunoController {
         return alunoModelAssembler.toCollectionModel(alunoService.listarTodos());
     }
 
+    @GetMapping("/meu-curso")
+    @ResponseStatus(HttpStatus.OK)
+    public List<AlunoModel> listarPorCursoAtual() {
+        return alunoModelAssembler.toCollectionModel(alunoService.listarPorCursoAtual());
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
