@@ -120,12 +120,14 @@ public class TicketController {
     @GetMapping("/dashboard")
     @ResponseStatus(HttpStatus.OK)
     public DashboardModel statusDashboard() {
-        return ticketService.dashboardTickets();
+        Usuario usuario = authService.getCurrentUsuarioEntity();
+        return ticketService.dashboardTickets(usuario);
     }
 
     @GetMapping("/tickets-por-mes")
     @ResponseStatus(HttpStatus.OK)
     public List<TicketPorMesModel> ticketsFechadosPorMes() {
-        return ticketService.obterTicketsPorMesFechado();
+        Usuario usuario = authService.getCurrentUsuarioEntity();
+        return ticketService.obterTicketsPorMesFechado(usuario);
     }
 }

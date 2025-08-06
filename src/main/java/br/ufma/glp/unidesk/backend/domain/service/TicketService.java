@@ -188,15 +188,17 @@ public class TicketService {
         return ticketsNoPeriodo;
     }
 
-    public DashboardModel dashboardTickets() {
-        Long totalTickets = ticketRepository.count();
-
-        Map<String, Long> contagens = countTicketsByAllStatus();
+    public DashboardModel dashboardTickets(Usuario usuario) {
+        
+        Map<String, Long> contagens = countTicketsByAllStatus(usuario);
 
         long totalTicketsResolvidos = contagens.getOrDefault("Fechado", 0L);
         long totalTicketsAbertos = contagens.getOrDefault("Aberto", 0L);
         long totalTicketsPendentes = contagens.getOrDefault("Pendente", 0L);
         long totalTicketsEmAndamento = contagens.getOrDefault("Em Andamento", 0L);
+
+        long totalTickets = totalTicketsAbertos + totalTicketsPendentes + totalTicketsResolvidos + totalTicketsEmAndamento;
+
 
         DashboardModel dashboardModel = new DashboardModel();
         if(totalTickets != 0){
@@ -217,29 +219,56 @@ public class TicketService {
         return dashboardModel;
     }
 
-    public Map<String, Long> countTicketsByAllStatus() {
-        List<Object[]> resultados = ticketRepository.countTicketsByStatus();
-        return resultados.stream().collect(Collectors.toMap(
-                r -> (String) r[0],
-                r -> (Long) r[1]));
-    }
+    public Map<String, Long> countTicketsByAllStatus(Usuario usuario) {
+        List<Object[]> resultados;
 
-    public List<TicketPorMesModel> obterTicketsPorMesFechado() {
-        Status statusFechado = statusRepository.findByNome("Fechado").orElseThrow(() -> new StatusNaoEncontradoException("Status Fechado nao encontrado"));
-        List<Ticket> tickets = ticketRepository.findByStatus(statusFechado);
-
-        Map<Integer, Long> mapaMeses = tickets.stream()
-                .filter(t -> t.getDataFechamento() != null)
-                .collect(Collectors.groupingBy(t -> ZonedDateTime.ofInstant(t.getDataFechamento(), ZoneId.of("America/Sao_Paulo"))
-                                .getMonthValue(),
-                        Collectors.counting()));
-
-        List<TicketPorMesModel> lista = new ArrayList<>();
-        for (int mes = 1; mes <= 12; mes++) {
-            lista.add(new TicketPorMesModel(mes, mapaMeses.getOrDefault(mes, 0L)));
+        if (usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"))) {
+            resultados = ticketRepository.countTicketsByStatus();
+        } else if (usuario.getRole() == UsuarioRole.ALUNO) {
+            resultados = ticketRepository.countTicketsByStatusAndAluno(usuario.getIdUsuario());
+        } else if (usuario.getRole() == UsuarioRole.COORDENADOR) {
+            Coordenacao coord = coordenadorService.buscarPorIdOuFalhar(usuario.getIdUsuario()).getCoordenacao();
+            resultados = ticketRepository.countTicketsByStatusAndCoordenacao(coord.getIdCoordenacao());
+        } else if (usuario.getRole() == UsuarioRole.FUNCIONARIO_COORDENACAO) {
+            FuncionarioCoordenacao func = funcionarioCoordenacaoService.buscarPorIdOuFalhar(usuario.getIdUsuario());
+            resultados = ticketRepository.countTicketsByStatusAndFuncionario(func.getIdUsuario());
+        } else {
+            resultados = List.of();
         }
 
-        return lista;
+        return resultados.stream().collect(Collectors.toMap(r -> (String) r[0], r -> (Long) r[1]));
+    }
+
+    public List<TicketPorMesModel> obterTicketsPorMesFechado(Usuario usuario) {
+        Status statusFechado = statusRepository.findByNome("Fechado").orElseThrow(() -> new StatusNaoEncontradoException("Status Fechado nao encontrado"));
+        List<Ticket> tickets = null;
+        if (usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"))) {
+            tickets = ticketRepository.findByStatus(statusFechado);
+        } else if (usuario.getRole() == UsuarioRole.ALUNO) {
+            tickets = ticketRepository.findByAlunoIdUsuarioAndStatus(usuario.getIdUsuario(), statusFechado);
+        } else if (usuario.getRole() == UsuarioRole.COORDENADOR) {
+            Coordenacao coord = coordenadorService.buscarPorIdOuFalhar(usuario.getIdUsuario()).getCoordenacao();
+            tickets = ticketRepository.findByCoordenacaoAndStatus(coord.getIdCoordenacao(), statusFechado);
+        } else if (usuario.getRole() == UsuarioRole.FUNCIONARIO_COORDENACAO) {
+            FuncionarioCoordenacao func = funcionarioCoordenacaoService.buscarPorIdOuFalhar(usuario.getIdUsuario());
+            tickets = ticketRepository.findByFuncionarioAndStatus(func.getIdUsuario(), statusFechado);
+        }
+
+        if(tickets != null) {
+            Map<Integer, Long> mapaMeses = tickets.stream()
+                    .filter(t -> t.getDataFechamento() != null)
+                    .collect(Collectors.groupingBy(t -> ZonedDateTime.ofInstant(t.getDataFechamento(), ZoneId.of("America/Sao_Paulo"))
+                                    .getMonthValue(),
+                            Collectors.counting()));
+    
+            List<TicketPorMesModel> lista = new ArrayList<>();
+            for (int mes = 1; mes <= 12; mes++) {
+                lista.add(new TicketPorMesModel(mes, mapaMeses.getOrDefault(mes, 0L)));
+            }
+    
+            return lista;
+        }
+        return null;
     }
 
 }
