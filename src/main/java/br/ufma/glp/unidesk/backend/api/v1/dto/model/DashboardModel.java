@@ -17,7 +17,7 @@ public class DashboardModel {
     Long totalTicketsPendentes;
     Long totalTicketsEmAndamento;
     Long porcentagemProgresso;
-    Long porcentagemAbertos;
+    Double porcentagemAbertos;
     Long porcentagemResolvidos;
     Long porcentagemAndamento;
 }
