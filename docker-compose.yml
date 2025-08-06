@@ -39,6 +39,13 @@ services:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - JAVA_MINIO_URL=${JAVA_MINIO_URL}
+  frontend:
+    image: antikevin/unidesk-frontend
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+    command: npm run start
 
 volumes:
   db_data:
