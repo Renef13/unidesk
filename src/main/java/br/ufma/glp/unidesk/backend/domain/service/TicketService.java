@@ -186,7 +186,7 @@ public class TicketService {
 
         
         Long porcentagemProgresso = (totalTicketsEmAndamento + totalTicketsPendentes + totalTicketsResolvidos) / totalTickets * 100;
-        Long porcentagemAbertos = totalTicketsAbertos  / totalTickets * 100;
+        Long porcentagemAbertos = (totalTicketsAbertos  / totalTickets) * 100;
         Long porcentagemResolvidos = totalTicketsResolvidos / totalTickets * 100;
         Long porcentagemAndamento = totalTicketsEmAndamento / totalTickets * 100;
         DashboardModel dashboardModel = new DashboardModel();
