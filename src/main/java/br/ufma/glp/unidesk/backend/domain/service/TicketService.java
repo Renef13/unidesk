@@ -6,11 +6,8 @@ import br.ufma.glp.unidesk.backend.domain.exception.CoordenacaoNaoEncontradaExce
 import br.ufma.glp.unidesk.backend.domain.exception.FuncionarioCoordenacaoNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.StatusNaoEncontradoException;
 import br.ufma.glp.unidesk.backend.domain.exception.TicketNaoEncontradoException;
-import br.ufma.glp.unidesk.backend.domain.repository.CoordenacaoRepository;
-import br.ufma.glp.unidesk.backend.domain.repository.FuncionarioCoordenacaoRepository;
 import br.ufma.glp.unidesk.backend.domain.model.*;
-import br.ufma.glp.unidesk.backend.domain.repository.StatusRepository;
-import br.ufma.glp.unidesk.backend.domain.repository.TicketRepository;
+import br.ufma.glp.unidesk.backend.domain.repository.*;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.InsufficientDataException;
 import io.minio.errors.InternalException;
@@ -23,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -192,6 +190,40 @@ public class TicketService {
             throw new TicketNaoEncontradoException("Nao encontrado tickets no periodo selecionado");
         }
         return ticketsNoPeriodo;
+    }
+
+
+    public Page<Ticket> buscarTicketsComFiltros(Usuario usuario, String texto, Long statusId, Long prioridadeId, Long cursoId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        boolean isAdmin = usuario.getAuthorities().stream().anyMatch(role -> role.getAuthority().contains("ADMIN"));
+        Specification<Ticket> spec = Specification.where(null);
+
+        if (!isAdmin) {
+            if (usuario.getRole() == UsuarioRole.ALUNO) {
+                spec = spec.and(TicketSpecs.hasAluno(usuario.getIdUsuario()));
+            } else if (usuario.getRole() == UsuarioRole.COORDENADOR) {
+                Long coordId = coordenadorService.buscarPorIdOuFalhar(usuario.getIdUsuario()).getCoordenacao().getIdCoordenacao();
+                spec = spec.and(TicketSpecs.hasCoordenacao(coordId));
+            } else if (usuario.getRole() == UsuarioRole.FUNCIONARIO_COORDENACAO) {
+                Long funcId = funcionarioCoordenacaoService.buscarPorIdOuFalhar(usuario.getIdUsuario()).getIdUsuario();
+                spec = spec.and(TicketSpecs.hasFuncionario(funcId));
+            }
+        }
+
+        if (texto != null && !texto.isEmpty()) {
+            spec = spec.and(TicketSpecs.hasText(texto));
+        }
+        if (statusId != null) {
+            spec = spec.and(TicketSpecs.hasStatus(statusId));
+        }
+        if (prioridadeId != null) {
+            spec = spec.and(TicketSpecs.hasPrioridade(prioridadeId));
+        }
+        if (cursoId != null) {
+            spec = spec.and(TicketSpecs.hasCurso(cursoId));
+        }
+
+        return ticketRepository.findAll(spec, pageable);
     }
 
     public DashboardModel dashboardTickets(Usuario usuario) {
