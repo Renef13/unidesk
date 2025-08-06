@@ -73,12 +73,12 @@ public class TicketService {
     }
 
     @Transactional
-    public Ticket novoTicket(@Valid @NotNull(message = "O Ticket nao pode ser nulo") Ticket ticket, MultipartFile file)
+    public Ticket novoTicket(@Valid @NotNull(message = "O Ticket nao pode ser nulo") Ticket ticket /*,MultipartFile file*/)
             throws Exception {
-        if (file != null) {
-            String idFile = storageService.uploadFile(file);
-            ticket.setIdFile(idFile);
-        }
+        // if (file != null) {
+        //     String idFile = storageService.uploadFile(file);
+        //     ticket.setIdFile(idFile);
+        // }
         return ticketRepository.save(ticket);
     }
 
