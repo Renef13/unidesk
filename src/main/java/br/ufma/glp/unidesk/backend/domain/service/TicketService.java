@@ -108,6 +108,7 @@ public class TicketService {
         }
 
         ticketExistente.setStatus(statusFechado);
+        ticketExistente.setDataFechamento(Instant.now());
 
         return ticketRepository.save(ticketExistente);
     }
@@ -197,22 +198,22 @@ public class TicketService {
         long totalTicketsPendentes = contagens.getOrDefault("Pendente", 0L);
         long totalTicketsEmAndamento = contagens.getOrDefault("Em Andamento", 0L);
 
-
-        Long porcentagemProgresso = (totalTicketsEmAndamento + totalTicketsPendentes + totalTicketsResolvidos)/ totalTickets * 100;
-        Double porcentagemAbertos = (double) (totalTicketsAbertos / totalTickets) * 100;
-
-        Long porcentagemResolvidos = totalTicketsResolvidos / totalTickets * 100;
-        Long porcentagemAndamento = totalTicketsEmAndamento / totalTickets * 100;
         DashboardModel dashboardModel = new DashboardModel();
+        if(totalTickets != 0){
+            Double porcentagemProgresso = ((double)totalTicketsEmAndamento + totalTicketsPendentes + totalTicketsResolvidos)/ totalTickets * 100;
+            Double porcentagemAbertos =  ((double)totalTicketsAbertos / totalTickets) * 100;
+            Double porcentagemResolvidos = ((double)totalTicketsResolvidos / totalTickets) * 100;
+            Double porcentagemAndamento = ((double)totalTicketsEmAndamento / totalTickets) * 100;
+            dashboardModel.setPorcentagemProgresso(porcentagemProgresso);
+            dashboardModel.setPorcentagemAbertos(porcentagemAbertos);
+            dashboardModel.setPorcentagemResolvidos(porcentagemResolvidos);
+            dashboardModel.setPorcentagemAndamento(porcentagemAndamento);
+        }
         dashboardModel.setTotalTickets(totalTickets);
         dashboardModel.setTotalTicketsResolvidos(totalTicketsResolvidos);
         dashboardModel.setTotalTicketsAbertos(totalTicketsAbertos);
         dashboardModel.setTotalTicketsPendentes(totalTicketsPendentes);
         dashboardModel.setTotalTicketsEmAndamento(totalTicketsEmAndamento);
-        dashboardModel.setPorcentagemProgresso(porcentagemProgresso);
-        dashboardModel.setPorcentagemAbertos(porcentagemAbertos);
-        dashboardModel.setPorcentagemResolvidos(porcentagemResolvidos);
-        dashboardModel.setPorcentagemAndamento(porcentagemAndamento);
         return dashboardModel;
     }
 
@@ -224,10 +225,11 @@ public class TicketService {
     }
 
     public List<TicketPorMesModel> obterTicketsPorMes() {
-        Status statusFechado = statusRepository.findByNome("Fechado").get();
+        Status statusFechado = statusRepository.findByNome("Fechado").orElseThrow(() -> new StatusNaoEncontradoException("Status Fechado nao encontrado"));
         List<Ticket> tickets = ticketRepository.findByStatus(statusFechado);
 
         Map<Integer, Long> mapaMeses = tickets.stream()
+                .filter(t -> t.getDataFechamento() != null)
                 .collect(Collectors.groupingBy(t -> ZonedDateTime.ofInstant(t.getDataFechamento(), ZoneId.of("America/Sao_Paulo"))
                                 .getMonthValue(),
                         Collectors.counting()));
