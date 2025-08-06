@@ -64,7 +64,7 @@ public class AlunoService {
             case ADMIN:
                 return alunoRepository.findAll();
             default:
-                throw new AccessDeniedException("Usuário não tem permissão para listar alunos por curso atual");
+                throw new AlunoNaoEncontradoException("Usuário não tem permissão para listar alunos por curso atual");
         }
 
     }
