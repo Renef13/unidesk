@@ -1,5 +1,6 @@
 package br.ufma.glp.unidesk.backend.domain.service;
 
+import org.springframework.security.access.AccessDeniedException;
 import br.ufma.glp.unidesk.backend.domain.exception.*;
 import br.ufma.glp.unidesk.backend.domain.model.Aluno;
 import br.ufma.glp.unidesk.backend.domain.model.Curso;
