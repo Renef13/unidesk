@@ -126,6 +126,6 @@ public class TicketController {
     @GetMapping("/tickets-por-mes")
     @ResponseStatus(HttpStatus.OK)
     public List<TicketPorMesModel> ticketsFechadosPorMes() {
-        return ticketService.obterTicketsPorMes();
+        return ticketService.obterTicketsPorMesFechado();
     }
 }
