@@ -91,8 +91,8 @@ public class TicketController {
     @PreAuthorize("hasRole('ALUNO')")
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public TicketModel adicionar(@RequestPart("data") @Valid TicketCadastroInput data, @RequestParam(required = false) MultipartFile file) throws Exception {
-        return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(data), file));
+    public TicketModel adicionar(@RequestBody @Valid TicketCadastroInput data /* , @RequestParam(required = false) MultipartFile file*/) throws Exception {
+        return ticketModelAssembler.toModel(ticketService.novoTicket(ticketCadastroInputDisassembler.toDomainObject(data)/* , file*/));
     }
 
     @PreAuthorize("hasRole('ALUNO' or 'FUNCIONARIO_COORDENACAO' or 'COORDENADOR')")
