@@ -43,12 +43,18 @@ public class TicketController {
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    public Page<TicketModel> listar(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+    public Page<TicketModel> listar(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Long statusId,
+            @RequestParam(required = false) Long prioridadeId,
+            @RequestParam(required = false) Long cursoId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         Usuario usuario = authService.getCurrentUsuarioEntity();
         if (usuario == null) {
             throw new IllegalStateException("Usuário não autenticado");
         }
-        return ticketService.listarTickets(usuario, page, size)
+        return ticketService.buscarTicketsComFiltros(usuario, search, statusId, prioridadeId, cursoId, page, size)
                 .map(ticketModelAssembler::toModel);
     }
 
