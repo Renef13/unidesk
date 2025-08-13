@@ -3,10 +3,12 @@ package br.ufma.glp.unidesk.backend.api.v1.controller;
 import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketCadastroInputDisassembler;
 import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketEdicaoInputDisassembler;
 import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketModelAssembler;
+import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketMovimentacaoModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.TicketCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.TicketEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.DashboardModel;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketModel;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketMovimentacaoModel;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketPorMesModel;
 import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
@@ -43,6 +45,7 @@ public class TicketController {
     private final TicketCadastroInputDisassembler ticketCadastroInputDisassembler;
     private final TicketEdicaoInputDisassembler ticketEdicaoInputDisassembler;
     private final AuthService authService;
+    private final TicketMovimentacaoModelAssembler ticketMovimentacaoModelAssembler;
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
@@ -135,5 +138,14 @@ public class TicketController {
     public List<TicketPorMesModel> ticketsFechadosPorMes() {
         Usuario usuario = authService.getCurrentUsuarioEntity();
         return ticketService.obterTicketsPorMesFechado(usuario);
+    }
+
+    @GetMapping("/movimentacoes/{id_ticket}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TicketMovimentacaoModel> listarMovimentacoes(@PathVariable("id_ticket") Long idTicket) {
+        // retorna timeline de movimentações de um ticket específico
+        return ticketMovimentacaoModelAssembler.toCollectionModel(
+            ticketService.buscarMovimentacoesTicket(idTicket)
+        );
     }
 }
