@@ -32,6 +32,11 @@ public class MensagemService {
                 .orElseThrow(() -> new MensagemNaoEncontradaException(idMensagem));
     }
 
+    public List<Mensagem> buscarPorIdTicket(Long idTicket) {
+        List<Mensagem> mensagens = mensagemRepository.findByTicketIdTicket(idTicket);
+        return mensagens;
+    }
+
     @Transactional
     public Mensagem salvar(@Valid @NotNull Mensagem mensagem) {
         validarMensagem(mensagem);

@@ -32,8 +32,10 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,6 +53,7 @@ public class TicketService {
     private final FuncionarioCoordenacaoRepository funcionarioCoordenacaoRepository;
     private final CoordenadorService coordenadorService;
     private final FuncionarioCoordenacaoService funcionarioCoordenacaoService;
+    private final MensagemRepository mensagemRepository;
 
     public Page<Ticket> listarTickets(@Valid @NotNull Usuario usuario, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -123,6 +126,8 @@ public class TicketService {
 
     @Transactional
     public Ticket atualizarTicket(@NotNull Long idTicket, @NotNull Ticket ticketAtualizado) {
+        System.out.println("-".repeat(20));
+        System.out.println(ticketAtualizado.getMensagens().get(0).getConteudo());
         Ticket ticketExistente = ticketRepository.findById(idTicket)
                 .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
         if (ticketAtualizado.getTitulo() != null) {
@@ -167,6 +172,14 @@ public class TicketService {
             ticketExistente.setIdFile(ticketAtualizado.getIdFile());
         }
 
+        // Atualiza a mensagem se for enviada
+        if(ticketAtualizado.getMensagens() != null) {
+            Usuario usuario = authService.getCurrentUsuarioEntity();
+            for(Mensagem m: ticketAtualizado.getMensagens()) {
+                m.setUsuario(usuario);
+                ticketExistente.addMensagem(m);
+            }
+        }
         registrarMovimentacao(ticketExistente, TipoMovimentacao.ATUALIZAR, null);
         return ticketExistente;
     }
@@ -347,6 +360,14 @@ public class TicketService {
                 .usuarioDestino(usuarioDestino)
                 .build();
         ticketMovimentacaoRepository.save(mov);
+    }
+
+    public TicketMovimentacao buscarUltimaMovimentacaoTicket(Long idTicket) {
+        if(!ticketRepository.existsById(idTicket)) {
+            throw new TicketNaoEncontradoException(idTicket);
+        }
+        TicketMovimentacao ultimaMovimentacaoTicket = ticketMovimentacaoRepository.findByTicketIdTicketOrderByDataMovimentacaoAsc(idTicket).stream().findFirst().get();
+        return ultimaMovimentacaoTicket;
     }
 
 }

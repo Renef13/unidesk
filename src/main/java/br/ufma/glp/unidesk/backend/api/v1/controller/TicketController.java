@@ -1,5 +1,6 @@
 package br.ufma.glp.unidesk.backend.api.v1.controller;
 
+import br.ufma.glp.unidesk.backend.api.v1.assembler.MensagemModelAssembler;
 import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketCadastroInputDisassembler;
 import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketEdicaoInputDisassembler;
 import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketModelAssembler;
@@ -7,12 +8,15 @@ import br.ufma.glp.unidesk.backend.api.v1.assembler.TicketMovimentacaoModelAssem
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.TicketCadastroInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.input.TicketEdicaoInput;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.DashboardModel;
+import br.ufma.glp.unidesk.backend.api.v1.dto.model.MensagemModel;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketModel;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketMovimentacaoModel;
 import br.ufma.glp.unidesk.backend.api.v1.dto.model.TicketPorMesModel;
+import br.ufma.glp.unidesk.backend.domain.model.Mensagem;
 import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.Usuario;
 import br.ufma.glp.unidesk.backend.domain.service.AuthService;
+import br.ufma.glp.unidesk.backend.domain.service.MensagemService;
 import br.ufma.glp.unidesk.backend.domain.service.TicketService;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.InsufficientDataException;
@@ -46,6 +50,8 @@ public class TicketController {
     private final TicketEdicaoInputDisassembler ticketEdicaoInputDisassembler;
     private final AuthService authService;
     private final TicketMovimentacaoModelAssembler ticketMovimentacaoModelAssembler;
+    private final MensagemModelAssembler mensagemModelAssembler;
+    private final MensagemService mensagemService;
 
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
@@ -68,8 +74,8 @@ public class TicketController {
     @ResponseStatus(HttpStatus.OK)
     public TicketModel buscarPorId(@PathVariable Long id) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, XmlParserException, ServerException, IllegalArgumentException, IOException {
         TicketModel ticketModel = ticketModelAssembler.toModel(ticketService.buscarTicketPorId(id));
-        String urlImage = ticketService.getUrlImage(id);
-        ticketModel.setUrlImage(urlImage);
+        // String urlImage = ticketService.getUrlImage(id);
+        // ticketModel.setUrlImage(urlImage);
         return ticketModel;
     }
 
@@ -148,5 +154,21 @@ public class TicketController {
         return ticketMovimentacaoModelAssembler.toCollectionModel(
             ticketService.buscarMovimentacoesTicket(idTicket)
         );
+    }
+
+    @GetMapping("/movimentacoes-ultima/{id_ticket}")
+    @ResponseStatus(HttpStatus.OK)
+    public TicketMovimentacaoModel exibirUltimaMovimentacaoTicket(@PathVariable("id_ticket") Long idTicket) {
+        return ticketMovimentacaoModelAssembler.toModel(
+            ticketService.buscarUltimaMovimentacaoTicket(idTicket)
+        );
+    }
+
+    @GetMapping("/mensagens/{id_ticket}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MensagemModel> exibirMensagensTicket(@PathVariable("id_ticket") Long idTicket) {
+        List<Mensagem> mensagens = mensagemService.buscarPorIdTicket(idTicket);
+        return mensagemModelAssembler.toCollectionModel(mensagens);
+        
     }
 }

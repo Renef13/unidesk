@@ -77,4 +77,5 @@ public interface MensagemRepository extends JpaRepository<Mensagem, Long> {
      * @return Lista de mensagens do usuário e ticket informados.
      */
     List<Mensagem> findByUsuarioIdUsuarioAndTicketIdTicket(Long idUsuario, Long idTicket);
+
 }

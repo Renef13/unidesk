@@ -14,6 +14,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tickets")
@@ -81,10 +83,21 @@ public class Ticket {
     @NotNull(message = "Categoria é obrigatória")
     private Categoria categoria;
 
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Mensagem> mensagens = new ArrayList<>();
 
     @AssertTrue(message = "Data de fechamento não pode ser anterior à data de criação")
     private boolean isFechaValida() {
         return dataFechamento == null
                 || !dataFechamento.isBefore(dataCriacao);
+    }
+    public void addMensagem(Mensagem mensagem) {
+        mensagens.add(mensagem);
+        mensagem.setTicket(this);
+    }
+
+    public void removeMensagem(Mensagem mensagem) {
+        mensagens.remove(mensagem);
+        mensagem.setTicket(null);
     }
 }
