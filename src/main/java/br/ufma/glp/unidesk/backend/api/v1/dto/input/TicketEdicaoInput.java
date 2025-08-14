@@ -16,6 +16,8 @@ public class TicketEdicaoInput {
 
     private String descricao;
 
+    private String mensagem;
+
     private Long idCoordenacao;
 
     private Long idFuncionario;

@@ -22,7 +22,7 @@ public class TicketEdicaoInputDisassembler {
                        mapper.skip(Ticket::setAluno);
                        mapper.skip(Ticket::setStatus);
                        mapper.skip(Ticket::setPrioridade);
-                       mapper.skip(Ticket::setCategoria);
+                       mapper.skip(Ticket::setCategoria);                       
                    })
                    .map(ticketEdicaoInput, ticketExistente);
 
@@ -61,5 +61,11 @@ public class TicketEdicaoInputDisassembler {
             categoria.setIdCategoria(ticketEdicaoInput.getIdCategoria());
             ticketExistente.setCategoria(categoria);
         }
+        if (ticketEdicaoInput.getMensagem() != null) {
+            Mensagem mensagem = new Mensagem();
+            mensagem.setConteudo(ticketEdicaoInput.getMensagem());
+            ticketExistente.addMensagem(mensagem);
+        }
+        
     }
 }
