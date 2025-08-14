@@ -122,10 +122,9 @@ public class TicketService {
     }
 
     @Transactional
-    public Ticket atualizarTicket(@NotNull Ticket ticketAtualizado) {
-        // TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
-        Ticket ticketExistente = ticketRepository.findById(ticketAtualizado.getIdTicket())
-                .orElseThrow(() -> new TicketNaoEncontradoException(ticketAtualizado.getIdTicket()));
+    public Ticket atualizarTicket(@NotNull Long idTicket, @NotNull Ticket ticketAtualizado) {
+        Ticket ticketExistente = ticketRepository.findById(idTicket)
+                .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
         if (ticketAtualizado.getTitulo() != null) {
             ticketExistente.setTitulo(ticketAtualizado.getTitulo());
         }
@@ -144,15 +143,13 @@ public class TicketService {
                 ? ticketExistente.getFuncionario().getIdUsuario() : null;
         if (ticketAtualizado.getFuncionario() != null) {
             Long novoFuncId = ticketAtualizado.getFuncionario().getIdUsuario();
-            FuncionarioCoordenacao funcionarioCoord = funcionarioCoordenacaoRepository
-                    .findById(novoFuncId)
-                    .orElseThrow(() -> new FuncionarioCoordenacaoNaoEncontradoException("Funcionario nao encontrado"));
-            if (antigoFuncId == null) {
-                ticketExistente.setFuncionario(funcionarioCoord);
-                registrarMovimentacao(ticketExistente, TipoMovimentacao.DELEGAR, funcionarioCoord);
-            } else if (!novoFuncId.equals(antigoFuncId)) {
-                ticketExistente.setFuncionario(funcionarioCoord);
-                registrarMovimentacao(ticketExistente, TipoMovimentacao.DELEGAR, funcionarioCoord);
+            if (antigoFuncId == null || !antigoFuncId.equals(novoFuncId)) {
+                FuncionarioCoordenacao funcionario = funcionarioCoordenacaoRepository
+                        .findById(novoFuncId)
+                        .orElseThrow(() -> new FuncionarioCoordenacaoNaoEncontradoException(
+                                "Funcionario de coordenacao nao encontrado para o id: " + novoFuncId));
+                ticketExistente.setFuncionario(funcionario);
+                registrarMovimentacao(ticketExistente, TipoMovimentacao.DELEGAR, funcionario);
             }
         }
 

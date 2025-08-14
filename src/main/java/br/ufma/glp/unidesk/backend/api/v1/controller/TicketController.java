@@ -102,9 +102,10 @@ public class TicketController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TicketModel atualizar(@PathVariable Long id, @RequestBody @Valid TicketEdicaoInput ticketEdicaoInput) {
-        Ticket ticketExistente = ticketService.buscarTicketPorId(id);
-        ticketEdicaoInputDisassembler.copyToDomainObject(ticketEdicaoInput, ticketExistente);
-        Ticket ticketAtualizado = ticketService.atualizarTicket(ticketExistente);
+        // mapeia input em uma nova instância para comparação sem afetar o cache JPA
+        Ticket ticketParaAtualizar = new Ticket();
+        ticketEdicaoInputDisassembler.copyToDomainObject(ticketEdicaoInput, ticketParaAtualizar);
+        Ticket ticketAtualizado = ticketService.atualizarTicket(id, ticketParaAtualizar);
         return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
