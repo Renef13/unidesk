@@ -24,7 +24,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -33,7 +32,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,6 +42,8 @@ import java.util.stream.Collectors;
 public class TicketService {
 
     private final TicketRepository ticketRepository;
+    private final TicketMovimentacaoRepository ticketMovimentacaoRepository;
+    private final AuthService authService;
     private final StorageService storageService;
     private final StatusRepository statusRepository;
     private final StatusService statusService;
@@ -93,7 +93,13 @@ public class TicketService {
         }
         ticket.setStatus(status);
 
-        return ticketRepository.save(ticket);
+        Ticket saved = ticketRepository.save(ticket);
+        if (status.getNome().equals("Fechado")) {
+            registrarMovimentacao(saved, TipoMovimentacao.FINALIZAR, null);
+        } else {
+            registrarMovimentacao(saved, TipoMovimentacao.ATUALIZAR_STATUS, null);
+        }
+        return saved;
     }
 
     @Transactional
@@ -110,14 +116,15 @@ public class TicketService {
         ticketExistente.setStatus(statusFechado);
         ticketExistente.setDataFechamento(Instant.now());
 
-        return ticketRepository.save(ticketExistente);
+        Ticket saved = ticketRepository.save(ticketExistente);
+        registrarMovimentacao(saved, TipoMovimentacao.FINALIZAR, null);
+        return saved;
     }
 
     @Transactional
-    public Ticket atualizarTicket(@NotNull Ticket ticketAtualizado) {
-        // TODO: Ajustar depois para os campos certos ou dividis em outras funcoes
-        Ticket ticketExistente = ticketRepository.findById(ticketAtualizado.getIdTicket())
-                .orElseThrow(() -> new TicketNaoEncontradoException(ticketAtualizado.getIdTicket()));
+    public Ticket atualizarTicket(@NotNull Long idTicket, @NotNull Ticket ticketAtualizado) {
+        Ticket ticketExistente = ticketRepository.findById(idTicket)
+                .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
         if (ticketAtualizado.getTitulo() != null) {
             ticketExistente.setTitulo(ticketAtualizado.getTitulo());
         }
@@ -130,12 +137,23 @@ public class TicketService {
                     .orElseThrow(() -> new CoordenacaoNaoEncontradaException("Coordenacao nao encontrada"));
             ticketExistente.setCoordenacao(coordenacao);
         }
+
+        // Lógica para registrar movimentação apenas se o funcionário for alterado
+        Long antigoFuncId = ticketExistente.getFuncionario() != null
+                ? ticketExistente.getFuncionario().getIdUsuario() : null;
         if (ticketAtualizado.getFuncionario() != null) {
-            FuncionarioCoordenacao funcionarioCoord = funcionarioCoordenacaoRepository
-                    .findById(ticketAtualizado.getFuncionario().getIdUsuario())
-                    .orElseThrow(() -> new FuncionarioCoordenacaoNaoEncontradoException("Funcionario nao encontrado"));
-            ticketExistente.setFuncionario(funcionarioCoord);
+            Long novoFuncId = ticketAtualizado.getFuncionario().getIdUsuario();
+            if (antigoFuncId == null || !antigoFuncId.equals(novoFuncId)) {
+                FuncionarioCoordenacao funcionario = funcionarioCoordenacaoRepository
+                        .findById(novoFuncId)
+                        .orElseThrow(() -> new FuncionarioCoordenacaoNaoEncontradoException(
+                                "Funcionario de coordenacao nao encontrado para o id: " + novoFuncId));
+                ticketExistente.setFuncionario(funcionario);
+                registrarMovimentacao(ticketExistente, TipoMovimentacao.DELEGAR, funcionario);
+            }
         }
+
+        // Atualiza o status se fornecido
         if (ticketAtualizado.getStatus() != null) {            
             Status status = statusRepository.findById(ticketAtualizado.getStatus().getIdStatus())
                 .orElseThrow(() -> new StatusNaoEncontradoException(
@@ -149,6 +167,7 @@ public class TicketService {
             ticketExistente.setIdFile(ticketAtualizado.getIdFile());
         }
 
+        registrarMovimentacao(ticketExistente, TipoMovimentacao.ATUALIZAR, null);
         return ticketExistente;
     }
 
@@ -165,10 +184,10 @@ public class TicketService {
         return tickets;
     }
 
-    public String getUrlImage(Long idTicket) throws InvalidKeyException, ErrorResponseException,
-            InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException,
-            XmlParserException, ServerException, IllegalArgumentException, IOException {
-        String idFile = ticketRepository.findByIdTicket(idTicket).get().getIdFile();
+    public String getUrlImage(Long idTicket) throws InvalidKeyException, ErrorResponseException, InsufficientDataException, InternalException, InvalidResponseException, NoSuchAlgorithmException, XmlParserException, ServerException, IllegalArgumentException, IOException {
+        Ticket ticket = ticketRepository.findByIdTicket(idTicket)
+                .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
+        String idFile = ticket.getIdFile();
         return storageService.getUrl(idFile);
     }
 
@@ -307,6 +326,27 @@ public class TicketService {
             return lista;
         }
         return null;
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<TicketMovimentacao> buscarMovimentacoesTicket(Long idTicket) {
+        if (!ticketRepository.existsById(idTicket)) {
+            throw new TicketNaoEncontradoException(idTicket);
+        }
+        return ticketMovimentacaoRepository.findByTicketIdTicketOrderByDataMovimentacaoAsc(idTicket);
+    }
+
+
+    private void registrarMovimentacao(Ticket ticket, TipoMovimentacao tipo, Usuario usuarioDestino) {
+        Usuario usuarioOrigem = authService.getCurrentUsuarioEntity();
+        TicketMovimentacao mov = TicketMovimentacao.builder()
+                .ticket(ticket)
+                .tipo(tipo)
+                .usuarioOrigem(usuarioOrigem)
+                .usuarioDestino(usuarioDestino)
+                .build();
+        ticketMovimentacaoRepository.save(mov);
     }
 
 }

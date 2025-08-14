@@ -35,6 +35,7 @@ services:
       - UNIDESK_DB_PASSWORD=${POSTGRES_PASSWORD}
     depends_on:
       - db
+    mem_limit: "512m"
 
   minio:
     image: bitnami/minio:latest
