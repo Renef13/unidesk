@@ -98,7 +98,7 @@ public class AuthControllerTest {
         mockMvc.perform(post("/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authInput))
-                        .with(csrf())  // 👈 ADICIONE AQUI
+                        .with(csrf())
                 )
                 .andExpect(status().isInternalServerError());
 
