@@ -6,4 +6,5 @@ public enum TipoMovimentacao {
     FINALIZAR,
     ATUALIZAR_STATUS,
     ATUALIZAR,
+    REABRIR,
 }

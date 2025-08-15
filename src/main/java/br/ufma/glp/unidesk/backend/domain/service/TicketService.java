@@ -126,8 +126,6 @@ public class TicketService {
 
     @Transactional
     public Ticket atualizarTicket(@NotNull Long idTicket, @NotNull Ticket ticketAtualizado) {
-        System.out.println("-".repeat(20));
-        System.out.println(ticketAtualizado.getMensagens().get(0).getConteudo());
         Ticket ticketExistente = ticketRepository.findById(idTicket)
                 .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
         if (ticketAtualizado.getTitulo() != null) {
@@ -159,13 +157,20 @@ public class TicketService {
         }
 
         // Atualiza o status se fornecido
-        if (ticketAtualizado.getStatus() != null) {            
+        if (ticketAtualizado.getStatus() != null) {
             Status status = statusRepository.findById(ticketAtualizado.getStatus().getIdStatus())
                 .orElseThrow(() -> new StatusNaoEncontradoException(
                         "Status não encontrado para o id: " + ticketAtualizado.getStatus().getIdStatus()));
-            if(status.getNome().equals("Fechado")) {
-                ticketExistente.setDataFechamento(Instant.now());
+            if (!ticketExistente.getStatus().getIdStatus().equals(status.getIdStatus())) {
+                if(status.getNome().equals("Fechado")) {
+                    ticketExistente.setDataFechamento(Instant.now());
+                    registrarMovimentacao(ticketExistente, TipoMovimentacao.FINALIZAR, null);
+                }
+                else {
+                    registrarMovimentacao(ticketExistente, TipoMovimentacao.ATUALIZAR_STATUS, null);
+                }
             }
+
             ticketExistente.setStatus(status);
         }
         if (ticketAtualizado.getIdFile() != null) {
@@ -182,6 +187,25 @@ public class TicketService {
         }
         registrarMovimentacao(ticketExistente, TipoMovimentacao.ATUALIZAR, null);
         return ticketExistente;
+    }
+
+    public Ticket reabrirTicket(@NotNull Long idTicket) {
+        Ticket ticketExistente = ticketRepository.findById(idTicket)
+                .orElseThrow(() -> new TicketNaoEncontradoException(idTicket));
+
+        Status statusPendente = statusService.buscarPorNomeOuFalhar("Pendente");
+        Status statusFechado = statusService.buscarPorNomeOuFalhar("Fechado");
+
+        if (!ticketExistente.getStatus().getIdStatus().equals(statusFechado.getIdStatus())) {
+            throw new IllegalStateException("Somente tickets fechados podem ser reabertos.");
+        }
+
+        ticketExistente.setStatus(statusPendente);
+        ticketExistente.setDataFechamento(null);
+
+        Ticket saved = ticketRepository.save(ticketExistente);
+        registrarMovimentacao(saved, TipoMovimentacao.REABRIR, null);
+        return saved;
     }
 
     public Ticket buscarTicketPorId(@Valid @NotNull(message = "O Id do ticket nao pode ser nulo") Long idTicket) {

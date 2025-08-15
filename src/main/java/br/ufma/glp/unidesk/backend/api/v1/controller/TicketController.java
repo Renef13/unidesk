@@ -133,6 +133,14 @@ public class TicketController {
         return ticketModelAssembler.toModel(ticketAtualizado);
     }
 
+    @PreAuthorize("hasRole('ALUNO')")
+    @PatchMapping("/{id}/reabrir")
+    @ResponseStatus(HttpStatus.OK)
+    public TicketModel reabrirTicket(@PathVariable Long id) {
+        Ticket ticketAtualizado = ticketService.reabrirTicket(id);
+        return ticketModelAssembler.toModel(ticketAtualizado);
+    }
+
     @GetMapping("/dashboard")
     @ResponseStatus(HttpStatus.OK)
     public DashboardModel statusDashboard() {
