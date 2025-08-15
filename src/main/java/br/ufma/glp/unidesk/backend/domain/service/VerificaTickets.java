@@ -33,12 +33,12 @@ public class VerificaTickets {
     private final TicketRepository ticketRepository;
 
     @Transactional
-    @Scheduled(fixedDelay = MINUTO)
+    @Scheduled(fixedDelay = HORA)
     public void verificarPorHoraTicketsSemTratamento() {
         // pegar a data atual e a data de dois dias atras
         Instant dataAtual = Instant.now();
 
-        Instant doisDiasAtras = dataAtual.minus(1, ChronoUnit.SECONDS);
+        Instant doisDiasAtras = dataAtual.minus(2, ChronoUnit.DAYS);
         Map<Ticket, TicketMovimentacao> ultimaMovimentacaoPorTicket = ticketMovimentacaoRepository
             .findAll().stream().filter(tm -> tm.getDataMovimentacao() != null)
                 .collect(Collectors.groupingBy(
