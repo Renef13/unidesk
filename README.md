@@ -80,11 +80,11 @@ O backend do Sistema de Help-Desk Universitário é uma API REST desenvolvida em
 | --------------- | ----------------- | -------------------------- | -------- | ------------------------------------- |
 | João Silva      | joao.silva        | ALUNO                      | senha123 | Coordenação de Engenharia de Software |
 | Maria Souza     | maria.souza       | ALUNO                      | senha123 | Coordenação de Ciência da Computação  |
-| Usuário Teste   | usuario.teste     | ADMIN                      | senha123 | —                                     |
+| Usuario Teste   | usuario.teste     | ADMIN                      | usuarioteste   | —                                     |
 | Pedro Santos    | pedro.santos      | COORDENADOR                | senha123 | Coordenação de Engenharia de Software |
 | Ana Oliveira    | ana.oliveira      | COORDENADOR                | senha123 | Coordenação de Ciência da Computação  |
 | Carlos Pereira  | carlos.pereira    | FUNCIONARIO_COORDENACAO    | senha123 | Coordenação de Engenharia de Software |
-| Mariana Costa   | usuario.admin     | FUNCIONARIO_COORDENACAO    | senha123 | Coordenação de Ciência da Computação  |
+| Mariana Costa   | mariana.costa     | FUNCIONARIO_COORDENACAO    | senha123 | Coordenação de Ciência da Computação  |
 
 ## 📄 Licença
 
