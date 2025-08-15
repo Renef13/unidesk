@@ -16,15 +16,15 @@ VALUES ('Coordenação de Engenharia de Software', 1),
 
 INSERT INTO usuarios (nome, email, senha, role, usuario)
 VALUES ('João Silva', 'joao.silva@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby', 'ALUNO', 'joao.silva'),
-       ('Maria Souza', 'maria.souza@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby ', 'ALUNO', 'maria.souza'),
-       ('Usuario Teste', 'usuario.teste@discente.ufma.br',
-        '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby', 'ADMIN', 'usuario.teste'),
+       ('Maria Souza', 'maria.souza@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby', 'ALUNO', 'maria.souza'),
+       ('Usuario Admin', 'usuario.admin@discente.ufma.br',
+        '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby', 'ADMIN', 'usuario.admin'),
        ('Pedro Santos', 'pedro.santos@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby', 'COORDENADOR', 'pedro.santos'),
        ('Ana Oliveira', 'ana.oliveira@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby',
         'COORDENADOR', 'ana.oliveira'),
        ('Carlos Pereira', 'carlos.pereira@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby', 'FUNCIONARIO_COORDENACAO', 'carlos.pereira'),
        ('Mariana Costa', 'mariana.costa@example.com', '$2a$10$Fv8ENXOpRjzITnF0yh5ROunLiTFfsWnyDAjPQh3EDgdHeYTg6Ddby',
-        'FUNCIONARIO_COORDENACAO', 'usuario.admin');
+        'FUNCIONARIO_COORDENACAO', 'mariana.costa');
 
 --
 --   "usuario": "usuario.teste",  ADMIN
