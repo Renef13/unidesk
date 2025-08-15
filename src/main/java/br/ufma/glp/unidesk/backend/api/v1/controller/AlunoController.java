@@ -26,7 +26,7 @@ public class AlunoController {
     private final AlunoCadastroInputDisassembler alunoCadastroInputDisassembler;
     private final AlunoEdicaoInputDisassembler alunoEdicaoInputDisassembler;
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize( "hasRole('ADMIN')")
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
     public List<AlunoModel> listar() {
@@ -53,11 +53,13 @@ public class AlunoController {
         return alunoModelAssembler.toModel(alunoService.buscarPorNomeOuFalhar(nome));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public AlunoModel adicionar(@RequestBody @Valid AlunoCadastroInput alunoInput) {
-        return alunoModelAssembler.toModel(alunoService.salvar(alunoCadastroInputDisassembler.toDomainObject(alunoInput)));
+        return alunoModelAssembler.toModel(
+                alunoService.salvar(alunoCadastroInputDisassembler.toDomainObject(alunoInput))
+        );
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('ALUNO')")
@@ -74,7 +76,7 @@ public class AlunoController {
         return alunoModelAssembler.toModel(alunoAtualizado);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize( "hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {
