@@ -17,6 +17,7 @@ import br.ufma.glp.unidesk.backend.domain.model.Ticket;
 import br.ufma.glp.unidesk.backend.domain.model.TicketMovimentacao;
 import br.ufma.glp.unidesk.backend.domain.repository.TicketMovimentacaoRepository;
 import br.ufma.glp.unidesk.backend.domain.repository.TicketRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -30,6 +31,8 @@ public class VerificaTickets {
     private final TicketMovimentacaoRepository ticketMovimentacaoRepository;
     private final StatusService statusService;
     private final TicketRepository ticketRepository;
+
+    @Transactional
     @Scheduled(fixedDelay = HORA)
     public void verificarPorHoraTicketsSemTratamento() {
         // pegar a data atual e a data de dois dias atras
@@ -45,7 +48,9 @@ public class VerificaTickets {
 
         // pegar os tickets com movimentacao mais antiga que dois dias atras ()
         List<Ticket> ticketsNaoTratadosNoPrazo = ultimaMovimentacaoPorTicket.values().stream().filter(tm -> tm.getDataMovimentacao().isBefore(doisDiasAtras)).map( tm -> tm.getTicket()).toList();
-
+        for(Ticket t: ticketsNaoTratadosNoPrazo) {
+            System.out.println(t.getDataAtualizacao());
+        }
         // para cada ticket desse nao tratado, mudar o status para fechado
         Status statusFechado = statusService.buscarPorNomeOuFalhar("Fechado");
         ticketsNaoTratadosNoPrazo.stream().forEach(t -> t.setStatus(statusFechado));
