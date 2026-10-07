@@ -38,7 +38,7 @@ services:
     mem_limit: "512m"
 
   minio:
-    image: bitnami/minio:latest
+    image: soldevelo/minio:latest
     container_name: minio-dev
     ports:
       - "9000:9000"
