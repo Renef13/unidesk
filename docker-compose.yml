@@ -30,7 +30,7 @@ services:
     depends_on:
       - db
   minio:
-    image: bitnami/minio:latest
+    image: soldevelo/minio:latest
     container_name: minio1
     ports: 
       - 9000:9000
